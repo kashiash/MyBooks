@@ -1,50 +1,352 @@
-> An app using Swift data. In this first set of three videos, we'll be looking at creating an application for tracking books that you've either put on your shelf, you're in the process of reading, or you have read. Now, this is going to be the longest video in this series, and I'm going to introduce you to the CRUD operations for creating, reading, updating, and deleting records, and persisting them to a SQLite database in your device. In the sections that follow this video, we'll build on this application and I'll introduce you to relationships such as one-to-many and many-to-many relationships. We'll even take a look at localization and CloudKit. So I hope you stick with me as we explore this exciting new framework. I love getting your feedback so tap the thumbs up button if you enjoyed this video and leave a comment below. Make sure you subscribe to the video and ring that bell to get notifications of new videos. And if you want to support my work, you can buy me a coffee. So we want to create an iPhone application that's going to allow us to add and track books that we have obtained and are either waiting to read, in progress, or completed. And we might want to add a summary about a book or even give it a rating. So let's create a new app now in Xcode and I'm going to call it "My Books". Now we could choose SwiftData as the storage option but that would create a lot of boilerplate code that we would have to change and besides with SwiftData it's really easy to create our persistent models and storage manually. Let's start then by creating a model for our book. When I create a new entry all I'm going to want to do is add a title and an author so we'll be setting some default values for the other properties, but I'll get to that. So first let's create a Swift file called Book. Inside there we'll create a class called Book and let's add some properties. We'll need a title and an author and both of those are strings. I want to track when I add the book, when I started the book, and when I finished it. 
+# My Books
+
+Aplikacja korzystająca z Swift Data. W pierwszym zestawie trzech filmów będziemy tworzyć aplikację do śledzenia książek, które albo umieściliśmy na półce, albo aktualnie czytamy, albo już przeczytaliśmy. Ten film będzie najdłuższy w tej serii, wprowadzę was do operacji CRUD, czyli tworzenia, odczytu, aktualizacji i usuwania rekordów, oraz jak je trwale przechowywać w bazie danych SQLite na urządzeniu. W kolejnych sekcjach po tym filmie rozwiniemy tę aplikację i przedstawię wam relacje, takie jak relacje jeden-do-wielu oraz wiele-do-wielu. Będziemy nawet zagłębiać się w lokalizację i CloudKit.  Chcemy stworzyć aplikację na iPhone'a, która pozwoli nam dodawać i śledzić książki, które zdobyliśmy i które czekają na przeczytanie, są w trakcie czytania lub zostały już przeczytane. Możemy także chcieć dodać podsumowanie książki lub nawet ocenę. Zaczynajmy więc od utworzenia nowej aplikacji teraz w Xcode i nazwiemy ją "Moje Książki". Moglibyśmy wybrać SwiftData jako opcję przechowywania danych, ale to spowodowałoby konieczność zmiany wielu podstawowych fragmentów kodu, a poza tym z SwiftData bardzo łatwo ręcznie tworzyć nasze modele danych i przechowywać je. Zaczniemy od utworzenia modelu dla naszej książki. Kiedy tworzę nowy wpis, chcę po prostu dodać tytuł i autora, dlatego ustalimy domyślne wartości dla pozostałych właściwości, ale o tym jeszcze porozmawiam. Zacznijmy więc od utworzenia pliku Swift o nazwie "Book". Wewnątrz utworzymy klasę o nazwie "Book" i dodamy kilka właściwości. Będziemy potrzebowali tytułu i autora, oba będą typu String. Chcę śledzić datę dodania książki, datę rozpoczęcia jej czytania i datę jej zakończenia.
+
+Wszystkie te właściwości będą typu daty, i możesz pomyśleć, że właściwości `started` i `completed` powinny być opcjonalne. Ale uważam, że ponieważ zamierzam użyć pickera, łatwiej jest ustawić wartość domyślną, o czym niedługo zobaczysz. Dla podsumowania stworzę właściwość typu String, a dla oceny utworzę opcjonalną wartość całkowitą (`Int`). 
+
+```swift
+class Book {
+    var title: String
+    var author: String
+    var dateAdded: Date
+    var dateStarted: Date
+    var dateCompleted: Date
+    var summary: String
+    var rating: Int?
+}
+```
 
 
 
-Aplikacja korzystająca z Swift Data. W pierwszym zestawie trzech filmów będziemy tworzyć aplikację do śledzenia książek, które albo umieściliśmy na półce, albo aktualnie czytamy, albo już przeczytaliśmy. Ten film będzie najdłuższy w tej serii, wprowadzę was do operacji CRUD, czyli tworzenia, odczytu, aktualizacji i usuwania rekordów, oraz jak je trwale przechowywać w bazie danych SQLite na urządzeniu. W kolejnych sekcjach po tym filmie rozwiniemy tę aplikację i przedstawię wam relacje, takie jak relacje jeden-do-wielu oraz wiele-do-wielu. Będziemy nawet zagłębiać się w lokalizację i CloudKit. Mam nadzieję, że zostaniecie ze mną, gdy będziemy odkrywać tę ekscytującą nową technologię. Uwielbiam otrzymywać wasze opinie, więc dajcie mi znać, jeśli podobał wam się ten film, klikając przycisk kciuka w górę, i zostawcie komentarz poniżej. Upewnijcie się, że subskrybujecie kanał i kliknijcie dzwonek, aby otrzymywać powiadomienia o nowych filmach. Jeśli chcecie wesprzeć moją pracę, możecie mi postawić kawę. Chcemy stworzyć aplikację na iPhone'a, która pozwoli nam dodawać i śledzić książki, które zdobyliśmy i które czekają na przeczytanie, są w trakcie czytania lub zostały już przeczytane. Możemy także chcieć dodać podsumowanie książki lub nawet ocenę. Zaczynajmy więc od utworzenia nowej aplikacji teraz w Xcode i nazwiemy ją "Moje Książki". Moglibyśmy wybrać SwiftData jako opcję przechowywania danych, ale to spowodowałoby konieczność zmiany wielu podstawowych fragmentów kodu, a poza tym z SwiftData bardzo łatwo ręcznie tworzyć nasze modele danych i przechowywać je. Zaczniemy od utworzenia modelu dla naszej książki. Kiedy tworzę nowy wpis, chcę po prostu dodać tytuł i autora, dlatego ustalimy domyślne wartości dla pozostałych właściwości, ale o tym jeszcze porozmawiam. Zacznijmy więc od utworzenia pliku Swift o nazwie "Book". Wewnątrz utworzymy klasę o nazwie "Book" i dodamy kilka właściwości. Będziemy potrzebowali tytułu i autora, oba będą typu String. Chcę śledzić datę dodania książki, datę rozpoczęcia jej czytania i datę jej zakończenia.
+Aby śledzić status naszej książki, stworzę enuma dla tej właściwości i nazwę go `status`. Utworzę go tutaj, w tym samym pliku. Zdefiniuję go jako Int, ale dla Swift Data musimy upewnić się, że jest Codable. Chcę również używać go w pickerze, więc musi być identyfikowalny (`Identifiable`). Jeśli użyję case iterable, będę mógł iterować przez wszystkie różne przypadki. Trzy przypadki, które chcę obejmować, to `onShelf`, `inProgress` i `completed`.
+
+```swift
+enum Status: Int, Codable, Identifiable, CaseIterable {
+  case onShelf,inProgress, completed
+}
+```
+
+ Aby spełnić protokół `Identifiable`, mogę utworzyć obliczoną właściwość `id` typu `Self`, która po prostu zwróci `self`. 
+
+```swift
+    var id: Self {
+        self
+    }
+```
+
+Teraz picker będzie potrzebować pewnego tekstu do wyświetlenia dla każdego przypadku. Utworzę więc kolejną obliczoną właściwość, którą nazwę `description` , która będzie typu String. Użyję instrukcji switch na `self` i dla każdego przypadku zwrócę tekstową reprezentację tego przypadku. Tak więc OnShelf, InProgress lub Completed. Teraz mogę dodać właściwość `status` do naszej klasy, która będzie miała ten typ `status`. 
+
+```swift
+    var description: String {
+        switch self {
+
+        case .onShelf:
+            "On Shelf"
+        case .inProgress:
+            "In Progress"
+        case .completed:
+            "Completed"
+        }
+    }
+```
+
+Następnie, ponieważ używam klasy, będę potrzebować inicjalizatora. Pozwól, że zaznaczę parametry 
+
+```swift
+    init(
+        title: String,
+        author: String,
+        dateAdded: Date,
+        dateStarted: Date,
+        dateCompleted: Date,
+        summary: String,
+        rating: Int? = nil,
+        status: Status
+    ) {
+        self.title = title
+        self.author = author
+        self.dateAdded = dateAdded
+        self.dateStarted = dateStarted
+        self.dateCompleted = dateCompleted
+        self.summary = summary
+        self.rating = rating
+        self.status = status
+    }
+```
+
+naszego inicjalizatora i użyję skrótu Ctrl+M wprowadzonego w Xcode 15, aby rozdzielić je na wiele linii. 
 
 
 
 
 
-> These will all be date properties and you might think that I should be making the started and completed versions of these properties optional. But I find that because I'm going to be using a picker it's easier to set a default value that you will see shortly. For the summary I'll create a string property and for the rating I will create this as an optional int. Now in order to track the status of our book I'm going to create an enum for that property and I'm going to call it status. I'll just create it here in the same file. I'm going to make it of type Int, but for Swift data we'll need to make sure that it's codable. I'm also going to want to use it in a picker, so I'll need it to be identifiable, and if I use case iterable I can loop through all the different cases. Well the three cases that I want are onShelf, inProgress, and completed. To satisfy the identifiable protocol I can create a computed ID property that that is of type capital S self, and simply return self. Now the picker is going to need some text to display for each case. So I'm going to create another computed property that I'll call descript, or D-E-S-C-R, and that's going to be a string, and I'll switch on self. And then for each case, I can return the text representations of these cases. So, OnShelf, InProgress, or Completed. So now I can add a status property to our class that will be of this type status. Next, since I'm using a class here, I'll need an initializer. Now let me select the parameters of our initializer and use that Ctrl+M shortcut introduced in Xcode 15 to separate them out onto multiple lines. Now as I mentioned, the only things I'm going to require is the user to enter the title of the book and the author. So that means I'm going to need to supply default values for every other property. 
-
-
-
-
-
-Wszystkie te właściwości będą typu daty, i możesz pomyśleć, że właściwości `started` i `completed` powinny być opcjonalne. Ale uważam, że ponieważ zamierzam użyć pickera, łatwiej jest ustawić wartość domyślną, o czym niedługo zobaczysz. Dla podsumowania stworzę właściwość typu String, a dla oceny utworzę opcjonalną wartość całkowitą (`Int`). Aby śledzić status naszej książki, stworzę enuma dla tej właściwości i nazwę go `status`. Utworzę go tutaj, w tym samym pliku. Zdefiniuję go jako Int, ale dla Swift Data musimy upewnić się, że jest Codable. Chcę również używać go w pickerze, więc musi być identyfikowalny (`Identifiable`). Jeśli użyję case iterable, będę mógł iterować przez wszystkie różne przypadki. Trzy przypadki, które chcę obejmować, to `onShelf`, `inProgress` i `completed`. Aby spełnić protokół `Identifiable`, mogę utworzyć obliczoną właściwość `id` typu `Self`, która po prostu zwróci `self`. Teraz picker będzie potrzebować pewnego tekstu do wyświetlenia dla każdego przypadku. Utworzę więc kolejną obliczoną właściwość, którą nazwę `description` (lub skrótem DESC-R), która będzie typu String. Użyję instrukcji switch na `self` i dla każdego przypadku zwrócę tekstową reprezentację tego przypadku. Tak więc OnShelf, InProgress lub Completed. Teraz mogę dodać właściwość `status` do naszej klasy, która będzie miała ten typ `status`. Następnie, ponieważ używam klasy, będę potrzebować inicjalizatora. Pozwól, że zaznaczę parametry naszego inicjalizatora i użyję skrótu Ctrl+M wprowadzonego w Xcode 15, aby rozdzielić je na wiele linii. Jak wspomniałem, jedynym, co będę wymagać, to podanie tytułu książki i autora. Oznacza to, że będę musiał dostarczyć domyślne wartości dla każdej innej właściwości.
-
-> The date added will be assigned the current date or date.now. And then again, instead of making the date started and date completed optional, and having to check for that, I'm going to use the static date.distantPastDate, and we have not yet get started or completed a book. For the summary, I'll just use an empty string, and that rating defaults to nil. And for status, when the book gets added, I will put it on shelf. Well, the only thing that is necessary now for our model to make it into a Swift data object is to import Swift data and then decorate our class with a @Model macro. So in creating a new book, all we'll need to do is ask for the name and author and set the default values for every other property. Well, now that we have our model, we'll need to, when the app starts, create the container for it so that it can persist the data. And with SwiftData, this is extremely easy. When our app launches, we can apply a SwiftData method to our window group. So I'm going to import Swift data here, and we have now access to a model container method. The only requirement is for us to specify the persistent model type that we want to store. For us, that model is our book, we'll have to go dot self. I always like to check out that backend data where it's stored, and I've discovered that like core data, it stores it by default in the application support directory for our app in the simulator. So I'm going to create an initializer for when our app gets created, and then I'm going to print out the path to this location. Since application support directory in Finder is more than one word, I'm going to remove the percent 20s that the path will generate for each space by setting the percent encoded to false. 
+Jak wspomniałem, jedynym, co będę wymagać, to podanie tytułu książki i autora. Oznacza to, że będę musiał dostarczyć domyślne wartości dla każdej innej właściwości.
 
 Data dodania zostanie przypisana jako aktualna data (`Date()` lub `Date.now`). Ponownie, zamiast sprawiać, że `dateStarted` i `dateCompleted` będą opcjonalne i trzeba będzie sprawdzać to ręcznie, użyję statycznego `date.distantPastDate`, ponieważ książka jeszcze nie została zaczęta lub zakończona. Dla podsumowania użyję pustego ciągu znaków (`""`), a ocena domyślnie będzie `nil`. Status książki zostanie ustawiony na "onShelf" (na półce), gdy książka zostanie dodana.
 
-Teraz, aby nasz model stał się obiektem Swift Data, musimy zaimportować Swift Data i oznaczyć naszą klasę makrem `@Model`. W ten sposób, podczas tworzenia nowej książki, będziemy musieli podać tylko nazwę i autora, a domyślne wartości zostaną ustawione dla pozostałych właściwości. Teraz, gdy mamy nasz model, musimy, gdy aplikacja zostanie uruchomiona, utworzyć dla niego kontener, aby można było zachować dane. Z pomocą Swift Data jest to niezwykle łatwe. Podczas uruchamiania naszej aplikacji, możemy zastosować metodę Swift Data do naszej grupy okien. Importuję Swift Data i teraz mamy dostęp do metody `modelContainer`. Jedynym wymogiem jest podanie typu modelu, który chcemy przechowywać jako trwały. Dla naszego przypadku, naszym modelem jest nasza książka, więc używamy `dot self`. Zawsze lubię sprawdzić, gdzie są przechowywane dane backendowe. Odkryłem, że podobnie jak Core Data, Swift Data domyślnie przechowuje dane w katalogu application support dla naszej aplikacji w symulatorze. Chcę więc utworzyć inicjalizator dla naszej aplikacji, który zostanie wywołany podczas jej uruchamiania, a następnie wydrukować ścieżkę do tego miejsca. Ponieważ katalog application support w Finderze zawiera więcej niż jedno słowo, chcę usunąć znaki procentowe (`%20s`), które będą generowane dla każdej spacji, ustawiając `percentEncoded` na `false`.
+```swift
+    init(
+        title: String,
+        author: String,
+        dateAdded: Date = Date.now,
+        dateStarted: Date = Date.distantPast,
+        dateCompleted: Date = Date.distantPast,
+        summary: String = "",
+        rating: Int? = nil,
+        status: Status = .onShelf
+    ) {
+        ...
+    }
+```
 
-> So let me run this app now and reveal the console once it has launched. And I see the path is printed to the console. So let me select the path right now and right-click on it and choose from the Services menu, Open to Open Location and reveal the three files, just like Core Data. The first file is the default.store and this is a SQLite file that I want to inspect with a SQLite editor. You can use any editor of your choice but I found that there's this free one that you might want to use to get started. I'll leave a link in the description. This is called dbbrowser. I've already downloaded and installed the Silicon Mac version for my M2 Mac Mini that I'm recording on. So if I right-click now on this file and open it in the application with that file, you'll notice that like Core Data there are a lot of support tables in this database. But there is one for our book model. And don't worry about that Z or Z in front. This is a Core Data Swift data thing. Now if you choose Browse Data and then choose the table that we want to view the records on, which is our book table, you see that there are a number of columns and specifically there are ones for all of our properties. Now we haven't created any books yet but we'll come back to this once we do. The first letter in the CRUD acronym is C and it stands for Create. So let's see how we can create new books and have them stored in our database. So I'm going to rename this content view to "Booklist View". I'm going to embed that content currently in a navigation stack and I'm going to add a navigation title using the string "My Books". I'm going to follow this by setting up a toolbar and I'm only going to have a single button on my toolbar. 
+Teraz, aby nasz model stał się obiektem Swift Data, musimy zaimportować Swift Data i oznaczyć naszą klasę makrem `@Model`. 
+
+```swift
+import Foundation
+import SwiftData
+
+@Model
+class Book { 
+  ...
+}
+```
+
+W ten sposób, podczas tworzenia nowej książki, będziemy musieli podać tylko nazwę i autora, a domyślne wartości zostaną ustawione dla pozostałych właściwości. Teraz, gdy mamy nasz model, musimy, gdy aplikacja zostanie uruchomiona, utworzyć dla niego kontener, aby można było zachować dane. Z pomocą Swift Data jest to niezwykle łatwe. Podczas uruchamiania naszej aplikacji, możemy zastosować metodę Swift Data do naszej grupy okien. Importuję Swift Data i teraz mamy dostęp do metody `modelContainer`. Jedynym wymogiem jest podanie typu modelu, który chcemy przechowywać jako trwały. Dla naszego przypadku, naszym modelem jest nasza książka, więc używamy `.self`. 
+
+```swift
+import SwiftUI
+import SwiftData
+
+@main
+struct MyBooksApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+        .modelContainer(for: Book.self)
+    }
+
+}
+```
+
+Zawsze lubię sprawdzić, gdzie są przechowywane dane backendowe. Odkryłem, że podobnie jak Core Data, Swift Data domyślnie przechowuje dane w katalogu application support dla naszej aplikacji w symulatorze. Chcę więc utworzyć inicjalizator dla naszej aplikacji, który zostanie wywołany podczas jej uruchamiania, a następnie wydrukować ścieżkę do tego miejsca. Ponieważ katalog application support w Finderze zawiera więcej niż jedno słowo, chcę usunąć znaki procentowe (`%20s`), które będą generowane dla każdej spacji, ustawiając `percentEncoded` na `false`.
+
+```swift
+    init() {
+        print(URL.applicationSupportDirectory.path(percentEncoded: false))
+    }
+```
 
 
 
-Pozwólcie, że teraz uruchomię tę aplikację i wyświetlę konsolę po uruchomieniu. Widzę, że ścieżka jest wydrukowana w konsoli. Wybiorę teraz tę ścieżkę, kliknę prawym przyciskiem myszy i z menu Usługi wybiorę opcję "Otwórz lokalizację", aby wyświetlić trzy pliki, tak jak w przypadku Core Data. Pierwszy plik to default.store, to plik SQLite, który chcę przejrzeć za pomocą edytora SQLite. Możecie użyć dowolnego edytora, który wam odpowiada, ale znalazłem ten darmowy, który może być dobrym wyborem na początek. Pozostawię link w opisie. Nazywa się dbbrowser. Już go pobrałem i zainstalowałem na moim Macu z M2, na którym nagrywam. Teraz, jeśli kliknę prawym przyciskiem myszy na ten plik i otworzę go w aplikacji, zauważycie, że podobnie jak w Core Data w tej bazie danych jest wiele tabel wsparcia. Ale jest jedna dla naszego modelu książki. Nie martwcie się o literę Z na początku - to jest coś związane z Core Data i Swift Data. Teraz, jeśli wybierzecie Przeglądaj dane i wybierzecie tabelę, którą chcemy zobaczyć, czyli naszą tabelę książek, zobaczycie, że są tam kolumny dla wszystkich naszych właściwości. Na razie nie utworzyliśmy jeszcze żadnych książek, ale wrócimy do tego, gdy to zrobimy. Pierwsza litera w skrócie CRUD oznacza C, co oznacza Create (Utwórz). Zobaczmy więc, jak możemy tworzyć nowe książki i przechowywać je w naszej bazie danych. Teraz zmienię nazwę tego widoku na "Widok listy książek". Umieszczę obecnie ten widok w nawigacyjnym stosie i dodam tytuł nawigacji "Moje Książki". Następnie utworzę pasek narzędzi i będę miał na nim tylko jeden przycisk.
+Pozwólcie, że teraz uruchomię tę aplikację i wyświetlę konsolę po uruchomieniu. Widzę, że ścieżka jest wydrukowana w konsoli. 
+
+```swift
+/Users/uta/Library/Developer/CoreSimulator/Devices/65D28238-47E9-40BE-8185-EB5A26699637/data/Containers/Data/Application/442223B0-C445-493F-BC5A-AEE8A2BC8B81/Library/Application Support/
+```
+
+Wybiorę teraz tę ścieżkę, kliknę prawym przyciskiem myszy i z menu Usługi wybiorę opcję "Otwórz lokalizację", aby wyświetlić trzy pliki, tak jak w przypadku Core Data. Pierwszy plik to default.store, to plik SQLite, który chcę przejrzeć za pomocą edytora SQLite. Możecie użyć dowolnego edytora, który wam odpowiada, ale znalazłem ten darmowy, który może być dobrym wyborem na początek.
+
+https://sqlitebrowser.org/dl/
+
+można go zainstalować  za pomocą brew: 
+
+```swift
+brew install --cask db-browser-for-sqlite
+```
+
+. Nazywa się dbbrowser. Już go pobrałem i zainstalowałem na moim Macu z M2, na którym nagrywam. Teraz, jeśli kliknę prawym przyciskiem myszy na ten plik i otworzę go w aplikacji, zauważycie, że podobnie jak w Core Data w tej bazie danych jest wiele tabel wsparcia. Ale jest jedna dla naszego modelu książki. Nie martwcie się o literę Z na początku - to jest coś związane z Core Data i Swift Data. Teraz, jeśli wybierzecie Przeglądaj dane i wybierzecie tabelę, którą chcemy zobaczyć, czyli naszą tabelę książek, zobaczycie, że są tam kolumny dla wszystkich naszych właściwości. 
+
+![image-20231011145312090](image-20231011145312090.png)
 
 
 
-> So within that toolbar I can create a button, leaving the action out for now, but for the label I'm going to create an image using the system name plus dot circle dot fill. Then I can set the image scale to large. I want to be able to present a bottom sheet that will ask for the book name and author. So I'm going to create a new file that I'm going to call NewBookView. And it's a SwiftUI view. I'll add two state properties, one for the title and one for the author, and default both of them to empty strings. Well, I'm going to be presenting this as a modal sheet, so in order to dismiss it, I add an environment variable for the dismiss key value and create it as dismiss. So let's build the view now by replacing the body content with a navigation stack and inside that navigation stack we'll create a form. Within that form I'm going to create two text fields. The first will be a text field using the string "BookTitle" bound to our title state property. And I'll do the same thing for the second one, which is going to be our author bound to the author state property. I'm going to add another button below this with a label "Create" and for the action right now I'm just going to call "Dismiss". But going to set the frame so that it aligns with the trailing edge and I can do that by specifying the max width to be infinity with an alignment at the trailing edge. And then to make it stand out I'll make the button style border prominent. And I'll add a little vertical padding. I also don't want the user to be able to tap on the button unless they've entered both a title and an author. So I can make it disabled if either the title is empty or the author is empty. And then I can add a navigation title using the string "New Book" and I'll set the title display mode to "Inline". Now Swift Data stores all of the data in memory and the information is not persisted to the database until necessary. example on creation, updates, or deletes. These operations are all managed by the containers main context. 
+## NewBookView czyli Create  
 
-W ramach tego paska narzędziowego mogę utworzyć przycisk, na razie pomijając akcję. Ale jako etykietę chcę utworzyć obrazek, używając systemowego symbolu `plus.circle.fill`. Następnie ustawiam skalę obrazka na dużą (`large`). Chcę móc wyświetlić arkusz na dole, który zapyta o nazwę i autora książki. Dlatego utworzę nowy plik, który nazwę `NewBookView`. Będzie to widok SwiftUI. Dodam dwie właściwości stanu, jedną dla tytułu i drugą dla autora, obie domyślnie ustawione na puste ciągi znaków. Ponieważ będę go prezentować jako modalny arkusz, aby go zamknąć, dodam zmienną środowiskową dla wartości klucza `dismiss` i utworzę ją jako `dismiss`. Zbudujmy teraz ten widok, zastępując zawartość `body` nawigacyjnym stosem, a wewnątrz tego stosu utworzymy formularz. Wewnątrz formularza utworzę dwa pola tekstowe. Pierwsze będzie polem tekstowym z napisem "Tytuł książki", związane z naszą właściwością stanu `title`. Zrobię to samo dla drugiego, które będzie naszym polem na autora, związanym z właściwością stanu `author`. Poniżej dodam kolejny przycisk z etykietą "Utwórz", a jako akcję na razie będę wywoływać "Dismiss". Ustawiam ramkę tak, aby współgrała z brzegiem od strony prawej, mogę to zrobić, określając maksymalną szerokość na nieskończoność z wyjustowaniem do prawego brzegu. Aby się wyróżniał, nadam przyciskowi styl graniczy wyraźnie (`borderedProminent`). Dodam też nieco wypełnienia pionowego. Nie chcę również, aby użytkownik mógł nacisnąć przycisk, dopóki nie wpisze zarówno tytułu, jak i autora. Mogę więc go wyłączyć, jeśli albo tytuł, albo autor jest pusty. Następnie dodam nawigacyjny tytuł z napisem "Nowa Książka" i ustawiam tryb wyświetlania tytułu na "Inline". Swift Data przechowuje wszystkie dane w pamięci, a informacje nie są przechowywane w bazie danych, chyba że jest to konieczne - na przykład podczas tworzenia, aktualizacji lub usuwania rekordów. Te operacje są zarządzane przez główny kontekst kontenera.
+Na razie nie utworzyliśmy jeszcze żadnych książek, ale wrócimy do tego, gdy to zrobimy. Pierwsza litera w skrócie CRUD oznacza C, co oznacza Create (Utwórz). Zobaczmy więc, jak możemy tworzyć nowe książki i przechowywać je w naszej bazie danych. Teraz zmienię nazwę widoku  `ContentView` na `BookListView`. Umieszczę obecnie ten widok w nawigacyjnym stosie i dodam tytuł nawigacji "Moje Książki". Następnie utworzę pasek narzędzi i będę miał na nim tylko jeden przycisk.
+
+W ramach tego paska narzędziowego mogę utworzyć przycisk, na razie pomijając akcję. Ale jako etykietę chcę utworzyć obrazek, używając systemowego symbolu `plus.circle.fill`. Następnie ustawiam skalę obrazka na dużą (`large`). 
+
+```swift
+struct BookListView: View {
+    var body: some View {
+        NavigationStack {
+            VStack {
+                ...
+            }
+            .padding()
+            .navigationTitle("Moje książki")
+            .toolbar{
+                Button {
+
+                } label : {
+                    Image(systemName: "plus.circle.fill")
+                        .imageScale(.large)
+                }
+            }
+        }
+    }
+}
+```
 
 
 
-> When we created our container, it creates that context and places it in the environment, where I can access it with the model context key path. Let me create a variable called context from that environment key path right now. So to create a new book in our create action, we can create that book passing in the title and the author from our state text fields. Then I can simply call the context insert method passing in that book, and then of course, we'll dismiss. So let's return now to book list view, And here we'll need to present a sheet when we tap the toolbar button. So let's create a state boolean property that I'll call createNewBook and I'll initialize it as false. After the toolbar I'm going to create a sheet that binds isPresented to that new createNewBook state property. And I'm going to use train-linked closure syntax here. So I'm going to clean it up a bit. And then I'll display the new book view as the content. I don't need it to be full screen, so I'll set the presentation detent to be just medium within that detent array. So to present the view, we'll need to set the create new book to true in our toolbar buttons action. So let me run in the simulator now and create a new book. You'll need to provide a name and an author. And you can create an entry for a real book or make one up like I'm doing here. Let's stop the app now and open our SQL editor once again to see what we have. I'll navigate to the Browse Data tab and select our book table. Notice the value has been entered for all but rating, and it's set at null, because it was optional. It may look like summary doesn't have anything, but it is an empty string. Now, just so we have something to work with in our next section, create another couple of book entries in the app. Now there's one more thing that I want to do, and that is in my new book view. I'd like to add a cancel button to dismiss the view if we don't want to create a new book when we presented that sheet. So I'll need a toolbar, and this button I want to be on the leading edge, so I will need to create a toolbar item and set the placement to top bar leading. And within there I can simply create a button with the label cancel and then for the action I'll simply call that dismiss function. Now that we've created some entries we'll need to be able to display them and this is the R for read in the CRUD acronym. We're going to present these these items in a list. Now, by default, arrays of the persistent model objects conform to the identifiable protocol. Each record in the book table has a unique object ID that we'll be looking at a little later. First, we'll need to be able to access all of the records. And this is done using a new query macro that is part of Swift data. And it observes changes and refreshes the view any time new changes occur. So first we'll need to import SwiftData. 
+Chcę móc wyświetlić arkusz na dole, który zapyta o nazwę i autora książki. Dlatego utworzę nowy plik, który nazwę `NewBookView`. Będzie to widok SwiftUI. Dodam dwie właściwości stanu, jedną dla tytułu i drugą dla autora, obie domyślnie ustawione na puste ciągi znaków. Ponieważ będę go prezentować jako modalny arkusz, aby go zamknąć, dodam zmienną środowiskową dla wartości klucza `dismiss` i utworzę ją jako `dismiss`. 
 
-Gdy utworzyliśmy nasz kontener, został utworzony kontekst i umieszczony w środowisku, gdzie mogę uzyskać do niego dostęp za pomocą ścieżki klucza modelu (`modelContextKeyPath`). Pozwólcie mi teraz utworzyć zmienną o nazwie `context` z tego klucza środowiskowego. Aby utworzyć nową książkę w akcji "Utwórz", możemy utworzyć tę książkę, przekazując tytuł i autora z naszych pól tekstowych w stanie. Następnie mogę po prostu wywołać metodę `context.insert`, przekazując do niej tę książkę, a potem oczywiście zamkniemy arkusz. Wróćmy teraz do widoku listy książek. Tutaj będziemy musieli wyświetlić arkusz po naciśnięciu przycisku paska narzędziowego. Stworzymy zatem stanową właściwość typu boolowskiego, którą nazwę `createNewBook` i zainicjalizuję jako `false`. Po pasku narzędziowym utworzę arkusz, który będzie związany z właściwością stanu `isPresented` (czyli `createNewBook`). Użyję tutaj domknięcia związującego. Posprzątam to trochę. Następnie jako zawartość wyświetlę widok `NewBookView`. Nie chcę, żeby był pełnoekranowy, więc ustawiam sposób wyświetlania na `medium` w tablicy detent. Aby wyświetlić widok, będziemy musieli ustawić wartość `createNewBook` na `true` w akcji przycisku paska narzędziowego. Teraz uruchommy aplikację w symulatorze i stwórzmy nową książkę. Musisz podać tytuł i autora. Możesz utworzyć wpis dla prawdziwej książki lub wymyślić jakąś, jak ja robię teraz. Zatrzymajmy teraz aplikację i otwórzmy ponownie nasz edytor SQL, aby zobaczyć, co mamy. Przejdę do zakładki "Przeglądaj dane" i wybiorę naszą tabelę książek. Zauważ, że wartości zostały wprowadzone dla wszystkich pól oprócz oceny, która jest ustawiona na `null`, ponieważ była opcjonalna. Wydaje się, że pole podsumowania jest puste, ale jest to pusty ciąg znaków. Teraz, aby mieć coś do pracy w naszym następnym etapie, stwórzmy kilka kolejnych wpisów w aplikacji. Jeszcze jedno, co chcę zrobić, to w moim widoku `NewBookView` dodać przycisk "Anuluj", aby zamknąć widok, jeśli nie chcemy tworzyć nowej książki, gdy wyświetlimy ten arkusz. Potrzebuję paska narzędziowego, a ten przycisk chcę umieścić z przodu, więc będę musiał utworzyć element paska narzędziowego i ustawić jego umiejscowienie na `topBarLeading`. Wewnątrz niego po prostu utworzę przycisk z etykietą "Anuluj", a jako akcję po prostu wywołam funkcję `dismiss`. Teraz, gdy mamy już jakieś wpisy, będziemy musieli je wyświetlić, co odpowiada literze R w akronimie CRUD. Będziemy prezentować te elementy w liście. Domyślnie tablice obiektów modelu trwałego spełniają protokół `Identifiable`. Każdy rekord w tabeli książek ma unikalne ID obiektu, o którym dowiemy się trochę później. Najpierw będziemy musieli uzyskać dostęp do wszystkich rekordów. Można to zrobić za pomocą nowego makra `query`, które jest częścią Swift Data. Obserwuje ono zmiany i odświeża widok za każdym razem, gdy wystąpią nowe zmiany. Najpierw będziemy musieli zaimportować SwiftData.
+```swift
+struct NewBookView: View {
+    @Environment(\.dismiss) var dismiss
+    @State private var title = ""
+    @State private var author = ""
+    var body: some View {
+        ...
+    }
+}
+```
+
+Zbudujmy teraz ten widok, zastępując zawartość `body` nawigacyjnym stosem, a wewnątrz tego stosu utworzymy formularz. Wewnątrz formularza utworzę dwa pola tekstowe. Pierwsze będzie polem tekstowym z napisem "Tytuł książki", związane z naszą właściwością stanu `title`. Zrobię to samo dla drugiego, które będzie naszym polem na autora, związanym z właściwością stanu `author`. Poniżej dodam kolejny przycisk z etykietą "Zapisz", a jako akcję na razie będę wywoływać "Dismiss". Ustawiam ramkę tak, aby współgrała z brzegiem od strony prawej, mogę to zrobić, określając maksymalną szerokość na nieskończoność z wyjustowaniem do prawego brzegu. Aby się wyróżniał, nadam przyciskowi styl graniczy wyraźnie (`borderedProminent`). Dodam też nieco wypełnienia pionowego. Nie chcę również, aby użytkownik mógł nacisnąć przycisk, dopóki nie wpisze zarówno tytułu, jak i autora. Mogę więc go wyłączyć, jeśli albo tytuł, albo autor jest pusty. Następnie dodam nawigacyjny tytuł z napisem "Nowa Książka" i ustawiam tryb wyświetlania tytułu na "Inline". 
+
+```swift
+        NavigationStack{
+            Form{
+                TextField("Tytuł ksiązki",text: $title)
+                TextField("Autor",text: $author)
+                Button("Zapisz") {
+                    dismiss()
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .buttonStyle(.borderedProminent)
+                .padding(.vertical)
+                .disabled(title.isEmpty || author.isEmpty)
+                .navigationTitle("Nowa książka")
+                .navigationBarTitleDisplayMode(.inline)
+            }
+        }
+```
 
 
 
-> We can then apply the macro that can accept a sort order and a filter option. We're going to leave filter out for now and I'll retrieve all of our objects, but I'm going to set a sort order which is ascending by default, and I'm going to specify that property that we want to sort by using a key path. Later on, we'll be looking at sorting on multiple properties using an array of sort descriptors. but for now we'll just use the key path and we'll assign this to a private variable called books. And books will be an array of book. Well now we can replace our VStack with a list, but we want to be able to use an onDelete function on our list items. So we'll need to use a forEach loop within the list. In that list, I want to create a navigation link that will take me to a detail screen eventually where I can view and/or edit the remaining properties. But for the time being, let's just have a navigation link that will take me to a text view that will display the book title. And for the label, I'm going to want to display the title and author, but also an icon representing the book status. And if there is a rating, a number of stars representing that rating. Let's also set the list style to a plain list. Now if we want to be able to use the preview, we'll need to add the model container to our book list view here in the preview. But we don't want to persist the data in our preview, we just want to keep it in memory and not persist it. We could, but this becomes a bit problematic later on. In testing, we start the same way as we did in our @Main section, but this time we'll add an additional argument that is in memory and set it to true. The default is false, which we had. So I'm going to return to our book model and I'm going to create a computed property to represent a different icon for our book status. Computed properties aren't stored in the database, so our SQLite structure won't change. We can create this variable and I'm going to call it "icon" and it's going to be an image. Now "image" is only available in SwiftUI, so I'll need to import SwiftUI instead of Foundation. Now we can switch on that status and create some appropriate images. So these are the ones that I'm going to use. For "onShelf" it's going to be an image using the system name "checkmark.diamond.fill". in progress I'll just use book.fill and then for completed I'll use books.vertical.fill. So let's return to our book list view now then and create the label for our navigation link. I'll start with an h stack with a spacing of 10. And then the first element in that h stack is going to be that book icon image. 
+Swift Data przechowuje wszystkie dane w pamięci, a informacje nie są przechowywane w bazie danych, chyba że jest to konieczne - na przykład podczas tworzenia, aktualizacji lub usuwania rekordów. Te operacje są zarządzane przez główny kontekst kontenera.
+
+Gdy utworzyliśmy nasz kontener, został utworzony kontekst i umieszczony w środowisku, gdzie mogę uzyskać do niego dostęp za pomocą ścieżki klucza modelu (`modelContextKeyPath`). Pozwólcie mi teraz utworzyć zmienną o nazwie `context` z tego klucza środowiskowego. 
+
+```swift
+struct NewBookView: View {
+    @Environment(\.modelContext) private var context
+  ...
+}
+```
+
+Aby utworzyć nową książkę w akcji "Utwórz", możemy utworzyć tę książkę, przekazując tytuł i autora z naszych pól tekstowych w stanie. Następnie mogę po prostu wywołać metodę `context.insert`, przekazując do niej tę książkę, a potem oczywiście zamkniemy arkusz. 
+
+```swift
+                Button("Zapisz") {
+                    let newBook = Book(title: title, author: author)
+                    context.insert(newBook)
+                    dismiss()
+                }
+```
+
+Wróćmy teraz do widoku listy książek `BookListView`. Tutaj będziemy musieli wyświetlić arkusz po naciśnięciu przycisku paska narzędziowego. Stworzymy zatem stanową właściwość typu boolowskiego, którą nazwę `createNewBook` i zainicjalizuję jako `false`. Po pasku narzędziowym utworzę arkusz, który będzie związany z właściwością stanu `isPresented` (czyli `createNewBook`). Użyję tutaj domknięcia związującego. Posprzątam to trochę. Następnie jako zawartość wyświetlę widok `NewBookView`. Nie chcę, żeby był pełnoekranowy, więc ustawiam sposób wyświetlania na `medium` w tablicy detent. Aby wyświetlić widok, będziemy musieli ustawić wartość `createNewBook` na `true` w akcji przycisku paska narzędziowego. 
+
+```swift
+struct BookListView: View {
+    @State  private var createNewBook = false
+    var body: some View {
+        NavigationStack {
+            VStack {
+                Image(systemName: "globe")
+                    .imageScale(.large)
+                    .foregroundStyle(.tint)
+                Text("Hello, world!")
+            }
+            .padding()
+            .navigationTitle("Moje książki")
+            .toolbar{
+                Button {
+                    createNewBook = true
+                } label : {
+                    Image(systemName: "plus.circle.fill")
+                        .imageScale(.large)
+                }
+            }
+            .sheet(isPresented: $createNewBook) {
+                NewBookView()
+                    .presentationDetents([.medium])
+            }
+        }
+    }
+}
+```
+
+Teraz uruchommy aplikację w symulatorze i stwórzmy nową książkę. Musisz podać tytuł i autora. Możesz utworzyć wpis dla prawdziwej książki lub wymyślić jakąś, jak ja robię teraz. Zatrzymajmy teraz aplikację i otwórzmy ponownie nasz edytor SQL, aby zobaczyć, co mamy. Tym razem uzyje lubiane przeze mnie DataGrip:
+
+![image-20231011184751985](image-20231011184751985.png)
+
+nastepnie przechodzimy do nowo dodanej gaqlezi w database explorer, wybieramy ZBOOK, następnie tabelę książek:
+
+![image-20231011185449831](image-20231011185449831.png)
+
+ Zauważ, że wartości zostały wprowadzone dla wszystkich pól oprócz oceny, która jest ustawiona na `null`, ponieważ była opcjonalna. Wydaje się, że pole podsumowania jest puste, ale jest to pusty ciąg znaków. Teraz, aby mieć coś do pracy w naszym następnym etapie, stwórzmy kilka kolejnych wpisów w aplikacji. 
 
 
+
+Jeszcze jedno, co chcę zrobić, to w moim widoku `NewBookView` dodać przycisk "Anuluj", aby zamknąć widok, jeśli nie chcemy tworzyć nowej książki, gdy wyświetlimy ten arkusz. Potrzebuję paska narzędziowego, a ten przycisk chcę umieścić z przodu, więc będę musiał utworzyć element paska narzędziowego i ustawić jego umiejscowienie na `topBarLeading`. Wewnątrz niego po prostu utworzę przycisk z etykietą "Anuluj", a jako akcję po prostu wywołam funkcję `dismiss`. 
+
+```swift
+                .toolbar{
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Anuluj") {
+                            dismiss()
+                        }
+                    }
+                }
+```
+
+
+
+Całość kodu `NewBokView` :
+
+```swift
+struct NewBookView: View {
+    @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) var dismiss
+    @State private var title = ""
+    @State private var author = ""
+    var body: some View {
+        NavigationStack{
+            Form{
+                TextField("Tytuł ksiązki",text: $title)
+                TextField("Autor",text: $author)
+                Button("Zapisz") {
+                    let newBook = Book(title: title, author: author)
+                    context.insert(newBook)
+                    dismiss()
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .buttonStyle(.borderedProminent)
+                .padding(.vertical)
+                .disabled(title.isEmpty || author.isEmpty)
+                .navigationTitle("Nowa książka")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar{
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Anuluj") {
+                            dismiss()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+
+
+## BookListView czyli Read  
+
+Teraz, gdy mamy już jakieś wpisy, będziemy musieli je wyświetlić, co odpowiada literze R w akronimie CRUD. Będziemy prezentować te elementy w liście. Domyślnie tablice obiektów modelu trwałego spełniają protokół `Identifiable`. Każdy rekord w tabeli książek ma unikalne ID obiektu, o którym dowiemy się trochę później. Najpierw będziemy musieli uzyskać dostęp do wszystkich rekordów. Można to zrobić za pomocą nowego makra `query`, które jest częścią Swift Data. Obserwuje ono zmiany i odświeża widok za każdym razem, gdy wystąpią nowe zmiany. Najpierw będziemy musieli zaimportować SwiftData.
 
 Następnie możemy użyć makra, które może przyjąć porządek sortowania i opcję filtrowania. Na razie pomińmy filtr i pobierzmy wszystkie nasze obiekty, ale ustawmy domyślny porządek sortowania jako rosnący i określmy właściwość, według której chcemy sortować, używając ścieżki klucza. Później będziemy patrzeć na sortowanie według wielu właściwości, używając tablicy deskryptorów sortowania, ale na razie użyjemy tylko ścieżki klucza i przypiszemy to do prywatnej zmiennej o nazwie `books`. `books` będzie tablicą obiektów typu `Book`.
 

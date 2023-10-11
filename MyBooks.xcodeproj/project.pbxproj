@@ -11,6 +11,7 @@
 		763FC7CD2AD693D00008E040 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763FC7CC2AD693D00008E040 /* ContentView.swift */; };
 		763FC7CF2AD693D20008E040 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 763FC7CE2AD693D20008E040 /* Assets.xcassets */; };
 		763FC7D32AD693D20008E040 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 763FC7D22AD693D20008E040 /* Preview Assets.xcassets */; };
+		763FC7DA2AD694430008E040 /* An app using Swift data.md in Resources */ = {isa = PBXBuildFile; fileRef = 763FC7D92AD694430008E040 /* An app using Swift data.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		763FC7CE2AD693D20008E040 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		763FC7D02AD693D20008E040 /* MyBooks.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MyBooks.entitlements; sourceTree = "<group>"; };
 		763FC7D22AD693D20008E040 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		763FC7D92AD694430008E040 /* An app using Swift data.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "An app using Swift data.md"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +38,7 @@
 		763FC7BE2AD693D00008E040 = {
 			isa = PBXGroup;
 			children = (
+				763FC7D92AD694430008E040 /* An app using Swift data.md */,
 				763FC7C92AD693D00008E040 /* MyBooks */,
 				763FC7C82AD693D00008E040 /* Products */,
 			);
@@ -127,6 +130,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				763FC7DA2AD694430008E040 /* An app using Swift data.md in Resources */,
 				763FC7D32AD693D20008E040 /* Preview Assets.xcassets in Resources */,
 				763FC7CF2AD693D20008E040 /* Assets.xcassets in Resources */,
 			);

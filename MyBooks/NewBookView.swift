@@ -17,15 +17,25 @@ struct NewBookView: View {
             Form{
                 TextField("Tytuł ksiązki",text: $title)
                 TextField("Autor",text: $author)
-                Button("Zapisz") {
-                    let newBook = Book(title: title, author: author)
-                    context.insert(newBook)
-                    dismiss()
+                HStack {
+                    Button("Anuluj") {
+
+                        dismiss()
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .buttonStyle(.bordered)
+
+                    Button("Zapisz") {
+                        let newBook = Book(title: title, author: author)
+                        context.insert(newBook)
+                        dismiss()
+                    }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .buttonStyle(.borderedProminent)
+                    .padding(.vertical)
+                    .disabled(title.isEmpty || author.isEmpty)
                 }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .buttonStyle(.borderedProminent)
-                .padding(.vertical)
-                .disabled(title.isEmpty || author.isEmpty)
+
                 .navigationTitle("Nowa książka")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar{

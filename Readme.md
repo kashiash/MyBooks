@@ -1,6 +1,10 @@
 # My Books
 
-Aplikacja korzystająca z Swift Data. W pierwszym zestawie trzech filmów będziemy tworzyć aplikację do śledzenia książek, które albo umieściliśmy na półce, albo aktualnie czytamy, albo już przeczytaliśmy. Ten film będzie najdłuższy w tej serii, wprowadzę was do operacji CRUD, czyli tworzenia, odczytu, aktualizacji i usuwania rekordów, oraz jak je trwale przechowywać w bazie danych SQLite na urządzeniu. W kolejnych sekcjach po tym filmie rozwiniemy tę aplikację i przedstawię wam relacje, takie jak relacje jeden-do-wielu oraz wiele-do-wielu. Będziemy nawet zagłębiać się w lokalizację i CloudKit.  Chcemy stworzyć aplikację na iPhone'a, która pozwoli nam dodawać i śledzić książki, które zdobyliśmy i które czekają na przeczytanie, są w trakcie czytania lub zostały już przeczytane. Możemy także chcieć dodać podsumowanie książki lub nawet ocenę. Zaczynajmy więc od utworzenia nowej aplikacji teraz w Xcode i nazwiemy ją "Moje Książki". Moglibyśmy wybrać SwiftData jako opcję przechowywania danych, ale to spowodowałoby konieczność zmiany wielu podstawowych fragmentów kodu, a poza tym z SwiftData bardzo łatwo ręcznie tworzyć nasze modele danych i przechowywać je. Zaczniemy od utworzenia modelu dla naszej książki. Kiedy tworzę nowy wpis, chcę po prostu dodać tytuł i autora, dlatego ustalimy domyślne wartości dla pozostałych właściwości, ale o tym jeszcze porozmawiam. Zacznijmy więc od utworzenia pliku Swift o nazwie "Book". Wewnątrz utworzymy klasę o nazwie "Book" i dodamy kilka właściwości. Będziemy potrzebowali tytułu i autora, oba będą typu String. Chcę śledzić datę dodania książki, datę rozpoczęcia jej czytania i datę jej zakończenia.
+Aplikacja korzystająca z Swift Data. W pierwszym zestawie trzech filmów będziemy tworzyć aplikację do śledzenia książek, które albo umieściliśmy na półce, albo aktualnie czytamy, albo już przeczytaliśmy. Ten film będzie najdłuższy w tej serii, wprowadzę was do operacji CRUD, czyli tworzenia, odczytu, aktualizacji i usuwania rekordów, oraz jak je trwale przechowywać w bazie danych SQLite na urządzeniu. W kolejnych sekcjach po tym filmie rozwiniemy tę aplikację i przedstawię wam relacje, takie jak relacje jeden-do-wielu oraz wiele-do-wielu. Będziemy nawet zagłębiać się w lokalizację i CloudKit.  Chcemy stworzyć aplikację na iPhone'a, która pozwoli nam dodawać i śledzić książki, które zdobyliśmy i które czekają na przeczytanie, są w trakcie czytania lub zostały już przeczytane. Możemy także chcieć dodać podsumowanie książki lub nawet ocenę. Zaczynajmy więc od utworzenia nowej aplikacji teraz w Xcode i nazwiemy ją "Moje Książki". Moglibyśmy wybrać SwiftData jako opcję przechowywania danych, ale to spowodowałoby konieczność zmiany wielu podstawowych fragmentów kodu, a poza tym z SwiftData bardzo łatwo ręcznie tworzyć nasze modele danych i przechowywać je. 
+
+## Books model
+
+Zaczniemy od utworzenia modelu dla naszej książki. Kiedy tworzę nowy wpis, chcę po prostu dodać tytuł i autora, dlatego ustalimy domyślne wartości dla pozostałych właściwości, ale o tym jeszcze porozmawiam. Zacznijmy więc od utworzenia pliku Swift o nazwie "Book". Wewnątrz utworzymy klasę o nazwie "Book" i dodamy kilka właściwości. Będziemy potrzebowali tytułu i autora, oba będą typu String. Chcę śledzić datę dodania książki, datę rozpoczęcia jej czytania i datę jej zakończenia.
 
 Wszystkie te właściwości będą typu daty, i możesz pomyśleć, że właściwości `started` i `completed` powinny być opcjonalne. Ale uważam, że ponieważ zamierzam użyć pickera, łatwiej jest ustawić wartość domyślną, o czym niedługo zobaczysz. Dla podsumowania stworzę właściwość typu String, a dla oceny utworzę opcjonalną wartość całkowitą (`Int`). 
 
@@ -111,7 +115,69 @@ class Book {
 }
 ```
 
-W ten sposób, podczas tworzenia nowej książki, będziemy musieli podać tylko nazwę i autora, a domyślne wartości zostaną ustawione dla pozostałych właściwości. Teraz, gdy mamy nasz model, musimy, gdy aplikacja zostanie uruchomiona, utworzyć dla niego kontener, aby można było zachować dane. Z pomocą Swift Data jest to niezwykle łatwe. Podczas uruchamiania naszej aplikacji, możemy zastosować metodę Swift Data do naszej grupy okien. Importuję Swift Data i teraz mamy dostęp do metody `modelContainer`. Jedynym wymogiem jest podanie typu modelu, który chcemy przechowywać jako trwały. Dla naszego przypadku, naszym modelem jest nasza książka, więc używamy `.self`. 
+W ten sposób, podczas tworzenia nowej książki, będziemy musieli podać tylko nazwę i autora, a domyślne wartości zostaną ustawione dla pozostałych właściwości. 
+
+Całość:
+
+```swift
+import Foundation
+import SwiftData
+import SwiftUI
+
+@Model
+class Book {
+    var title: String
+    var author: String
+    var dateAdded: Date
+    var dateStarted: Date
+    var dateCompleted: Date
+    var summary: String
+    var rating: Int?
+    var status: Status
+
+    init(
+        title: String,
+        author: String,
+        dateAdded: Date = Date.now,
+        dateStarted: Date = Date.distantPast,
+        dateCompleted: Date = Date.distantPast,
+        summary: String = "",
+        rating: Int? = nil,
+        status: Status = .onShelf
+    ) {
+        self.title = title
+        self.author = author
+        self.dateAdded = dateAdded
+        self.dateStarted = dateStarted
+        self.dateCompleted = dateCompleted
+        self.summary = summary
+        self.rating = rating
+        self.status = status
+    }
+    
+}
+enum Status: Int, Codable, Identifiable, CaseIterable {
+  case onShelf,inProgress, completed
+    var id: Self {
+        self
+    }
+    var description: String {
+        switch self {
+
+        case .onShelf:
+            "On Shelf"
+        case .inProgress:
+            "In Progress"
+        case .completed:
+            "Completed"
+        }
+    }
+}
+```
+
+
+
+Teraz, gdy mamy nasz model, musimy, gdy aplikacja zostanie uruchomiona, utworzyć dla niego kontener, aby można było zachować dane. Z pomocą Swift Data jest to niezwykle łatwe. Podczas uruchamiania naszej aplikacji, możemy zastosować metodę Swift Data do naszej grupy okien. Importuję Swift Data i teraz mamy dostęp do metody `modelContainer`. Jedynym wymogiem jest podanie typu modelu, który chcemy przechowywać jako trwały. Dla naszego przypadku, naszym modelem jest nasza książka, więc używamy `.self`. 
 
 ```swift
 import SwiftUI
@@ -342,6 +408,29 @@ struct NewBookView: View {
 }
 ```
 
+wariant alternatywny przycisk anuluj mozna dac obok przycisku zapisz osadzajac oba w HStack i przenoszac modyfikatory przycisku zapisz bezposrednio do niego:
+
+```swift
+HStack{
+  Button("Anuluj") {
+
+    dismiss()
+  }
+  .frame(maxWidth: .infinity, alignment: .leading)
+  .buttonStyle(.bordered)
+
+  Button("Zapisz") {
+    let newBook = Book(title: title, author: author)
+    context.insert(newBook)
+    dismiss()
+  }
+  .frame(maxWidth: .infinity, alignment: .trailing)
+  .buttonStyle(.borderedProminent)
+  .padding(.vertical)
+  .disabled(title.isEmpty || author.isEmpty)
+}
+```
+
 
 
 ## BookListView czyli Read  
@@ -350,29 +439,130 @@ Teraz, gdy mamy już jakieś wpisy, będziemy musieli je wyświetlić, co odpowi
 
 Następnie możemy użyć makra, które może przyjąć porządek sortowania i opcję filtrowania. Na razie pomińmy filtr i pobierzmy wszystkie nasze obiekty, ale ustawmy domyślny porządek sortowania jako rosnący i określmy właściwość, według której chcemy sortować, używając ścieżki klucza. Później będziemy patrzeć na sortowanie według wielu właściwości, używając tablicy deskryptorów sortowania, ale na razie użyjemy tylko ścieżki klucza i przypiszemy to do prywatnej zmiennej o nazwie `books`. `books` będzie tablicą obiektów typu `Book`.
 
+```swift
+@Query(sort: \Book.title) private var books: [Book]
+```
+
 Teraz możemy zastąpić naszego `VStack` listą, ale chcemy móc używać funkcji `onDelete` na elementach naszej listy. Musimy więc użyć pętli `forEach` wewnątrz listy. W tej liście chcę stworzyć link nawigacyjny, który zabierze mnie w końcu do ekranu szczegółowego, gdzie będę mógł przeglądać i / lub edytować pozostałe właściwości. Ale na razie utwórzmy link nawigacyjny, który zabierze mnie do widoku tekstu, który wyświetli tytuł książki. Dla etykiety będę chciał wyświetlić tytuł i autora, a także ikonę reprezentującą status książki. Jeśli jest ocena, chcę również wyświetlić odpowiednią liczbę gwiazdek reprezentujących tę ocenę. Ustawmy także styl listy na zwykłą listę (`plain list`).
 
-Teraz, jeśli chcemy móc używać podglądu, będziemy musieli dodać kontener modelu do naszego widoku listy książek również w podglądzie. Ale nie chcemy przechowywać danych w naszym podglądzie, chcemy je trzymać tylko w pamięci i nie zapisywać ich trwale. Oczywiście moglibyśmy to zrobić, ale później może to stworzyć pewne problemy. W teście zaczynamy tak samo jak w sekcji `@Main`, ale tym razem dodamy dodatkowy argument `inMemory` i ustawimy go na `true`. Domyślnie jest `false`, co mieliśmy dotąd. 
+```swift
+List {
+  ForEach(books) { book in
+                  NavigationLink{
 
-Teraz wróćmy do naszego modelu książki i stworzymy właściwość obliczeniową, która będzie reprezentować inną ikonę dla statusu naszej książki. Właściwości obliczeniowe nie są przechowywane w bazie danych SQLite, więc nasza struktura nie będzie się zmieniać. Możemy utworzyć tę zmienną i nazwę ją "icon", a będzie to obrazek. Teraz `Image` jest dostępne tylko w SwiftUI, więc będziemy musieli zaimportować SwiftUI zamiast Foundation. Teraz możemy przełączyć się na ten status i utworzyć odpowiednie obrazy. Oto te, które zamierzam użyć: dla `onShelf` będzie to obrazek używający systemowego symbolu "checkmark.diamond.fill", dla `inProgress` użyję "book.fill", a dla `completed` użyję "books.vertical.fill". Wróćmy teraz do naszego widoku listy książek i utwórzmy etykietę dla naszego linku nawigacyjnego. Zacznę od `HStack` z odstępem 10. A pierwszym elementem w tym `HStack` będzie obrazek ikony książki.
+                  } label: {
+
+                  }
+                 }
+
+}
+.listStyle(.plain )
+```
+
+Teraz, jeśli chcemy móc używać podglądu, będziemy musieli dodać kontener modelu do naszego widoku listy książek również w podglądzie. Ale nie chcemy przechowywać danych w naszym podglądzie, chcemy je trzymać tylko w pamięci i nie zapisywać ich trwale. Oczywiście moglibyśmy to zrobić, ale później może to stworzyć pewne problemy. W teście zaczynamy tak samo jak w sekcji `@Main`, ale tym razem dodamy dodatkowy argument `inMemory` i ustawimy go na `true`. 
+
+```swift
+#Preview {
+    BookListView()
+        .modelContainer(for: Book.self, inMemory: true)
+}
+```
+
+Teraz wróćmy do naszego modelu książki i stworzymy właściwość obliczeniową, która będzie reprezentować inną ikonę dla statusu naszej książki. Właściwości obliczeniowe nie są przechowywane w bazie danych SQLite, więc nasza struktura nie będzie się zmieniać. Możemy utworzyć tę zmienną i nazwę ją "icon", a będzie to obrazek. Teraz `Image` jest dostępne tylko w SwiftUI, więc będziemy musieli zaimportować SwiftUI zamiast Foundation. Teraz możemy przełączyć się na ten status i utworzyć odpowiednie obrazy. Oto te, które zamierzam użyć: dla `onShelf` będzie to obrazek używający systemowego symbolu "checkmark.diamond.fill", dla `inProgress` użyję "book.fill", a dla `completed` użyję "books.vertical.fill". 
+
+```swift
+var icon: Image {
+  switch status {
+
+    case .onShelf:
+    Image(systemName: "checkmark.diamond.fill")
+    case .inProgress:
+    Image(systemName: "book.fill")
+    case .completed:
+    Image(systemName: "books.vertical.fill")
+  }
+}
+```
 
 
 
-> To the right of that I'll follow it with a V-Stack with an alignment leading. And the first row will be a text field displaying the title. Then I'll set the font to a Title 2 font. Below that the next row will be another text field but this time displaying the book author. And I'll change the foreground style to secondary. And then because not all books have a rating, I can use an if let to unwrap the book rating. And then if it exists, I can then create another HStack that will loop through from 0 up to the rating itself and set the ID as self. And then within the loop, I can create an image using the system image, which is a star.fill. I'll set the image scale to small, and then change the foreground style to yellow. Let me run this now on our simulator and see what happens. We get to see all three of those books we created. None of them have any ratings though, and all the icons are for the status on shelf because that was the default when we created these. So let's stop the app. I'm going to open the database in my SQL editor and I want to edit some of the properties. So if I go to browse data for our books table, I can, for example, update two of our statuses. For the status of 2, which is complete, I'm going to give it a rating of 4. Let me close the database and run again. We can see our updates have been applied. We have different icons for the status, and I can see a rating. Well we can test in the preview as well. In the preview I can create a new item. However, if I were to update my code or go to Selectable on the preview and then back again, that item disappears because we're not persisting the data. Now when there are no books in the list, we should be letting our users know to create their first book. This is a perfect case for the Content Unavailable view. So let me just collapse this list here so that I can see things better. Then let me create an IF check to see if the Books array is empty. If it is, I'll display a Content Unavailable view using the text "Enter your first book" And then I'll use the system image of a book.fill. If it's not empty, we'll create an else clause and display that list. Now the problem is, we have a title and a toolbar that I want to appear regardless, but we can't attach that to an if-else clause. So I'll need to enclose this entire if-else clause in a group so that our toolbar and our title can get applied. I've created an entire video on this new Content Unavailable view, so if you want to learn how to really maximize this view, I'll leave a link in the description. 
+Wróćmy teraz do naszego widoku listy książek i utwórzmy etykietę dla naszego linku nawigacyjnego. Zacznę od `HStack` z odstępem 10. A pierwszym elementem w tym `HStack` będzie obrazek ikony książki. Po prawej stronie tego umieszczę pionowy stos (`VStack`) z wyrównaniem do lewej. Pierwszy wiersz będzie zawierał pole tekstowe wyświetlające tytuł. Następnie ustawię czcionkę na tytułową o rozmiarze 2. Poniżej tego kolejny wiersz będzie kolejnym polem tekstowym, ale tym razem wyświetlającym autora książki. Zmienię również styl koloru tekstu na drugoplanowy (`secondary`). 
 
-Po prawej stronie tego umieszczę pionowy stos (`VStack`) z wyrównaniem do lewej. Pierwszy wiersz będzie zawierał pole tekstowe wyświetlające tytuł. Następnie ustawię czcionkę na tytułową o rozmiarze 2. Poniżej tego kolejny wiersz będzie kolejnym polem tekstowym, ale tym razem wyświetlającym autora książki. Zmienię również styl koloru tekstu na drugoplanowy (`secondary`). Ponieważ nie wszystkie książki mają ocenę, użyję instrukcji `if let` do rozpakowania oceny książki. A jeśli istnieje, mogę utworzyć kolejny stos horyzontalny (`HStack`), który przeiteruje od 0 do samej oceny i ustawienie ID jako `self`. Wewnątrz tej pętli mogę utworzyć obrazek za pomocą systemowego obrazka gwiazdki wypełnionej (`star.fill`). Ustawię skalę obrazka na małą (`small`) i zmienię styl koloru tekstu na żółty.
+```swift
+HStack(spacing: 10) {
+  book.icon
+  VStack(alignment: .leading) {
+    Text(book.title)
+    .font(.title2)
+    Text(book.author)
+    .foregroundStyle(.secondary)
+  }
+}
+```
+
+Ponieważ nie wszystkie książki mają ocenę, użyję instrukcji `if let` do obsłużenia  oceny książki. A jeśli istnieje, mogę utworzyć kolejny stos horyzontalny (`HStack`), który przeiteruje od 0 do samej oceny i ustawienie ID jako `self`. Wewnątrz tej pętli mogę utworzyć obrazek za pomocą systemowego obrazka gwiazdki wypełnionej (`star.fill`). Ustawię skalę obrazka na małą (`small`) i zmienię styl koloru tekstu na żółty.
+
+```swift
+if let rating = book.rating {
+  HStack {
+    ForEach(0..<rating, id:\.self) { _ in
+                                    Image(systemName: "star.fill")
+                                    .imageScale(.small)
+                                    .foregroundStyle(.yellow)
+                                   }
+  }
+}
+```
 
 Teraz uruchommy to na naszym symulatorze i zobaczmy, co się stanie. Zobaczymy wszystkie trzy książki, które utworzyliśmy. Żadna z nich nie ma oceny, a wszystkie ikony są dla statusu "on shelf", ponieważ taki był domyślny podczas ich tworzenia. Zatrzymajmy teraz aplikację. Otworzę bazę danych w moim edytorze SQL i chcę edytować niektóre właściwości. Przejdźmy do przeglądania danych naszej tabeli książek. Mogę na przykład zaktualizować dwa z naszych statusów. Dla statusu 2, który oznacza "completed", nadam ocenę 4. Zamknijmy bazę danych i uruchommy ponownie. Widzimy, że nasze aktualizacje zostały zastosowane. Mamy różne ikony dla różnych statusów, i widzimy ocenę.
 
-Możemy także przetestować to w podglądzie. W podglądzie mogę utworzyć nowy element. Jednak jeśli zaktualizuję kod lub przejdę do widoku wybierania w podglądzie, a potem z powrotem, ten element zniknie, ponieważ nie zapisujemy danych trwale. Teraz, gdy nie ma książek na liście, powinniśmy poinformować naszych użytkowników, żeby stworzyli swoją pierwszą książkę. Jest to idealny przypadek dla widoku `ContentUnavailable`. Pozwól mi zwęzić tę listę, aby lepiej widzieć rzeczy. Następnie sprawdźmy, czy tablica `Books` jest pusta. Jeśli tak, wyświetlmy widok `ContentUnavailable` z tekstem "Wprowadź swoją pierwszą książkę". Użyję także systemowego obrazka książki (`book.fill`). Jeśli nie jest pusta, utworzymy klauzulę `else` i wyświetlimy tę listę. Problem polega na tym, że mamy tytuł i pasek narzędziowy, które chcę, aby zawsze się pojawiały, ale nie możemy ich przypisać do instrukcji warunkowej `if-else`. Więc będę musiał zamknąć całą tę instrukcję warunkową `if-else` w grupie (`Group`), dzięki czemu nasz pasek narzędziowy i tytuł zostaną zastosowane. O tym nowym widoku `ContentUnavailable` stworzyłem osobne wideo, więc jeśli chcesz dowiedzieć się, jak naprawdę wykorzystać ten widok, zostawię link w opisie.
+<img src="image-20231011212137465.png" alt="image-20231011212137465" style="zoom:50%;" />
 
+Możemy także przetestować to w podglądzie. W podglądzie mogę utworzyć nowy element. Jednak jeśli zaktualizuję kod lub przejdę do widoku wybierania w podglądzie, a potem z powrotem, ten element zniknie, ponieważ nie zapisujemy danych trwale. Teraz, gdy nie ma książek na liście, powinniśmy poinformować naszych użytkowników, żeby stworzyli swoją pierwszą książkę.  Sprawdźmy, czy tablica `Books` jest pusta. Jeśli tak, wyświetlmy widok `ContentUnavailable` z tekstem "Wprowadź swoją pierwszą książkę". Użyję także systemowego obrazka książki (`book.fill`).
 
+```swift
+if books.isEmpty {
+    ContentUnavailableView("Wprowadź pierwszą książkę", systemImage: "book.fill")
+}
+```
 
-> Give it a watch. In our preview then, we see the Content Unavailable view, but when we create our first book, it disappears and is replaced by the list. We've done Create and Read from our CRUD acronym. We still have two more to do. Update and Delete. Well, delete is the easiest one, so let's do that right now. Since we used a forEach loop, we can use an onDelete function that will give us access to the index set that we swiped on. And then we can step through each of our indices using a forEach loop on each one to get an index of our books array that we're deleting. So then we'll let book equal books at that index. And just like when we added a book, we needed access to the context to insert it. So similarly, we're going to need to have access to that context to delete it. So again, we'll need to add an environment property with the key path model context. And I'll assign it to a variable called context. And now we can use that context to delete our book. We can test this in the preview canvas by first adding a new book. And again, when we did this, the content unavailable view disappeared and the book appears in the list. But now we have a swipe action from the right that allows us to delete. And when that's gone, the content unavailable view appears again. So let's test on the simulator and take a look at our persisted data in our simulator. Let's delete this fictional book here. Let me double check then by going back into our SQL database in our SQL editor. If I navigate to the Browse Data tab for our book table, it reveals that we now only have two entries, whereas before I had three. Everything's looking good so far. So we've got our last item in the CRUD acronym now, which is Update. So we'll be able to update all fields in our book model. And for this, I'll need to create a new view. So let's create a SwiftUI view that we'll call EditBookView. Well this view is going to be displayed when we tap on our row, which is our navigation link from the list view, so we'll need to receive a book that it was tapped on. So I'm going to create a constant for that, a book, which is of type book. When we do this, however, the preview requires a book to be injected into the environment, but it has no idea what the container is and where to get this book, and the preview fails to load. So for the time being I'm going to just comment out this book and build my UI, then test on a device to show it working. In the next video of this series I'll show you how you can resolve this problem by creating an in-memory container with some sample data. Now the view is going to update every property, and rather than binding the properties to every property in the book to some text fields, pickers, and text editors, I'd rather create a corresponding state property for each of those properties. The reason I'm doing that is if I use the book as a bindable object rather than a constant, I could bind each of the properties directly to the book itself. 
+ Jeśli nie jest pusta, utworzymy klauzulę `else` i wyświetlimy istniejącą  listę książek. 
 
+```swift
+if books.isEmpty {
+  ContentUnavailableView("Wprowadź pierwszą książkę", systemImage: "book.fill")
+} else {
+  List {...}
+  .navigationTitle("Moje książki")
+  .toolbar{...}
+  .listStyle(.plain )
+  .sheet(isPresented: $createNewBook) {...}
+}
+```
 
+Problem polega na tym, że mamy tytuł i pasek narzędziowy, które chcę, aby zawsze się pojawiały, ale nie możemy ich przypisać do instrukcji warunkowej `if-else`. Więc będę musiał zamknąć całą tę instrukcję warunkową `if-else` w grupie (`Group`),przeniesiemy odpowiednie modyfikatory z List pod Group  dzięki czemu nasz pasek narzędziowy i tytuł zostaną wyświetlone .
 
-Obejrzyj to. W naszej podglądzie widzimy widok "Zawartość niedostępna", ale gdy tworzymy naszą pierwszą książkę, widok ten znika i zostaje zastąpiony listą. Wykonaliśmy już operacje tworzenia (Create) i odczytu (Read) z naszego akronimu CRUD. Mamy jeszcze dwie pozostałe do zrobienia: Aktualizację (Update) i Usunięcie (Delete). Usunięcie jest najłatwiejsze, więc zróbmy to teraz. Ponieważ użyliśmy pętli forEach, możemy teraz skorzystać z funkcji onDelete, która pozwoli nam uzyskać dostęp do zestawu indeksów, na których przesunęliśmy palcem. Następnie możemy przejść przez każdy z naszych indeksów, używając kolejnej pętli forEach, aby uzyskać indeks naszej tablicy książek, którą chcemy usunąć. Potem pozwólmy, aby zmienna "book" równała się książce o indeksie. Podobnie jak przy dodawaniu książki, potrzebowaliśmy dostępu do kontekstu, aby ją dodać. Podobnie, będziemy musieli mieć dostęp do tego kontekstu, aby ją usunąć. Zatem ponownie będziemy musieli dodać właściwość środowiskową o ścieżce klucza "model.context". Przypiszę ją do zmiennej o nazwie "context". Teraz możemy użyć tego kontekstu, aby usunąć naszą książkę. Możemy przetestować to na płótnie podglądu, dodając najpierw nową książkę. I znowu, gdy to zrobiliśmy, widok "Zawartość niedostępna" zniknął, a książka pojawiła się na liście. Ale teraz mamy akcję przesunięcia palcem z prawej strony, która pozwala nam usunąć. A kiedy to zniknie, widok "Zawartość niedostępna" pojawia się ponownie. Przetestujmy to teraz na symulatorze i spójrzmy na nasze przechowywane dane. Usuńmy tę fikcyjną książkę tutaj. Sprawdźmy jeszcze raz, wracając do naszej bazy danych SQL w edytorze SQL. Jeśli przejdę do karty "Przeglądaj dane" dla naszej tabeli "book", widzę teraz tylko dwie pozycje, podczas gdy wcześniej miałem trzy. Wszystko wygląda dobrze do tej pory. Mamy teraz ostatnią część naszego akronimu CRUD, czyli Aktualizację (Update). Będziemy mogli zaktualizować wszystkie pola w naszym modelu książki. W związku z tym będę musiał stworzyć nowy widok. Stwórzmy więc widok SwiftUI, który nazwiemy "EditBookView". Ten widok będzie wyświetlany, gdy klikniemy na nasz wiersz, który jest naszym odnośnikiem nawigacyjnym z widoku listy. Będziemy więc musieli otrzymać książkę, na którą kliknięto. Stworzę stałą dla tego obiektu, o nazwie "book", która będzie typu "book". Kiedy to zrobimy, podgląd będzie wymagać wstrzyknięcia książki do środowiska, ale nie będzie wiedział, gdzie znaleźć ten obiekt i jak go uzyskać, więc podgląd nie załaduje się. Na razie zamknę to wywołanie i zbuduję moje UI, a potem przetestuję je na urządzeniu, aby pokazać, że działa. W następnym filmie z tej serii pokażę ci, jak można rozwiązać ten problem, tworząc kontener w pamięci z przykładowymi danymi. Teraz ten widok będzie aktualizować każdą właściwość. Zamiast wiązać te właściwości bezpośrednio z każdą właściwością w książce do pól tekstowych, pickerów i edytorów tekstu, wolałbym utworzyć odpowiadającą właściwość stanu dla każdej z tych właściwości. Powodem tego jest, że jeśli użyję książki jako obiektu wiążącego zamiast stałej, będę mógł bezpośrednio wiązać każdą z właściwości z samą książką.
+```swift
+        NavigationStack {
+            Group {
+                if books.isEmpty {
+                    ...
+                } else {
+                    List {...}
+                    .listStyle(.plain )
+                }
+            }
+            .navigationTitle("Moje książki")
+            .toolbar{...}
+            .sheet(isPresented: $createNewBook) {...}
+        }
+```
+
+ 
+
+W naszej podglądzie widzimy widok "Zawartość niedostępna", ale gdy tworzymy naszą pierwszą książkę, widok ten znika i zostaje zastąpiony listą. Wykonaliśmy już operacje tworzenia (Create) i odczytu (Read) z naszego akronimu CRUD. 
+
+Mamy jeszcze dwie pozostałe do zrobienia: Aktualizację (Update) i Usunięcie (Delete). Usunięcie jest najłatwiejsze, więc zróbmy to teraz. Ponieważ użyliśmy pętli forEach, możemy teraz skorzystać z funkcji onDelete, która pozwoli nam uzyskać dostęp do zestawu indeksów, na których przesunęliśmy palcem. Następnie możemy przejść przez każdy z naszych indeksów, używając kolejnej pętli forEach, aby uzyskać indeks naszej tablicy książek, którą chcemy usunąć. Potem pozwólmy, aby zmienna "book" równała się książce o indeksie. Podobnie jak przy dodawaniu książki, potrzebowaliśmy dostępu do kontekstu, aby ją dodać. Podobnie, będziemy musieli mieć dostęp do tego kontekstu, aby ją usunąć. Zatem ponownie będziemy musieli dodać właściwość środowiskową o ścieżce klucza "model.context". Przypiszę ją do zmiennej o nazwie "context". Teraz możemy użyć tego kontekstu, aby usunąć naszą książkę. Możemy przetestować to na płótnie podglądu, dodając najpierw nową książkę. I znowu, gdy to zrobiliśmy, widok "Zawartość niedostępna" zniknął, a książka pojawiła się na liście. Ale teraz mamy akcję przesunięcia palcem z prawej strony, która pozwala nam usunąć. A kiedy to zniknie, widok "Zawartość niedostępna" pojawia się ponownie. Przetestujmy to teraz na symulatorze i spójrzmy na nasze przechowywane dane. Usuńmy tę fikcyjną książkę tutaj. Sprawdźmy jeszcze raz, wracając do naszej bazy danych SQL w edytorze SQL. Jeśli przejdę do karty "Przeglądaj dane" dla naszej tabeli "book", widzę teraz tylko dwie pozycje, podczas gdy wcześniej miałem trzy. Wszystko wygląda dobrze do tej pory. Mamy teraz ostatnią część naszego akronimu CRUD, czyli Aktualizację (Update). Będziemy mogli zaktualizować wszystkie pola w naszym modelu książki. W związku z tym będę musiał stworzyć nowy widok. Stwórzmy więc widok SwiftUI, który nazwiemy "EditBookView". Ten widok będzie wyświetlany, gdy klikniemy na nasz wiersz, który jest naszym odnośnikiem nawigacyjnym z widoku listy. Będziemy więc musieli otrzymać książkę, na którą kliknięto. Stworzę stałą dla tego obiektu, o nazwie "book", która będzie typu "book". Kiedy to zrobimy, podgląd będzie wymagać wstrzyknięcia książki do środowiska, ale nie będzie wiedział, gdzie znaleźć ten obiekt i jak go uzyskać, więc podgląd nie załaduje się. Na razie zamknę to wywołanie i zbuduję moje UI, a potem przetestuję je na urządzeniu, aby pokazać, że działa. W następnym filmie z tej serii pokażę ci, jak można rozwiązać ten problem, tworząc kontener w pamięci z przykładowymi danymi. Teraz ten widok będzie aktualizować każdą właściwość. Zamiast wiązać te właściwości bezpośrednio z każdą właściwością w książce do pól tekstowych, pickerów i edytorów tekstu, wolałbym utworzyć odpowiadającą właściwość stanu dla każdej z tych właściwości. Powodem tego jest, że jeśli użyję książki jako obiektu wiążącego zamiast stałej, będę mógł bezpośrednio wiązać każdą z właściwości z samą książką.
 
 
 

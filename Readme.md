@@ -1,5 +1,11 @@
 # My Books
 
+oryginalne video :
+
+https://www.youtube.com/watch?v=CAr_1kcf2_c&t=4s
+
+
+
 Aplikacja korzystająca z Swift Data. W pierwszym zestawie trzech filmów będziemy tworzyć aplikację do śledzenia książek, które albo umieściliśmy na półce, albo aktualnie czytamy, albo już przeczytaliśmy. Ten film będzie najdłuższy w tej serii, wprowadzę was do operacji CRUD, czyli tworzenia, odczytu, aktualizacji i usuwania rekordów, oraz jak je trwale przechowywać w bazie danych SQLite na urządzeniu. W kolejnych sekcjach po tym filmie rozwiniemy tę aplikację i przedstawię wam relacje, takie jak relacje jeden-do-wielu oraz wiele-do-wielu. Będziemy nawet zagłębiać się w lokalizację i CloudKit.  Chcemy stworzyć aplikację na iPhone'a, która pozwoli nam dodawać i śledzić książki, które zdobyliśmy i które czekają na przeczytanie, są w trakcie czytania lub zostały już przeczytane. Możemy także chcieć dodać podsumowanie książki lub nawet ocenę. Zaczynajmy więc od utworzenia nowej aplikacji teraz w Xcode i nazwiemy ją "Moje Książki". Moglibyśmy wybrać SwiftData jako opcję przechowywania danych, ale to spowodowałoby konieczność zmiany wielu podstawowych fragmentów kodu, a poza tym z SwiftData bardzo łatwo ręcznie tworzyć nasze modele danych i przechowywać je. 
 
 ## Books model
@@ -225,7 +231,7 @@ brew install --cask db-browser-for-sqlite
 
 ![image-20231011145312090](image-20231011145312090.png)
 
-
+## Operacje CRUD
 
 ## NewBookView czyli Create  
 
@@ -562,32 +568,446 @@ Problem polega na tym, że mamy tytuł i pasek narzędziowy, które chcę, aby z
 
 W naszej podglądzie widzimy widok "Zawartość niedostępna", ale gdy tworzymy naszą pierwszą książkę, widok ten znika i zostaje zastąpiony listą. Wykonaliśmy już operacje tworzenia (Create) i odczytu (Read) z naszego akronimu CRUD. 
 
-Mamy jeszcze dwie pozostałe do zrobienia: Aktualizację (Update) i Usunięcie (Delete). Usunięcie jest najłatwiejsze, więc zróbmy to teraz. Ponieważ użyliśmy pętli forEach, możemy teraz skorzystać z funkcji onDelete, która pozwoli nam uzyskać dostęp do zestawu indeksów, na których przesunęliśmy palcem. Następnie możemy przejść przez każdy z naszych indeksów, używając kolejnej pętli forEach, aby uzyskać indeks naszej tablicy książek, którą chcemy usunąć. Potem pozwólmy, aby zmienna "book" równała się książce o indeksie. Podobnie jak przy dodawaniu książki, potrzebowaliśmy dostępu do kontekstu, aby ją dodać. Podobnie, będziemy musieli mieć dostęp do tego kontekstu, aby ją usunąć. Zatem ponownie będziemy musieli dodać właściwość środowiskową o ścieżce klucza "model.context". Przypiszę ją do zmiennej o nazwie "context". Teraz możemy użyć tego kontekstu, aby usunąć naszą książkę. Możemy przetestować to na płótnie podglądu, dodając najpierw nową książkę. I znowu, gdy to zrobiliśmy, widok "Zawartość niedostępna" zniknął, a książka pojawiła się na liście. Ale teraz mamy akcję przesunięcia palcem z prawej strony, która pozwala nam usunąć. A kiedy to zniknie, widok "Zawartość niedostępna" pojawia się ponownie. Przetestujmy to teraz na symulatorze i spójrzmy na nasze przechowywane dane. Usuńmy tę fikcyjną książkę tutaj. Sprawdźmy jeszcze raz, wracając do naszej bazy danych SQL w edytorze SQL. Jeśli przejdę do karty "Przeglądaj dane" dla naszej tabeli "book", widzę teraz tylko dwie pozycje, podczas gdy wcześniej miałem trzy. Wszystko wygląda dobrze do tej pory. Mamy teraz ostatnią część naszego akronimu CRUD, czyli Aktualizację (Update). Będziemy mogli zaktualizować wszystkie pola w naszym modelu książki. W związku z tym będę musiał stworzyć nowy widok. Stwórzmy więc widok SwiftUI, który nazwiemy "EditBookView". Ten widok będzie wyświetlany, gdy klikniemy na nasz wiersz, który jest naszym odnośnikiem nawigacyjnym z widoku listy. Będziemy więc musieli otrzymać książkę, na którą kliknięto. Stworzę stałą dla tego obiektu, o nazwie "book", która będzie typu "book". Kiedy to zrobimy, podgląd będzie wymagać wstrzyknięcia książki do środowiska, ale nie będzie wiedział, gdzie znaleźć ten obiekt i jak go uzyskać, więc podgląd nie załaduje się. Na razie zamknę to wywołanie i zbuduję moje UI, a potem przetestuję je na urządzeniu, aby pokazać, że działa. W następnym filmie z tej serii pokażę ci, jak można rozwiązać ten problem, tworząc kontener w pamięci z przykładowymi danymi. Teraz ten widok będzie aktualizować każdą właściwość. Zamiast wiązać te właściwości bezpośrednio z każdą właściwością w książce do pól tekstowych, pickerów i edytorów tekstu, wolałbym utworzyć odpowiadającą właściwość stanu dla każdej z tych właściwości. Powodem tego jest, że jeśli użyję książki jako obiektu wiążącego zamiast stałej, będę mógł bezpośrednio wiązać każdą z właściwości z samą książką.
+### Usuwanie danych - Delete z CRUD
+
+Mamy jeszcze dwie pozostałe do zrobienia: Aktualizację (Update) i Usunięcie (Delete). Usunięcie jest najłatwiejsze, więc zróbmy to teraz. Ponieważ użyliśmy pętli forEach, możemy teraz skorzystać z funkcji onDelete, która pozwoli nam uzyskać dostęp do zestawu indeksów, na których przesunęliśmy palcem. Następnie możemy przejść przez każdy z naszych indeksów, używając kolejnej pętli forEach, aby uzyskać indeks naszej tablicy książek, którą chcemy usunąć. Potem pozwólmy, aby zmienna "book" równała się książce o indeksie. Podobnie jak przy dodawaniu książki, potrzebowaliśmy dostępu do kontekstu, aby ją dodać. Podobnie, będziemy musieli mieć dostęp do tego kontekstu, aby ją usunąć. Zatem ponownie będziemy musieli dodać właściwość środowiskową o ścieżce klucza "model.context". Przypiszę ją do zmiennej o nazwie "context". Teraz możemy użyć tego kontekstu, aby usunąć naszą książkę. 
+
+```swift
+                    List {
+                        ForEach(books) {...}
+                        .onDelete { indexSet in
+                            indexSet.forEach{ index in
+                                let book = books[index]
+                                context.delete(book)
+                            }
+                        }
+```
+
+Możemy przetestować to na oknie podglądu, dodając najpierw nową książkę. I znowu, gdy to zrobiliśmy, widok "Zawartość niedostępna" zniknął, a książka pojawiła się na liście. Ale teraz mamy akcję przesunięcia palcem z prawej strony, która pozwala nam usunąć. A kiedy to zniknie, widok "Zawartość niedostępna" pojawia się ponownie. Przetestujmy to teraz na symulatorze i spójrzmy na nasze przechowywane dane. Usuńmy tę fikcyjną książkę tutaj. 
+
+![2023-10-12_15-26-37 (1)](2023-10-12_15-26-37%20(1).gif)
+
+Sprawdźmy jeszcze raz, wracając do naszej bazy danych SQL w edytorze SQL. Jeśli przejdę do karty "Przeglądaj dane" dla naszej tabeli "book", widzę teraz tylko dwie pozycje, podczas gdy wcześniej miałem trzy. Wszystko wygląda dobrze do tej pory. 
+
+###  Aktualizacja danych czyi Update z CRUD
+
+Mamy teraz ostatnią część naszego akronimu CRUD, czyli Aktualizację (Update). Będziemy mogli zaktualizować wszystkie pola w naszym modelu książki. W związku z tym będę musiał stworzyć nowy widok. Stwórzmy więc widok SwiftUI, który nazwiemy "EditBookView". Ten widok będzie wyświetlany, gdy klikniemy na nasz wiersz, który jest naszym odnośnikiem nawigacyjnym z widoku listy. Będziemy więc musieli otrzymać książkę, na którą kliknięto. Stworzę stałą dla tego obiektu, o nazwie "book", która będzie typu "book". Kiedy to zrobimy, podgląd będzie wymagać wstrzyknięcia książki do środowiska, ale nie będzie wiedział, gdzie znaleźć ten obiekt i jak go uzyskać, więc podgląd nie załaduje się. Na razie zamknę to wywołanie i zbuduję moje UI, a potem przetestuję je na urządzeniu, aby pokazać, że działa. W następnym filmie z tej serii pokażę ci, jak można rozwiązać ten problem, tworząc kontener w pamięci z przykładowymi danymi. Teraz ten widok będzie aktualizować każdą właściwość. Zamiast wiązać te właściwości bezpośrednio z każdą właściwością w książce do pól tekstowych, pickerów i edytorów tekstu, wolałbym utworzyć odpowiadającą właściwość stanu dla każdej z tych właściwości. Powodem tego jest, że jeśli użyję książki jako obiektu wiążącego zamiast stałej, będę mógł bezpośrednio wiązać każdą z właściwości z samą książką. Jednakże problem polega na tym, że po dokonaniu zmian, Core Data automatycznie aktualizuje i zapisuje te zmiany, co może być niepożądane. Chcę dać użytkownikowi szansę na dokonanie aktualizacji tylko wtedy, gdy nastąpiły zmiany. Zamiast korzystać z formularza, zamierzam użyć wielu widoków z etykietami, ponieważ pozwoli mi to na większą kontrolę nad układem. Na początek stworzymy właściwość stanu dla każdej z ośmiu różnych właściwości książki, które chcemy zaktualizować, i przypiszemy wartości domyślne dla wszystkich wartości, które nie są opcjonalne.
+
+```swift
+struct EditBookView: View {
+   // var book: Book
+    @State private var status = Status.onShelf
+    @State private var rating: Int?
+    @State private var title = ""
+    @State private var author = ""
+    @State private var summary = ""
+    @State private var dateAdded = Date.distantPast
+    @State private var dateStarted = Date.distantPast
+    @State private var dateCompleted = Date.distantPast
+}
+```
+
+ Kiedy załadujemy ten widok, przypiszemy wartości przekazywanej książki w metodzie onAppear, aby zastąpić je obecnymi wartościami. Daty nie są opcjonalne, ale ponieważ zostaną zastąpione przez wersje książki, możemy po prostu użyć date.distantPast we wszystkich przypadkach. Stworzyłem prywatną właściwość stanu dla każdej z naszych różnych właściwości w naszym modelu. Dla wszystkich oprócz oceny (rating) stworzyłem wartość domyślną. 
+
+​	Zamieńmy teraz zawartość widoku na HStack. Jako pierwszy widok, stworzę pole tekstowe (textView) z służacy za etykietę z tekstem "Status". Następnie utworzymy picker z etykietą "status", gdzie wybór będzie powiązany ze zmienną stanu statusu. Teraz, ponieważ case'y w enumie status są iterable, możemy użyć pętli forEach, aby przejść przez wszystkie przypadki statusu i uzyskać iterator statusu, który możemy wykorzystać do utworzenia pola tekstowego (textView) wyświetlającego właściwość statusDescript. Następnie będziemy musieli ustawić tag na sam status, aby zaktualizować tę zmienną stanu statusu po wybraniu odpowiedniego statusu. Dodatkowo ustawiam styl przycisku na bordered, co sprawia, że jest bardziej widoczny. 
+
+```swift
+        HStack{
+            Text("Status")
+            Picker("Status",selection: $status) {
+                ForEach(Status.allCases) { status in
+                    Text(status.description).tag(status)
+
+                }
+            }
+            .buttonStyle(.bordered)
+        }
+```
+
+Poniżej HStacka wyświetlę pozostałe siedem właściwości. Utworzymy więc VStack z ustawionym wyrównaniem na leading. Na początek wyświetlę wszystkie daty, ale tylko te istotne. Więc jeśli status jest "na półce", będę wyświetlać tylko datę dodania. Jeśli jest "w trakcie", pokażę datę dodania i datę rozpoczęcia. Jeśli jest "zakończone", pokażę wszystkie trzy. Chcę, aby były one zawarte w grupie (GroupBox), aby się wyróżniały. Tutaj możemy użyć oznaczonych zawartości (labeled content) z konstruktorem content i label. Dla pierwszej daty, content będzie stanowić date picker, gdzie klucz tytułu będzie pustym ciągiem, a selection będzie powiązane z właściwością daty dodania. Ustawię komponenty wyświetlania tylko na datę. Nie interesuje mnie godzina. Następnie dla etykiety użyję pola tekstowego (textView) z etykietą "data dodania". Zawsze będziemy wyświetlać datę dodania, ponieważ domyślnie tworzymy bieżącą datę, gdy dodajemy nową książkę. Datę rozpoczęcia jednak będziemy musieli sprawdzić, czy status jest "w trakcie" lub "zakończone". Jeśli tak, możemy użyć kolejnej oznaczonej zawartości (labeled content), gdzie content będzie kolejnym date pickerem z pustym kluczem tytułu, tym razem powiązanym z datą rozpoczęcia. Znowu użyjemy komponentów wyświetlania daty. Dla daty zakończenia, najpierw sprawdzimy, czy status jest "zakończone". Jeśli tak, utworzymy kolejną oznaczoną zawartość, wyświetlającą datę zakończenia. Dodajmy także styl przedniego planu (foreground) na całą grupę, ustawiając go na sekundarny. 
+
+```swift
+        VStack(alignment: .leading) {
+            GroupBox {
+                LabeledContent {
+                    DatePicker("",selection: $dateAdded, displayedComponents: .date)
+                } label: {
+                    Text("Data dodania")
+                }
+
+                if status == .inProgress || status == .completed {
+                    DatePicker("Data rozpoczęcia",selection: $dateStarted, displayedComponents: .date)
+                }
+                if status == .completed {
+                    DatePicker("Data przeczytania",selection: $dateCompleted, displayedComponents: .date)
+                }
+            }
+            .foregroundStyle(.secondary)
+        }
+```
+
+Gdy zmienimy status, będziemy chcieli ewentualnie zresetować daty, ponieważ jeśli przejdziemy z "w trakcie" z powrotem na "na półce", będziemy musieli zresetować datę rozpoczęcia. Sprawdźmy wszystkie przypadki w modyfikatorze onChange. Korzystając z onChange dla statusu, uzyskujemy dostęp zarówno do starej, jak i nowej wartości. 
+
+Jeśli nowa wartość równa jest "na półce", ustawimy datę rozpoczęcia na date.distantPast i datę zakończenia na date.distantPast. 
+
+Jeśli nowa wartość to "w trakcie", a stara wartość to "zakończone", oznacza to, że przeszliśmy z "zakończonego" na "w trakcie", wtedy ustawimy dateCompleted na date.distantPast. 
+
+Kolejny przypadek, to jeśli nowa wartość jest równa "w trakcie", a stara wartość to "na półce", oznacza to, że zaczęliśmy czytać książkę. Możemy więc ustawić datę rozpoczęcia na date.now. 
+
+Kolejny przypadek to, gdy nowa wartość jest równa "zakończone", ale stara wartość to "na półce", co oznacza, że zapomnieliśmy ustawić początek książki i przeskoczyliśmy od "na półce" do "zakończone". Wtedy możemy ustawić datę zakończenia na date.now, ale datę rozpoczęcia ustawimy na tę samą datę, którą dodaliśmy książkę. 
+
+W przeciwnym razie, gdy jest to "zakończone", ustalimy datę zakończenia na date.now. 
+
+```swift
+            .onChange(of: status) { oldValue, newValue in
+                if newValue == .onShelf {
+                    dateStarted = Date.distantPast
+                    dateCompleted = Date.distantPast
+                } else if newValue == .inProgress && oldValue == .completed {
+                    dateCompleted = Date.distantPast
+                } else if newValue == .inProgress && oldValue == .onShelf {
+                    dateStarted = Date.now
+                } else if newValue == .completed && oldValue == .onShelf {
+                    dateCompleted = Date.now
+                    dateStarted = dateAdded
+                } else  {
+                    dateCompleted = Date.now
+                }
+            }
+```
+
+Poniżej tego utworzę separator. Jeśli chodzi o ocenę, chcę użyć niestandardowego widoku oceny, który stworzyłem. To jest modyfikacja widoku oceny, który pokazuję w tutorialu o korzystaniu z pakietów Swift. Zostawię link w opisie, jeśli chcesz to sprawdzić. Trochę go zmieniłem, więc nie mogę użyć tego pakietu, ale możesz uzyskać dostęp do kodu z tego gist. Link znajduje się w opisie. Możesz albo utworzyć nowy plik o nazwie "ratingsview" w swoim projekcie i skopiować ten kod, albo po prostu pobrać plik stąd, rozpakować i przeciągnąć go do swojego projektu. 
+
+```swift
+// https://gist.github.com/StewartLynch/03372c873fef568e0a613a968adbae69
+
+import SwiftUI
+
+/// A view of inline images that represents a rating.
+/// Tapping on an image will change it from an unfilled to a filled version of the image.
+///
+/// The following example shows a Ratings view with a maximum rating of 10 red flags, each with a width of 20:
+///
+///     RatingsView(maxRating: 10,
+///              currentRating: $currentRating,
+///              width: 20,
+///              color: .red,
+///              ratingImage: .flag)
+///
+///
+public struct RatingsView: View {
+    var maxRating: Int
+    @Binding var currentRating: Int?
+    var width:Int
+    var color: UIColor
+    var sfSymbol: String
+    
+    /// Only two required parameters are maxRating and the binding to currentRating.  All other parameters have default values
+    /// - Parameters:
+    ///   - maxRating: The maximum rating on the scale
+    ///   - currentRating: A binding to the current rating variable
+    ///   - width: The width of the image used for the rating  (Default - 20)
+    ///   - color: The color of the image ( (Default - systemYellow)
+    ///   - sfSymbol: A String representing an SFImage that has a fill variabnt (Default -  "star")
+    ///
+    public init(maxRating: Int, currentRating: Binding<Int?>, width: Int = 20, color: UIColor = .systemYellow, sfSymbol: String = "star") {
+        self.maxRating = maxRating
+        self._currentRating = currentRating
+        self.width = width
+        self.color = color
+        self.sfSymbol = sfSymbol
+    }
+
+    public var body: some View {
+        HStack {
+                Image(systemName: sfSymbol)
+                    .resizable()
+                    .scaledToFit()
+                    .symbolVariant(.slash)
+                    .foregroundStyle(Color(color))
+                    .onTapGesture {
+                        withAnimation{
+                            currentRating = nil
+                        }
+                    }
+                    .opacity(currentRating == 0 ? 0 : 1)
+            ForEach(1...maxRating, id: \.self) { rating in
+               Image(systemName: sfSymbol)
+                    .resizable()
+                    .scaledToFit()
+                    .fillImage(correctImage(for: rating))
+                    .foregroundStyle(Color(color))
+                    .onTapGesture {
+                        withAnimation{
+                            currentRating = rating + 1
+                        }
+                    }
+            }
+        }.frame(width: CGFloat(maxRating * width))
+    }
+    
+    func correctImage(for rating: Int) -> Bool {
+        if let currentRating, rating < currentRating {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+struct FillImage: ViewModifier {
+    let fill: Bool
+    func body(content: Content) -> some View {
+        if fill {
+            content
+                .symbolVariant(.fill)
+        } else {
+            content
+        }
+    }
+}
+
+extension View {
+    func fillImage(_ fill: Bool) -> some View {
+        modifier(FillImage(fill: fill))
+    }
+}
+
+#Preview {
+    struct PreviewWrapper: View {
+        @State var currentRating: Int? = 3
+        
+        var body: some View {
+            RatingsView(
+                maxRating: 5,
+                currentRating: $currentRating,
+                width: 30,
+                color: .red,
+                sfSymbol: "heart"
+            )
+        }
+    }
+    return PreviewWrapper()
+}
+```
+
+Teraz jest dość prosty, jak widać na podglądzie, przekazujesz maksymalną ocenę wraz z obecną oceną, która będzie powiązana z jakąś wartością, którą w naszym przypadku jest to właściwość stanu oceny, właściwość szerokości (width), kolor i symbol SF, który ma trzy różne warianty symboli: normalny, wypełniony i ukośnik. Podgląd wykorzystuje czerwony symbol serca z maksymalną oceną 5 i szerokością 30. Jednak z konstruktora domyślnego wynika, że szerokość wynosi 20, kolor to systemowy żółty, a ja używam symbolu gwiazdy SF. Więc to prawie pasuje do tego, co chcę. Jedyną rzeczą, którą chcę zmienić z domyślnych ustawień, to szerokość. W naszym widoku edycji książki, poniżej separatora, stworzymy kolejny oznaczony widok zawartości. Dla content, stworzymy nowy widok oceny. Określimy maksymalną ocenę na 5. Powiążemy obecną ocenę z naszą właściwością oceny, ale szerokość ustawię na 30. A dla etykiety, po prostu użyję pola tekstowego (textView) z napisem "ocena".
+
+```swift
+            LabeledContent{
+                RatingsView(maxRating: 5, currentRating: $rating, width: 30)
+            }label: {
+                Text("Ocena")
+            }
+```
+
+Przechodząc dalej, dla tytułu naszej książki ponownie użyję oznaczonej zawartości (labeled content), gdzie zawartość to pole tekstowe (text field) z pustym ciągiem jako kluczem tytułu, które jest powiązane z odpowiadającą właściwością stanu. Etykieta będzie po prostu polem tekstowym (text view) pokazującym "tytuł", a ustawie styl przedniego planu na sekundarny. 
+
+```swift
+            LabeledContent {
+                TextField("", text:$title)
+            } label: {
+                Text("Tytuł")
+            }
+```
+
+Skopiuję to dla autora, ponieważ będzie bardzo podobne, ale pole tekstowe będzie powiązane z właściwością stanu autora, a pole tekstowe wskaże "autor" zamiast "tytuł". 
+
+```swift
+            LabeledContent {
+                TextField("", text: $author)
+            } label: {
+                Text("Autor")
+            }
+```
+
+Następnie dodam kolejny separator, a pod nim pole tekstowe (text view), które wyświetli napis "podsumowanie" ze stylem przedniego planu ustawionym na sekundarny. I ostatecznie poniżej edytora tekstu, gdzie tekst jest powiązany z naszą zmienną podsumowania (summary), dodam trochę odstępu o wartości 5. 
+
+```swift
+            Divider()
+            Text("Opis").foregroundStyle(.secondary)
+            TextEditor(text: $summary)
+                .padding(5)
+```
+
+Następnie dodam nakładkę w postaci zaokrąglonego prostokąta (rounded rectangle) z promieniem naroża wynoszącym 20. Ustawię obrys na kolor korzystający z koloru UI wypełnienia systemowego trzeciego stopnia (tertiary system fill) i grubość linii na 2. 
+
+```swift
+.overlay(RoundedRectangle(cornerRadius: 20).stroke(Color(uiColor: .tertiarySystemFill), lineWidth: 2))
+```
+
+Pozwól, że trochę to uporządkuję. Dodam odstęp i ustawie styl pola tekstowego na zaokrągloną ramkę (rounded border). Ponieważ będzie to przeniesione na stos nawigacyjny (navigation stack), możemy określić tytuł nawigacji, który będzie wyświetlał tytuł książki. Następnie ustawię tryb wyświetlania tytułu paska nawigacji na inline (inline). Teraz stworzę pasek narzędzi (toolbar), który będzie zawierał przycisk z napisem "Aktualizuj" i na razie pozostawmy akcję, ale ustawmy styl przycisku na wyeksponowany z ramką (Bordered Prominent). 
+
+```swift
+  VStack {...}
+        .padding()
+        .textFieldStyle(.roundedBorder)
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            Button("Zapisz") {
+
+            }
+            .buttonStyle(.borderedProminent)
+        }
+```
+
+Nie zobaczysz tego w widoku, ponieważ nasz podgląd nie wie, że znajduje się na stosie nawigacyjnym. Aby to zobaczyć, umieśćmy podgląd w stosie nawigacyjnym. 
 
 
 
+```swift
+#Preview {
+    NavigationStack {
+        EditBookView()
+    }
+}
+```
+
+Ale gdy już zakończymy aktualizację, będziemy chcieli zamknąć widok. Będziemy więc potrzebować zmiennej środowiskowej (environment variable) dla tego, używając klucza dismiss (zwolnij). 
+
+```swift
+struct EditBookView: View {
+    @Environment(\.dismiss) private var dismiss
+    var book: Book 
+  ...
+}
+```
+
+Następnie, gdy zaktualizujemy, możemy zamknąć widok. 
+
+```swift
+        .toolbar {
+            Button("Zapisz") {
+                //kod do zapisu
+                    dismiss()
+            }
+            .buttonStyle(.borderedProminent)
+        }
+```
+
+No cóż, to mniej więcej nasz projekt teraz. Chcemy jednak wyświetlić przycisk aktualizacji tylko wtedy, gdy będą jakieś zmiany w przekazanej książce. Zatem odkomentujmy książkę i zakomentujmy nasz podgląd, który nie będzie działał do następnego lekcji, i zobaczmy, co musimy zrobić, aby zaktualizować książkę. Gdy książka się pojawi, chcemy ustawić właściwości stanu na te, które otrzymujemy od przekazanej książki, jak już wspomniałem. Zróbmy to dla każdej ze zmiennych stanu, dopasowując właściwości modelu z odpowiadającymi właściwościami książki. Status na book status, rating na book rating itd. 
+
+```swift
+        .onAppear {
+            status = book.status
+            rating = book.rating
+            title = book.title
+            author = book.author
+            summary = book.summary
+            dateAdded = book.dateAdded
+            dateCompleted = book.dateCompleted
+            dateStarted = book.dateStarted
+        }
+```
+
+Jednak chcę wyświetlić ten przycisk aktualizacji tylko wtedy, gdy któraś z tych właściwości zostanie zmieniona. Chcę więc utworzyć obliczeniową właściwość boolowską, którą nazwę "zmienione". Będzie ona sprawdzać, czy któreś z tych właściwości uległy zmianie. Pozwól mi po prostu skopiować to, co było w bloku onAppear i wkleić to tutaj, korzystając z technik edycji. Chcę sprawdzić, czy status nie jest równy statusowi książki, lub to samo będzie dotyczyć każdej z pozostałych właściwości. Więc użyję edycji wielokursorowej, naciskając Control-Shift-klik i przeciągając w dół, abym mógł po prostu dodać "or" i spacje przed każdą z naszych innych linii. Następnie mogę użyć Control-klik i po prostu zmienić równo na różne od. 
+
+```swift
+    var changed: Bool {
+       status != book.status
+      || rating != book.rating
+      || title != book.title
+      || author != book.author
+      || summary != book.summary
+      || dateAdded != book.dateAdded
+      || dateCompleted != book.dateCompleted
+      || dateStarted != book.dateStarted
+    }
+```
+
+A potem mogę wrócić i wyświetlić ten przycisk paska narzędzi tylko wtedy, gdy dane byly zmienione.
 
 
-However, the problem would be that once I made a change, Core Data is going to automatically update and save those changes, and I might not want to do that. I want to give the user a chance to only update if there are changes. So rather than using a form though, I'm going to use a lot of labeled content views, as it's going to give me more control in my layout. So first, let's create a state property for each of the different eight book properties that we want to update, and assign default values for all non-optional values. When we load this view, we'll assign the values of the book being passed in an onAppear method, so it's going to replace those values. Now the dates are not optional, but since they're going to be replaced by the book versions, we can simply use a date.distantPast in all cases. So I've created a state private property for each one of our different properties in our model. And for all except rating, I've created a default value. So let's replace the body content here with an hStack. And then as the first view, I'm going to create a text view using the string status. Next we'll create a picker with the label status, where the selection is bound to the status state variable. Now we made the status case iterable, so we can use a forEach loop to loop through the statuses all cases to get a status iterator that we can use in creating the text view to display the statusDescript property. And then we're going to have to set the tag to the status itself so that it will update that status tape variable once it's selected. And then I'm going to set the button style to bordered. It makes it stand out better for me. Below the HStack I'm going to display all of our remaining seven properties. So I'm going to create a VStack with the alignment set to leading. First I'm going to display all of my dates, but only the relevant ones. 
+
+Teraz jest jeden problem z naszymi datami. Ustawianie ich w bloku onAppear wprowadza zamieszanie w naszą właściwość obliczeniową changed ze względu na naszą metodę onChange. Aby to naprawić, zamierzam wprowadzić właściwość logiczną o nazwie firstView i ustawić ją na true, ponieważ chcę, aby właściwości te były ustawiane w bloku onAppear tylko podczas pierwszego pojawienia się widoku, a nie po każdym odświeżeniu. 
+
+```swift
+    @State private var firstView = true;
+```
+
+Więc teraz wszystko, co muszę zrobić, to zmienić wszystkie nasze przypisania lub zmiany w bloku onChange, korzystając z klauzuli if not firstView. A po ustanowieniu dat, ustawiamy ją na false. 
+
+```swift
+            .onChange(of: status) { oldValue, newValue in
+                if firstView {
+
+                 if newValue == .onShelf {
+                    dateStarted = Date.distantPast
+                    dateCompleted = Date.distantPast
+                } else if newValue == .inProgress && oldValue == .completed {
+                    dateCompleted = Date.distantPast
+                } else if newValue == .inProgress && oldValue == .onShelf {
+                    dateStarted = Date.now
+                } else if newValue == .completed && oldValue == .onShelf {
+                    dateCompleted = Date.now
+                    dateStarted = dateAdded
+                } else  {
+                    dateCompleted = Date.now
+                }
+                    firstView = false
+            }
+```
+
+Następnie możemy wrócić do naszego paska narzędzi (toolbar) dla akcji. 
+
+Jeślizarejestrowano zmianę, zanim zamkniemy widok, możemy przepisać wszystkie właściwości stanu do obiektu książki, a Swift zajmie się zmianą i zachowaniem tych wartości. Wreszcie wracając do widoku listy książek, gdzie otrzymujemy ten nawigacyjny link do tytułu książki, możemy go zmienić na wyświetlenie widoku edycji książki, przekazując książkę. 
+
+```swift
+                    List {
+                        ForEach(books) { book in
+                            NavigationLink{
+                                EditBookView(book:book)
+                            } label: { ...}
+                    ...                    
+```
+
+Chcę się upewnić, że daty dodania, rozpoczęcia i zakończenia są sekwencyjne, i że nie mogę ustawić daty poza sekwencją. Na przykład nie mogę ustawić daty wcześniej niż datę rozpoczęcia. Wróćmy więc do grupy (GroupBox) tutaj i tam, gdzie ustawiamy datę rozpoczęcia, zaznaczę, że nie możemy ustawić daty przed datą dodania. Robimy to, określając zakres za pomocą operatora in, a potem widzimy dateAdded..., trzy kropki. Podobnie dla daty zakończenia będziemy musieli ustawić zakres zaczynający się od dateStarted. 
+
+```swift
+if status == .inProgress || status == .completed {
+  DatePicker("Data rozpoczęcia",selection: $dateStarted,in: dateAdded..., displayedComponents: .date)
+}
+
+if status == .completed {
+  DatePicker("Data przeczytania",selection: $dateCompleted,in: dateStarted..., displayedComponents: .date)
+}
+```
+
+Sprawdźmy to teraz, uruchamiając symulator i zobaczmy, czy nasze dane są zachowane. Utwórzmy wpis do książki, aby się upewnić, że wszystko działa. Pamiętajmy, że potrzebujemy tylko tytułu i autora.
 
 
 
+Świetnie, działa. Zatem, edytujmy tę książkę. Powiedzmy, że zapomniałem dodać tej książki, gdy ją dostałem, więc zmienię datę na "ostatni miesiąc". Zacząłem czytać książkę, więc zmienię status. Zauważ, że kiedy to robię, data zostaje ustawiona na "dzisiejszą datę". Oceńmy książkę na razie. A co powiesz na wstępne myśli na temat podsumowania? Można je edytować w dowolnym momencie. Jeśli wrócę do widoku listy, zobaczę, że ikona się zmieniła, a moje oceny gwiazd się zmieniły, ale myślę, że dałem jej tylko trzy gwiazdki, więc muszę gdzieś popełnić błąd. Zatrzymajmy symulator i sprawdźmy, gdzie jest mój błąd. Ta ocena powinna być od 1, nie od 0. 
+
+```swift
+if let rating = book.rating {
+  HStack {
+    ForEach(1..<rating, id:\.self) { _ in
+                                    Image(systemName: "star.fill")
+                                    .imageScale(.small)
+                                    .foregroundStyle(.yellow)
+                                   }
+  }
+}
+```
+
+Uruchommy ponownie, zobaczysz, że dane są zachowane, a czytanie jest poprawne. 
+
+![2023-10-13_10-46-28 (1)](2023-10-13_10-46-28%20(1).gif)
+
+ Cóż, to kończy podstawowe operacje CRUD, a kolejne filmy w tej serii nie będą tak długie i będą skupiać się na pojedynczych tematach. W następnym filmie bliżej przyjrzymy się, jak jest konstruowany nasz modelowy kontener i jak możemy nad nim trochę kontrolować. Rozwiążemy także problem w widoku edycji, gdzie nie możemy podglądać książki w naszym podglądzie. Pokażę ci również, jak możesz tworzyć i używać przykładowych danych (mock data), abyś nie musiał zawsze pracować w symulatorze. 
 
 
-So if the status is on shelf, I'm only going to display the date added. If it's in progress, I'll show the date added and date started. And if it's date completed, I'll show all three. And I want those to all be included within a group box to stand out. We can use labeled content here with the content and label constructor. For the first one, the content will be the date picker, where the title key will be an empty string with the selection being bound to the date added property. I'm going to set the display components to only display the date. I don't care about the time. Then for the label, I'll use a text view with the labels date added. we're always going to show the date added because by default, we always create the current date when the new book is entered. The date started, however, we'll need to check to see if the status is either in progress or completed. If it is, we can use another label content where the content will be another date picker with an empty title key, this time bound to date started. again using the display components of date. For date completed, we'll first check to see if the status is completed. If it is, we'll create another label content displaying the date completed. Let's apply a foreground style of secondary to the entire group. When we change the status, we'll want to possibly reset the dates because if we go from in progress to on shelf again, we'll need to reset the in progress date. So let's look at all cases in an onChange modifier for this. Using the onChange of status, we get access to both the old and the new values. So if the new value is equal to onShelf, we'll set the date started to the date.distantPast, dateCompleted to date.distantPast. Else if newValue is in progress and oldValue is equal to completed, this means we've gone from completed to in progress, backwards, we'll set dateCompleted to date.distantPast. 
+
+## MockData - dane przykładowe do podglądu
 
 
 
-Another case, else if the newValue is equal to in progress and the oldValue is equal to onShelf, it means we've started the book. So we can set our date started to date.now. The next case is if the new value is equal to completed but the old value was on shelf, meaning we forgot to actually set the start book and jump from on shelf to completed. So we can set the date completed to date.now, but we'll set the date started to the same date that we added it. Else, our final case when it's completed, we'll set the dateCompleted to date.now. Below this I'm going to create a divider. For the rating, I want to use a custom rating view that I created. And it's a modification of a ratings view that I show you how to design in the tutorial on using Swift packages. I'll I'll leave a link in the description if you want to check that out. I've changed it a bit though so I can't use this package, but you can access the code from this gist. A link is in the description. You can either create a new file called "ratingsview" in your project and copy this code, or you can simply download the file here, unzip it, and drag it into your project. Now it's quite simple, and you can see from the preview that you pass in a max rating along with the current rating, which will be a binding to some value, which in our cases are a rating state property, a width property, a color, and an SF symbol that has three different symbol variants, a regular, a fill, and a slash. The preview you see is using a red heart symbol with a maximum of 5 ratings and a width of 30. You'll see from the initializer though that the default width is 20, the color is a system yellow and I use a star SF symbol. So this almost matches what I want. The only thing I'm going to want to change from the defaults is the width. In our edit book view then, below the divider, we'll create another labeled content view. For the content, I'll create a new ratings view. I'll specify the max rating to be 5. And I'll bind the current rating to our rating property, but I'll set the width to 30. And then for the label, I'll just use a text view using the string rating. 
+> We took a look at the basic CRUD functions of SwiftData and how the data is stored in a model container in your device. In this video, we're going to take a closer look at that model container and how we can configure it to meet our own needs. In addition, I'm also going to show you how you can create mock data and have it stored in memory so that you can use it in your previews. I love getting your feedback, so tap the thumbs up button if you enjoyed this video and leave a comment below. Make sure you subscribe to the video and ring that bell to get notifications of new videos. And if you want to support my work, you can buy me a coffee. In that last video we were able to persist our data to the application support directory, and when we ran our app, we printed out the path to that URL in our console. If you completed the project from that first video, you can continue along with me. If not, you can download the completed project from the link in the description, and it's a GitHub repository listed in that description. By the time you watch this video, there may be more branches, but you want to make sure that you start with the one that ends in the first video_crud. When you're at this page, you should see the completed branch from the video has been selected. can download it as a zip or choose to do as I do and use the GitHub CLI. 
 
+Przypatrzeliśmy się podstawowym funkcjom CRUD w SwiftData oraz temu, jak dane są przechowywane w kontenerze modelu na Twoim urządzeniu. W tym filmie przyjrzymy się bliżej temu kontenerowi modelu i jak możemy go skonfigurować, aby spełniał nasze własne potrzeby. Ponadto pokażę Ci, jak możesz tworzyć przykładowe dane (mock data) i przechowywać je w pamięci, dzięki czemu będziesz mógł ich używać w podglądach. Uwielbiam otrzymywać od Was opinie, więc naciśnij przycisk kciuka w górę, jeśli podobał Ci się ten film i zostaw komentarz poniżej. Upewnij się, że jesteś subskrybentem kanału i włącz powiadomienia, aby otrzymywać informacje o nowych filmach. Jeśli chcesz wesprzeć moją pracę, możesz mi kupić kawę.
 
+W poprzednim filmie udało nam się zachować nasze dane w katalogu wsparcia aplikacji, a gdy uruchomiliśmy naszą aplikację, wypisaliśmy ścieżkę do tego URL-a w konsoli. Jeśli ukończyłeś projekt z tego pierwszego filmu, możesz kontynuować razem ze mną. Jeśli nie, możesz pobrać gotowy projekt z linku w opisie, który znajdziesz w repozytorium na GitHubie podanym w opisie tego filmu. W chwili, gdy oglądasz ten film, może być więcej gałęzi, ale upewnij się, że zaczynasz od tej, która kończy się na "first video_crud". Gdy znajdziesz się na tej stronie, powinieneś zobaczyć wybraną gałąź "completed" z tego filmu. Możesz pobrać ją jako plik ZIP lub wybrać opcję, którą ja używam, czyli GitHub CLI.
 
-Moving on then, for the title of our book, I'm going to use labeled content again, where So the content is a text field with an empty string for the title key and it's bound to the corresponding state property. The label will simply be a text view showing title and I'll set the foreground style to secondary. I'm going to duplicate this for author as it's going to be very similar but the text field will be bound to the author state property and the text view will specify author instead. Then let me add one more divider followed by a text view that displays the string summary with a foreground style of secondary. And then finally below the text editor where the text is bound to our summary variable, I'm going to add some padding of 5. Then I'm going to add an overlay of a rounded rectangle with a corner radius of 20. Then I'm going to set the stroke to a color that uses a UI color of a tertiary system fill and a line width of 2. Well, let me clean this up a little bit then. I'm going to add some padding and set the text field style to rounded border. Since this will be pushed onto a navigation stack, we can specify a navigation title that'll display the book title. Then I'm going to set the navigation bar title display mode to inline. So I'm going to create a toolbar now then that has a button with the label Update and leave the action for now, but set the button style to Bordered Prominent. Now you won't see this in the view because our preview has no idea that they're in a navigation stack. So to see it, let's embed the preview in a navigation stack. But once we've completed the update, we'll want to dismiss the view. So we'll need an environment variable for that using the dismiss key path. So then once we've updated, we can dismiss the view. Well, that's pretty much our design now. What we'd like to do is display the button if there are any changes to the book that we passed in. So let's uncomment the book and comment out our preview that will not work until the next lesson and see what we have to do to update the book. When the book appears, we want to set the state properties to those that it gets from our passed in book, as I mentioned. So let's do that for each one of the state variables, matching the model properties with the corresponding book property. Status to book status, rating to book rating, and so on. Now, I only want to display that update button though if any one of those properties is changed. So I'm going to create a Boolean computed property that I'm going to call changed. And it's going to check for changes on any one of those properties. So let me just copy what was in that onAppear block and paste it in here and use some editing techniques. I want to check if status is not equal to book status, or the same thing will apply to each of the other properties. So let me do some multiple cursor editing here by doing a Control-Shift-click and dragging down so that I can simply add the or and a space in front of each one of our other lines. And then I can Control-click and simply change equal to not equal. And then I can go back and only display that toolbar button if changed is true. 
-
-
-
-Now there's one problem with our dates however though is that setting them in our onAppear messes up the change computed property because of our onChange method. So to fix this I'm going to introduce a boolean property called firstView And I'm going to set it to true because I only want this to set the properties in the onAppear when the view first appears and not after each refresh. So then all I'll have to do now is then change all of our assignments or our changes in the onChange with an if not firstView clause. And then after the dates are established, set it to false. Then we can return to our toolbar for the action. If changed is true, before dismissing, we can apply all of the state properties to the book, and Swift data will take care of changing and persisting those values. Finally then, back in our book list view, where we get that navigation link to the book title, we can change it to present the edit book view, passing in the book. Well, this is future me here, coming back to you with a slight update. I noticed that when I created the video that I had an issue when I was editing and changing dates. I want to make sure that the date added, started and completed dates are sequential, and that I can't set a date out of sequence. For example, I can't set the date to a time before I started. So let me go back to the group box here, and where I set that date started, I'm going to specify that we cannot set a date before the date added. We do that by specifying a range using in, and then we can see date added dot, dot, dot. Similarly, for the dateCompleted, we'll need to set the range starting from dateStarted. So let's test this now by running on the simulator and see if our data persists. Let me create a book entry to make sure that it's not broken. Remember, all I need is a title and an author. 
-
-
-
-tlumaczGreat, that works. So, let's edit this book. Let's say I forgot to add this book when I got it, so I'm going to change the date to "sometime last month." I've started reading the book, so let me change the status. And notice that when I do that, the date gets set to "today's date." Let me give the book a rating so far. And how about a preliminary set of thoughts for my summary? can be edited at any time. If I return to the List View, I see that my icon has changed and my star ratings are changed, but I think I only have it three stars so I must have a mistake somewhere. Let me stop the simulator and see where my error is. That rating should be from 1, not 0. So let me run again and you see that the data has persisted and indeed the reading is correct. In fact, I really like this book, so let me change it to a 5. Well, that completes the basic CRUD operations, and subsequent videos in this series will not be as long and will focus on single topics. In the next video, we'll be looking more closely at how our model container is constructed and how we can have some control over it. We'll also be fixing the issue that we have in the edit view where we can't preview the book in our preview. So in doing so I will also show you how you can create and use some mock data so that you don't always have to be running in the simulator. [BLANK_AUDIO]
+I recommend that you do some investigation on this command-line interface, but that's for another day. So where we left off we found out that when we ran our app in the simulator and had it print out the location for the persistent SQL database, the default location is the Applications Library Application Support Directory for the selected simulator and the database is named named default.store. And this will be the case for every Swift data project that you create. Often, you may store data like images in the Documents directory for your apps. Well, you can have your SQLite database stored there as well and use a different name. This is your choice. The default is used because we use the modelContainerFor and specified our model method. By option clicking on the method, we can get more information. There's an In Memory option that we used in our preview so that the data is kept in memory only. But of course, we don't want that for the default in our application. Auto saving is enabled by default, so that's why we never had to specify a call to a save method when we created, updated, or deleted our books. I'm not going to get into this isUndoEnabled or the onSetup callback in this series, but I encourage you to dig down and look to the documentation on your own. Further down, we're told that the environment model context property will be assigned a new context associated with the container. Remember, we used that when we had to update and delete our. Remember, we used that when we created with an insert or deleted one of our objects. All implicit model context operations in the scene, such as the query properties, use this environment's context. It's the context that has our insert and delete methods and handles the autosave. By default, the container stores its model data persistently on disk, just as we learned. The container will only be created once, however. So each time we launch our app, we're not going to create a new container. New values that are passed to the model type and in-memory parameters after the view is first created will be ignored. If you want more control, we'll need to use a different overload for creating the container. If you drill down into the documentation, we'll see that there's actually other choices. Specifically, one where we can pass in a model context, and another where we can pass in a model container, instead of a persistent model, or an array of persistent models. It's this option that I want to explore a bit more. So let me drill down on model container and see that it refers to such things as model configuration, schemas, and schema migration plan. And we'll get to that later on in the series. But there are three things that you need to be aware of. The model container is responsible for creating and managing the actual database file used in all Swift data stores needs. And as mentioned above, this gets created once. The model context has the job of tracking all objects that have been created, modified, and deleted in memory so that they can all be saved to the model container at some later point. So when we create our model container, the context is available from the environment. The model configuration determines how and where the data is stored, including which Cloud Kit container to use, if any, and whether saving should be enabled or not. This configuration is provided to your model container to determine how it behaves. So we need to explore this configuration option a bit more. In the location where our app launches, where the app main decoration is, let's create a new container property that's going to allow us to configure the name and where we want to store our database. First, we'll create a container property that is a model container. And in our initializer, where I currently print out the directory to the existing data store, I can configure that container. Well, we can create a configuration, which is a model configuration. It has a number of different overloads with properties, many of which are optional, or have default values. One just has a URL property that will allow us to determine where we want to store the container and its name. It allows us to specify a different directory, and when we append a path, that will allow us to name our datastore to be whatever we want. So let's set the location to the "Documents" directory, and we can give it a name other than default.store by appending a path and specifying our own name, like mybooks.store. Next, I can now create a new container and assign it to my container property. The overload I want to use is where we pass in our persistent model types as a variadic parameter along with any configurations I might have. And in our case we have one of each so we can just pass in book.self and config. When I create my model container using the model container with configurations, it can throw. So we have to use a try, and we have to enclose this in a do catch block. In the case that it would fail, your app is not going to run anyway, so I'm just going to use a fatal error, and display a string could not configure the container. Now, instead of using the modelContainer for our persistent model mentioned here, I'll use the modelContainer method that just asks for the container, which we now have. And instead of printing out our path to the application support directory, let me print out the path to the documents directory. And I don't need %encoding here because it's not necessary. There are no spaces in that path. If we run this now, our app launches, but we see that whatever data we had before has been lost because we're no longer using that other container. So let's open up the path, and here we see it with our new name. It's being stored in the documents directory. That old container in the library's application support directory is still there though. I personally don't like to move things into the documents directory. So I'm going to go back to the application support directory and use a different overload to do this and change the name. So I'm going to comment out the body of that new initializer now, and I'm going to create a different container. We'll get into migrations later on and you'll learn about schemas. But a schema is an object that maps model classes to data in the model store. And that helps with migration of the data between releases. But for us, all we need to do is specify an array of the models that we have, and we have only one. So we can say let schema equals schema, and the array contains the book.self. Well now I can create a configuration that uses the schema, and I can provide a name as the first argument for our data store, followed by the schema, which is what we've just defined. Now there are plenty of different options here, but all I need is the one to specify the name and schema, which we can do. Then as before, we create our container in a do catch block by trying to use the model containers overload for the schema, this time with the configuration, the single config. And again, we'll catch the error. Let's comment out that Documents directory path now and uncomment the print for the Application Support directory path, and run once more. When I return to the Application Support directory, I see that we now have added that new named container and we still have that old one, the default one. I encourage you to read through the documentation so that you can create your own containers as you wish. I'm going to leave it with this last option now, but I'm going to go and delete the container from the documents directory because we're no longer accessing it. Remember, by creating a new container with a different name in the application support directory, we lost all the data from our last lesson. It's still in that default location. Well, if we delete the My Books, but rename default as My Books, We should then be able to recover all of our data. So let's do that and let's run our app. Great, our data is back. So rather than running in the simulator, I'd like to be able to use mock data that I can have just for my previews. This will only be used for our previews, so in Xcode with the preview content folder, I'm going to create a new Swiss file, and I'm going to call it book samples. Inside there, I'm going to create an extension to our book model where I can create a static property representing an array of books. So I'm going to create that static property, and I'm going to call it Sample Books, which as I said is an array of book. So we'll start with an empty array. Now within here, that's where I want to create a variety of different book samples. Now because there are so many different default values and optionals, there are many, many different constructors for creating a sample book. The simplest is just to provide the title and author like we do in our app. This will default to a start day of today, the status of onShelf, but the other dates will be those Date.DistantPast, the rating will be an optional nil, and the summary will simply be an empty string. But in order to verify our UI, we need lots of other information when we view the Edit screen. So if I want to test this out, I want to have some variety in our list. Now the trickiest is providing dates. So what I'd like to do is to create a two more static properties, one for last week and one for last month. So I can use the calendar.current.date method, which allows me to add using by adding to a specific date component like day a value of minus seven to the current date, which is date.now, that will give me last week. So similarly, I can create a static property for last month, by changing that date component to month and the value to minus one. So you can create a lot of dates relative to the current date that you can use in your sample data. So with these static properties, I could create a variety of different books. So for example, I could have had a book that was added last month, started last week, and completed today. Now, if you don't want to create your own data, You can use the data that I provided in this gist. You can simply get to the raw value if you like, and copy all this content and paste it into the array of your sample books. Now that we have some sample data, let's see how we can use it. Now that we have some preview data, we can set up a memory container that we can populate with this data and use in our previews. So in the preview content folder, I'm going to create a new file and call it preview container. First let me import Swift data. And then I'm going to create a new struct called preview. and I'm going to create a single property that will be a container. And we're going to create it just as we created our persistent container. So I'll need an initializer. So we'll create a model configuration called config and specify that this is isStoredInMemoryOnly as true. There's no need to specify a URL as we did for our persistent store because it's going to be in memory. With the initializer, we can create that container within a do-catch block, remember it throws, by trying to create the model container for book.self with that particular config, just as we did before. But now, let's create a function that will allow us to add examples from an array of these type. While I do have this type, I do have that array of sample books. So within that function, we can loop through this array of examples for each loop, and then use the container's main context to insert that example iteration. Remember, we found that the container has a context, and this is its main context, and you can see here that the main context is giving us a warning that the main context is used in a context that doesn't support concurrency. Then the next warning is telling us that this must be executed on the main thread. So we create a task unit of work for the asynchronous task, and then we use a @MainActor in to have it performed on the main thread. So how can we use this? Well, let's return to our book list view then, where we use the model container for book.self in memory set to true. But we're going to replace this with our new container and examples. So first, we'll create a new instance of our preview struct, we'll just call it preview. Then we'll call the add examples function to pass in the book sample books array as that array. So now our preview container is going to have all of those examples. But then we'll need to change the model context from using for to simply use the preview.container property, as we did for our persisted container. Now, because we no longer have a single line being returned here, we'll need to specify a return on the book list view. There you have it. Our sample books are in memory and being displayed in our preview. Now, remember in edit book view, we commented out the preview in edit book view. So now we'll uncomment it, and I'm going to create our own preview container, and add in our books just as we did before, but we don't need to add in an array. What we can do is simply create a new preview object that has this container, and then as before, apply the model container for that preview container. Well, now we'll need to add a return for the entire navigation stack. But the edit book view requires a book, so we can pass in any one of our books from the sample books array. So for example, item 3, and we see that that is now displayed in our preview. Having an array of sample books, I can change that index to display a different book. Well, this is displaying our book okay, but we wouldn't be able to make any modifications in the preview here, unless we specify that modelContainer method, passing in our previews container. Well, this is pretty good, but we can do one better than this because eventually we might be adding in more models, and I don't want to have to create a different preview container type struck just to display those different objects. I might even want to reuse this preview container for different projects. Right now, all we're reviewing is this book model. If we return to the preview struct, everywhere I see book, I want to replace this with something that I inject when I initialize this preview. So this is going to have to happen in the initializer. So rather than injecting just a book, I'm going to inject models, and it's going to be a variadic array of persistent model.type. So I can pass in more than just book, I can simply pass in every single model that I want. Well, now the problem is that my constructor for the model container can't pass in a type, any persistent model.type as variadic arguments. Fortunately though, our container has another constructor as we've learned, and that's the one that allows us to add a schema. A schema can take a variadic set of models. So I can let schema equal schema models. Well, then we can change our model container to use the schema instead. Then finally, where we have that function to add our examples, well, this doesn't have to be an array of books. It can be an array of any persistent model. I can call this function for any model that I pass in and their sample array. Everywhere we went and constructed our preview with our in-memory preview then, we're going to have to pass in some variadic set of models. But we only have one, so we'll let the preview be the preview of book.self, and we'll do that in both of our views. First in the book list view, we'll pass in our model, which is the book.self, and similarly in the edit book view. We make sure that we apply the model container function for that preview container. Now, our previews are loaded in memory and I can perform all the same actions that I do when I run on the simulator. Now, if you're interested in learning more about these previews, I suggest you watch a video created by TunesDev on working with previews in Swift Data. It is a very nice solution for streamlining the previews even more, but I'm going to leave it like this as I think it might help you understand containers, contexts, and configurations and schemas a little bit better as you're learning, but definitely worth a watch. In the next video in this series, we're going to start to take a look at how we can filter and sort our list of books. And this is going to have to be a dynamic sort, allowing us to make those changes on on the fly and have the view refreshed. Hi, my name's Stuart Lynch. [BLANK_AUDIO]

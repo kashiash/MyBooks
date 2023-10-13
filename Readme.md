@@ -201,7 +201,7 @@ struct MyBooksApp: App {
 }
 ```
 
-Zawsze lubię sprawdzić, gdzie są przechowywane dane backendowe. Odkryłem, że podobnie jak Core Data, Swift Data domyślnie przechowuje dane w katalogu application support dla naszej aplikacji w symulatorze. Chcę więc utworzyć inicjalizator dla naszej aplikacji, który zostanie wywołany podczas jej uruchamiania, a następnie wydrukować ścieżkę do tego miejsca. Ponieważ katalog application support w Finderze zawiera więcej niż jedno słowo, chcę usunąć znaki procentowe (`%20s`), które będą generowane dla każdej spacji, ustawiając `percentEncoded` na `false`.
+Lubię sprawdzić, gdzie są przechowywane dane backendowe. Odkryłem, że podobnie jak Core Data, Swift Data domyślnie przechowuje dane w katalogu application support dla naszej aplikacji w symulatorze. Chcę więc utworzyć inicjalizator dla naszej aplikacji, który zostanie wywołany podczas jej uruchamiania, a następnie wydrukować ścieżkę do tego miejsca. Ponieważ katalog application support w Finderze zawiera więcej niż jedno słowo, chcę usunąć znaki procentowe (`%20s`), które będą generowane dla każdej spacji, ustawiając `percentEncoded` na `false`.
 
 ```swift
     init() {
@@ -211,7 +211,7 @@ Zawsze lubię sprawdzić, gdzie są przechowywane dane backendowe. Odkryłem, ż
 
 
 
-Pozwólcie, że teraz uruchomię tę aplikację i wyświetlę konsolę po uruchomieniu. Widzę, że ścieżka jest wydrukowana w konsoli. 
+Teraz uruchomię tę aplikację i wyświetlę konsolę po uruchomieniu. Widzę, że ścieżka jest wydrukowana w konsoli. 
 
 ```swift
 /Users/uta/Library/Developer/CoreSimulator/Devices/65D28238-47E9-40BE-8185-EB5A26699637/data/Containers/Data/Application/442223B0-C445-493F-BC5A-AEE8A2BC8B81/Library/Application Support/
@@ -978,22 +978,6 @@ Sprawdźmy to teraz, uruchamiając symulator i zobaczmy, czy nasze dane są zach
 
 
 
-Świetnie, działa. Zatem, edytujmy tę książkę. Powiedzmy, że zapomniałem dodać tej książki, gdy ją dostałem, więc zmienię datę na "ostatni miesiąc". Zacząłem czytać książkę, więc zmienię status. Zauważ, że kiedy to robię, data zostaje ustawiona na "dzisiejszą datę". Oceńmy książkę na razie. A co powiesz na wstępne myśli na temat podsumowania? Można je edytować w dowolnym momencie. Jeśli wrócę do widoku listy, zobaczę, że ikona się zmieniła, a moje oceny gwiazd się zmieniły, ale myślę, że dałem jej tylko trzy gwiazdki, więc muszę gdzieś popełnić błąd. Zatrzymajmy symulator i sprawdźmy, gdzie jest mój błąd. Ta ocena powinna być od 1, nie od 0. 
-
-```swift
-if let rating = book.rating {
-  HStack {
-    ForEach(1..<rating, id:\.self) { _ in
-                                    Image(systemName: "star.fill")
-                                    .imageScale(.small)
-                                    .foregroundStyle(.yellow)
-                                   }
-  }
-}
-```
-
-Uruchommy ponownie, zobaczysz, że dane są zachowane, a czytanie jest poprawne. 
-
 ![2023-10-13_10-46-28 (1)](2023-10-13_10-46-28%20(1).gif)
 
  Cóż, to kończy podstawowe operacje CRUD, a kolejne filmy w tej serii nie będą tak długie i będą skupiać się na pojedynczych tematach. W następnym filmie bliżej przyjrzymy się, jak jest konstruowany nasz modelowy kontener i jak możemy nad nim trochę kontrolować. Rozwiążemy także problem w widoku edycji, gdzie nie możemy podglądać książki w naszym podglądzie. Pokażę ci również, jak możesz tworzyć i używać przykładowych danych (mock data), abyś nie musiał zawsze pracować w symulatorze. 
@@ -1004,10 +988,386 @@ Uruchommy ponownie, zobaczysz, że dane są zachowane, a czytanie jest poprawne.
 
 
 
-> We took a look at the basic CRUD functions of SwiftData and how the data is stored in a model container in your device. In this video, we're going to take a closer look at that model container and how we can configure it to meet our own needs. In addition, I'm also going to show you how you can create mock data and have it stored in memory so that you can use it in your previews. I love getting your feedback, so tap the thumbs up button if you enjoyed this video and leave a comment below. Make sure you subscribe to the video and ring that bell to get notifications of new videos. And if you want to support my work, you can buy me a coffee. In that last video we were able to persist our data to the application support directory, and when we ran our app, we printed out the path to that URL in our console. If you completed the project from that first video, you can continue along with me. If not, you can download the completed project from the link in the description, and it's a GitHub repository listed in that description. By the time you watch this video, there may be more branches, but you want to make sure that you start with the one that ends in the first video_crud. When you're at this page, you should see the completed branch from the video has been selected. can download it as a zip or choose to do as I do and use the GitHub CLI. 
 
-Przypatrzeliśmy się podstawowym funkcjom CRUD w SwiftData oraz temu, jak dane są przechowywane w kontenerze modelu na Twoim urządzeniu. W tym filmie przyjrzymy się bliżej temu kontenerowi modelu i jak możemy go skonfigurować, aby spełniał nasze własne potrzeby. Ponadto pokażę Ci, jak możesz tworzyć przykładowe dane (mock data) i przechowywać je w pamięci, dzięki czemu będziesz mógł ich używać w podglądach. Uwielbiam otrzymywać od Was opinie, więc naciśnij przycisk kciuka w górę, jeśli podobał Ci się ten film i zostaw komentarz poniżej. Upewnij się, że jesteś subskrybentem kanału i włącz powiadomienia, aby otrzymywać informacje o nowych filmach. Jeśli chcesz wesprzeć moją pracę, możesz mi kupić kawę.
 
-W poprzednim filmie udało nam się zachować nasze dane w katalogu wsparcia aplikacji, a gdy uruchomiliśmy naszą aplikację, wypisaliśmy ścieżkę do tego URL-a w konsoli. Jeśli ukończyłeś projekt z tego pierwszego filmu, możesz kontynuować razem ze mną. Jeśli nie, możesz pobrać gotowy projekt z linku w opisie, który znajdziesz w repozytorium na GitHubie podanym w opisie tego filmu. W chwili, gdy oglądasz ten film, może być więcej gałęzi, ale upewnij się, że zaczynasz od tej, która kończy się na "first video_crud". Gdy znajdziesz się na tej stronie, powinieneś zobaczyć wybraną gałąź "completed" z tego filmu. Możesz pobrać ją jako plik ZIP lub wybrać opcję, którą ja używam, czyli GitHub CLI.
 
-I recommend that you do some investigation on this command-line interface, but that's for another day. So where we left off we found out that when we ran our app in the simulator and had it print out the location for the persistent SQL database, the default location is the Applications Library Application Support Directory for the selected simulator and the database is named named default.store. And this will be the case for every Swift data project that you create. Often, you may store data like images in the Documents directory for your apps. Well, you can have your SQLite database stored there as well and use a different name. This is your choice. The default is used because we use the modelContainerFor and specified our model method. By option clicking on the method, we can get more information. There's an In Memory option that we used in our preview so that the data is kept in memory only. But of course, we don't want that for the default in our application. Auto saving is enabled by default, so that's why we never had to specify a call to a save method when we created, updated, or deleted our books. I'm not going to get into this isUndoEnabled or the onSetup callback in this series, but I encourage you to dig down and look to the documentation on your own. Further down, we're told that the environment model context property will be assigned a new context associated with the container. Remember, we used that when we had to update and delete our. Remember, we used that when we created with an insert or deleted one of our objects. All implicit model context operations in the scene, such as the query properties, use this environment's context. It's the context that has our insert and delete methods and handles the autosave. By default, the container stores its model data persistently on disk, just as we learned. The container will only be created once, however. So each time we launch our app, we're not going to create a new container. New values that are passed to the model type and in-memory parameters after the view is first created will be ignored. If you want more control, we'll need to use a different overload for creating the container. If you drill down into the documentation, we'll see that there's actually other choices. Specifically, one where we can pass in a model context, and another where we can pass in a model container, instead of a persistent model, or an array of persistent models. It's this option that I want to explore a bit more. So let me drill down on model container and see that it refers to such things as model configuration, schemas, and schema migration plan. And we'll get to that later on in the series. But there are three things that you need to be aware of. The model container is responsible for creating and managing the actual database file used in all Swift data stores needs. And as mentioned above, this gets created once. The model context has the job of tracking all objects that have been created, modified, and deleted in memory so that they can all be saved to the model container at some later point. So when we create our model container, the context is available from the environment. The model configuration determines how and where the data is stored, including which Cloud Kit container to use, if any, and whether saving should be enabled or not. This configuration is provided to your model container to determine how it behaves. So we need to explore this configuration option a bit more. In the location where our app launches, where the app main decoration is, let's create a new container property that's going to allow us to configure the name and where we want to store our database. First, we'll create a container property that is a model container. And in our initializer, where I currently print out the directory to the existing data store, I can configure that container. Well, we can create a configuration, which is a model configuration. It has a number of different overloads with properties, many of which are optional, or have default values. One just has a URL property that will allow us to determine where we want to store the container and its name. It allows us to specify a different directory, and when we append a path, that will allow us to name our datastore to be whatever we want. So let's set the location to the "Documents" directory, and we can give it a name other than default.store by appending a path and specifying our own name, like mybooks.store. Next, I can now create a new container and assign it to my container property. The overload I want to use is where we pass in our persistent model types as a variadic parameter along with any configurations I might have. And in our case we have one of each so we can just pass in book.self and config. When I create my model container using the model container with configurations, it can throw. So we have to use a try, and we have to enclose this in a do catch block. In the case that it would fail, your app is not going to run anyway, so I'm just going to use a fatal error, and display a string could not configure the container. Now, instead of using the modelContainer for our persistent model mentioned here, I'll use the modelContainer method that just asks for the container, which we now have. And instead of printing out our path to the application support directory, let me print out the path to the documents directory. And I don't need %encoding here because it's not necessary. There are no spaces in that path. If we run this now, our app launches, but we see that whatever data we had before has been lost because we're no longer using that other container. So let's open up the path, and here we see it with our new name. It's being stored in the documents directory. That old container in the library's application support directory is still there though. I personally don't like to move things into the documents directory. So I'm going to go back to the application support directory and use a different overload to do this and change the name. So I'm going to comment out the body of that new initializer now, and I'm going to create a different container. We'll get into migrations later on and you'll learn about schemas. But a schema is an object that maps model classes to data in the model store. And that helps with migration of the data between releases. But for us, all we need to do is specify an array of the models that we have, and we have only one. So we can say let schema equals schema, and the array contains the book.self. Well now I can create a configuration that uses the schema, and I can provide a name as the first argument for our data store, followed by the schema, which is what we've just defined. Now there are plenty of different options here, but all I need is the one to specify the name and schema, which we can do. Then as before, we create our container in a do catch block by trying to use the model containers overload for the schema, this time with the configuration, the single config. And again, we'll catch the error. Let's comment out that Documents directory path now and uncomment the print for the Application Support directory path, and run once more. When I return to the Application Support directory, I see that we now have added that new named container and we still have that old one, the default one. I encourage you to read through the documentation so that you can create your own containers as you wish. I'm going to leave it with this last option now, but I'm going to go and delete the container from the documents directory because we're no longer accessing it. Remember, by creating a new container with a different name in the application support directory, we lost all the data from our last lesson. It's still in that default location. Well, if we delete the My Books, but rename default as My Books, We should then be able to recover all of our data. So let's do that and let's run our app. Great, our data is back. So rather than running in the simulator, I'd like to be able to use mock data that I can have just for my previews. This will only be used for our previews, so in Xcode with the preview content folder, I'm going to create a new Swiss file, and I'm going to call it book samples. Inside there, I'm going to create an extension to our book model where I can create a static property representing an array of books. So I'm going to create that static property, and I'm going to call it Sample Books, which as I said is an array of book. So we'll start with an empty array. Now within here, that's where I want to create a variety of different book samples. Now because there are so many different default values and optionals, there are many, many different constructors for creating a sample book. The simplest is just to provide the title and author like we do in our app. This will default to a start day of today, the status of onShelf, but the other dates will be those Date.DistantPast, the rating will be an optional nil, and the summary will simply be an empty string. But in order to verify our UI, we need lots of other information when we view the Edit screen. So if I want to test this out, I want to have some variety in our list. Now the trickiest is providing dates. So what I'd like to do is to create a two more static properties, one for last week and one for last month. So I can use the calendar.current.date method, which allows me to add using by adding to a specific date component like day a value of minus seven to the current date, which is date.now, that will give me last week. So similarly, I can create a static property for last month, by changing that date component to month and the value to minus one. So you can create a lot of dates relative to the current date that you can use in your sample data. So with these static properties, I could create a variety of different books. So for example, I could have had a book that was added last month, started last week, and completed today. Now, if you don't want to create your own data, You can use the data that I provided in this gist. You can simply get to the raw value if you like, and copy all this content and paste it into the array of your sample books. Now that we have some sample data, let's see how we can use it. Now that we have some preview data, we can set up a memory container that we can populate with this data and use in our previews. So in the preview content folder, I'm going to create a new file and call it preview container. First let me import Swift data. And then I'm going to create a new struct called preview. and I'm going to create a single property that will be a container. And we're going to create it just as we created our persistent container. So I'll need an initializer. So we'll create a model configuration called config and specify that this is isStoredInMemoryOnly as true. There's no need to specify a URL as we did for our persistent store because it's going to be in memory. With the initializer, we can create that container within a do-catch block, remember it throws, by trying to create the model container for book.self with that particular config, just as we did before. But now, let's create a function that will allow us to add examples from an array of these type. While I do have this type, I do have that array of sample books. So within that function, we can loop through this array of examples for each loop, and then use the container's main context to insert that example iteration. Remember, we found that the container has a context, and this is its main context, and you can see here that the main context is giving us a warning that the main context is used in a context that doesn't support concurrency. Then the next warning is telling us that this must be executed on the main thread. So we create a task unit of work for the asynchronous task, and then we use a @MainActor in to have it performed on the main thread. So how can we use this? Well, let's return to our book list view then, where we use the model container for book.self in memory set to true. But we're going to replace this with our new container and examples. So first, we'll create a new instance of our preview struct, we'll just call it preview. Then we'll call the add examples function to pass in the book sample books array as that array. So now our preview container is going to have all of those examples. But then we'll need to change the model context from using for to simply use the preview.container property, as we did for our persisted container. Now, because we no longer have a single line being returned here, we'll need to specify a return on the book list view. There you have it. Our sample books are in memory and being displayed in our preview. Now, remember in edit book view, we commented out the preview in edit book view. So now we'll uncomment it, and I'm going to create our own preview container, and add in our books just as we did before, but we don't need to add in an array. What we can do is simply create a new preview object that has this container, and then as before, apply the model container for that preview container. Well, now we'll need to add a return for the entire navigation stack. But the edit book view requires a book, so we can pass in any one of our books from the sample books array. So for example, item 3, and we see that that is now displayed in our preview. Having an array of sample books, I can change that index to display a different book. Well, this is displaying our book okay, but we wouldn't be able to make any modifications in the preview here, unless we specify that modelContainer method, passing in our previews container. Well, this is pretty good, but we can do one better than this because eventually we might be adding in more models, and I don't want to have to create a different preview container type struck just to display those different objects. I might even want to reuse this preview container for different projects. Right now, all we're reviewing is this book model. If we return to the preview struct, everywhere I see book, I want to replace this with something that I inject when I initialize this preview. So this is going to have to happen in the initializer. So rather than injecting just a book, I'm going to inject models, and it's going to be a variadic array of persistent model.type. So I can pass in more than just book, I can simply pass in every single model that I want. Well, now the problem is that my constructor for the model container can't pass in a type, any persistent model.type as variadic arguments. Fortunately though, our container has another constructor as we've learned, and that's the one that allows us to add a schema. A schema can take a variadic set of models. So I can let schema equal schema models. Well, then we can change our model container to use the schema instead. Then finally, where we have that function to add our examples, well, this doesn't have to be an array of books. It can be an array of any persistent model. I can call this function for any model that I pass in and their sample array. Everywhere we went and constructed our preview with our in-memory preview then, we're going to have to pass in some variadic set of models. But we only have one, so we'll let the preview be the preview of book.self, and we'll do that in both of our views. First in the book list view, we'll pass in our model, which is the book.self, and similarly in the edit book view. We make sure that we apply the model container function for that preview container. Now, our previews are loaded in memory and I can perform all the same actions that I do when I run on the simulator. Now, if you're interested in learning more about these previews, I suggest you watch a video created by TunesDev on working with previews in Swift Data. It is a very nice solution for streamlining the previews even more, but I'm going to leave it like this as I think it might help you understand containers, contexts, and configurations and schemas a little bit better as you're learning, but definitely worth a watch. In the next video in this series, we're going to start to take a look at how we can filter and sort our list of books. And this is going to have to be a dynamic sort, allowing us to make those changes on on the fly and have the view refreshed. Hi, my name's Stuart Lynch. [BLANK_AUDIO]
+
+Okazuje się, że gdy uruchomiliśmy naszą aplikację w symulatorze i spowodowaliśmy wydrukowanie lokalizacji dla trwałej bazy danych SQL, domyślnym miejscem jest Katalog Wsparcia Aplikacji w Bibliotece Aplikacji dla wybranego symulatora, a baza danych nosi nazwę "default.store". I tak będzie w przypadku każdego projektu Swift Data, który utworzysz. Często dane, takie jak obrazy, przechowuje się w katalogu Dokumentów dla aplikacji. Cóż, możesz przechowywać swoją bazę danych SQLite również tam i używać innej nazwy. To zależy od Ciebie. Domyślnie używane jest to, ponieważ używamy metody `modelContainerFor` i określamy naszą metodę `specified our model`. Po naciśnięciu opcji na tej metodzie możemy uzyskać więcej informacji. Istnieje opcja "In Memory", którą użyliśmy w naszym podglądzie, dzięki której dane są przechowywane tylko w pamięci. Oczywiście nie chcemy tego dla domyślnego zachowania w naszej aplikacji. Automatyczne zapisywanie jest domyślnie włączone, dlatego nigdy nie musieliśmy określać wywołania metody zapisywania, gdy tworzyliśmy, aktualizowaliśmy lub usuwaliśmy nasze książki. Nie będę zagłębiać się w kwestie `isUndo Enabled` czy w wywołanie `onSetup` w tej serii, ale zachęcam Cię do zgłębienia ich samodzielnie, przeczytania dokumentacji. Dalej jesteśmy informowani, że właściwość środowiskowa `modelContext` zostanie przypisana nowemu kontekstowi związanemu z kontenerem. Pamiętaj, użyliśmy tego, gdy musieliśmy zaktualizować lub usunąć nasze obiekty.
+
+Wszystkie niejawne operacje kontekstu modelu w scenie, takie jak właściwości zapytania, używają tego kontekstu środowiska. To ten kontekst zawiera nasze metody `insert` i `delete` oraz obsługuje automatyczne zapisywanie. Domyślnie kontener przechowuje swoje dane modelu na stałe na dysku, tak jak się tego nauczyliśmy. Kontener zostanie jednak utworzony tylko raz. Za każdym razem, gdy uruchamiamy naszą aplikację, nie będziemy tworzyć nowego kontenera. Nowe wartości przekazywane do typu modelu i parametrów w pamięci po utworzeniu widoku będą ignorowane. Jeśli chcesz uzyskać więcej kontroli, będziemy musieli użyć innej wersji do tworzenia kontenera. Jeśli zagłębisz się w dokumentację, zobaczysz, że są tak naprawdę inne wybory. Konkretnie jedno, gdzie możemy przekazać kontekst modelu, a drugie, gdzie możemy przekazać kontener modelu, zamiast trwałego modelu lub tablicy trwałych modeli. To opcja, którą chcę bliżej zbadać. Pozwól mi zagłębić się w kontener modelu i zobaczyć, że odnosi się do takich rzeczy jak konfiguracja modelu, schematy i plan migracji schematu. Przejdziemy do tego później w serii. Ale są trzy rzeczy, o których musisz wiedzieć:
+
+ Kontener modelu jest odpowiedzialny za tworzenie i zarządzanie rzeczywistym plikiem bazy danych używanym we wszystkich potrzebach sklepów Swift Data. Jak wspomniano powyżej, jest tworzony raz. Kontekst modelu ma za zadanie śledzenie wszystkich obiektów, które zostały utworzone, zmodyfikowane i usunięte w pamięci, aby można je było zapisać w kontenerze modelu w późniejszym okresie.
+
+Więc, gdy tworzymy nasz kontener modelu, kontekst jest dostępny ze środowiska. Konfiguracja modelu określa, jak i gdzie dane są przechowywane, w tym to, której kontener Cloud Kit użyć, jeśli taki istnieje, i czy zapisywanie powinno być włączone czy nie. Ta konfiguracja jest dostarczana do naszego kontenera modelu, aby określić jego zachowanie. Musimy więc bliżej przyjrzeć się tej opcji konfiguracji. W miejscu, gdzie nasza aplikacja się uruchamia, tam gdzie znajduje się deklaracja główna aplikacji, stwórzmy nową właściwość `container`, która pozwoli nam skonfigurować nazwę i miejsce, gdzie chcemy przechowywać naszą bazę danych. Najpierw stworzymy właściwość `container`, która jest kontenerem modelu. W naszym inicjalizatorze, w miejscu, gdzie obecnie drukuję ścieżkę do istniejącego magazynu danych, możemy skonfigurować ten kontener. Możemy stworzyć konfigurację, która jest konfiguracją modelu. Istnieje wiele różnych wersji tej konfiguracji z różnymi właściwościami, z których wiele jest opcjonalnych lub ma wartości domyślne. Jedna z nich ma właściwość `URL`, która pozwoli nam określić, gdzie chcemy przechowywać kontener i jego nazwę. Pozwala nam to określić inną ścieżkę, a dodanie ścieżki pozwoli nam nazwać naszą bazę danych jak chcemy.
+
+Więc ustawmy lokalizację na katalog "Documents", a nazwę możemy nadać inna niż domyślna.store, dodając ścieżkę i określając naszą własną nazwę, na przykład mybooks.store. Następnie mogę stworzyć nowy kontener i przypisać go do mojej właściwości `container`. Chcę użyć tej wersji przeciążonej metody, gdzie przekazujemy nasze typy modeli trwałych jako parametr variadic wraz z ewentualnymi konfiguracjami. W naszym przypadku mamy jedno i drugie, więc możemy po prostu przekazać book.self i config. Kiedy tworzymy nasz kontener modelu za pomocą `modelContainer(with: configurations:)`, ta operacja może zwrócić błąd, więc musimy użyć `try` i otoczyć to blokiem `do catch`. W przypadku, gdyby operacja nie powiodła się, nasza aplikacja i tak by nie działała, więc użyję `fatalError` i wyświetlę komunikat "Nie można skonfigurować kontenera". Teraz, zamiast używać `modelContainer` dla naszego modelu trwałego, o którym jest mowa tutaj, użyję metody `modelContainer`, która po prostu wymaga kontenera, który teraz mamy. Zamiast drukować ścieżkę do katalogu "Application Support", wydrukuję ścieżkę do katalogu "Documents". Nie potrzebuję tu kodowania procentowego, ponieważ nie jest to konieczne.
+
+```swift
+    init() {
+        let config = ModelConfiguration(url: URL.documentsDirectory.appending(path: "MyBooks.store"))
+        do {
+            container = try ModelContainer(for: Book.self, configurations: config)
+        } catch {
+            fatalError("Could not configure container")
+        }
+       // print(URL.applicationSupportDirectory.path(percentEncoded: false))
+        print(URL.documentsDirectory.path())
+    }
+```
+
+
+
+W tej ścieżce nie ma spacji. Jeśli uruchomimy teraz naszą aplikację, zobaczymy, że nasza aplikacja startuje, ale zauważymy, że wszelkie wcześniejsze dane zostały utracone, ponieważ nie korzystamy już z pierwotnego kontenera. Więc otwórzmy naszą ścieżkę, a tutaj widzimy ją z naszą nową nazwą. Jest przechowywana w katalogu "Documents". Ten stary kontener w katalogu "Application Support" wciąż istnieje. Osobiście nie lubię przenosić rzeczy do katalogu "Documents". Chcę wrócić do katalogu "Application Support" i użyć innego przeciążenia, aby to zrobić i zmienić nazwę. Zatem zakomentuję teraz treść tego nowego inicjalizatora, a następnie utworzę inny kontener. Przechodzić będziemy do migracji później, a wtedy dowiesz się o schematach. Ale schemat to obiekt, który mapuje klasy modeli na dane w magazynie modelu. Pomaga to w migracji danych między wersjami aplikacji. Ale dla nas wszystko, co musimy zrobić, to określić tablicę modeli, które posiadamy, a mamy tylko jeden. Więc możemy powiedzieć `let schema = schema`, a tablica zawiera `book.self`. Teraz mogę utworzyć konfigurację, która używa schematu, i jako pierwszy argument podać nazwę naszego magazynu danych, a następnie schemat, który właśnie zdefiniowaliśmy.
+
+
+
+Teraz jest wiele różnych opcji, ale ja potrzebuję tylko tej, która pozwala określić nazwę i schemat, co możemy zrobić. Następnie, jak wcześniej, tworzymy nasz kontener w bloku do catch, próbując użyć przeciążenia modelContainers dla schematu, tym razem z konfiguracją, jedną konfiguracją. I znowu złapiemy błąd. Teraz zakomentujmy ścieżkę katalogu "Documents" i odkomentujmy drukowanie ścieżki katalogu "Application Support" oraz uruchommy aplikację ponownie. 
+
+```swift
+        let schema = Schema([Book.self])
+        let config = ModelConfiguration("MyBooks", schema: schema)
+        do {
+            container = try ModelContainer(for: schema, configurations: config )
+
+        } catch {
+            fatalError("Could not configure container")
+        }
+        print(URL.applicationSupportDirectory.path(percentEncoded: false))
+```
+
+Gdy wrócimy do katalogu "Application Support", zobaczymy, że dodaliśmy nowy nazwany kontener, a nadal mamy ten stary, domyślny. Zachęcam cię do przeczytania dokumentacji, abyś mógł tworzyć własne kontenery według własnych preferencji. Teraz pozostawię to z tą ostatnią opcją, ale zamierzam usunąć kontener z katalogu "Documents", ponieważ już do niego nie uzyskujemy dostępu. Pamiętaj, że tworząc nowy kontener o innej nazwie w katalogu "Application Support", straciliśmy wszystkie dane z naszej ostatniej lekcji. One nadal są w tej domyślnej lokalizacji. Cóż, jeśli usuniemy My Books, ale zmienimy nazwę default na My Books, powinniśmy być w stanie odzyskać wszystkie nasze dane. Zróbmy to i uruchommy naszą aplikację.
+
+Świetnie, nasze dane wróciły. Zamiast uruchamiać w symulatorze, chciałbym móc używać danych próbkowych, które będę mógł używać wyłącznie do podglądów. Będą one używane tylko do podglądów, więc w Xcode w folderze zawartość podglądu, utworzę nowy plik Swiss, a nazwę go book samples. Wewnątrz tego pliku utworzę rozszerzenie do naszego modelu book, w którym będę mógł utworzyć statyczną właściwość reprezentującą tablicę książek. Utworzę tę statyczną właściwość i nazwę ją Sample Books, która jak już wspomniałem, jest tablicą książek. Zaczniemy od pustej tablicy. Teraz tutaj chcę utworzyć różne próbki książek. Ponieważ istnieje wiele różnych domyślnych wartości i opcji, istnieje wiele różnych konstruktorów do tworzenia próbki książki. Najprostszy to po prostu podanie tytułu i autora, jak robimy to w naszej aplikacji. Domyślnie to początek dzisiaj, status na półce, ale inne daty będą to Date.DistantPast, ocena będzie opcjonalnie nil, a streszczenie po prostu puste. Ale aby zweryfikować nasze UI, potrzebujemy wielu innych informacji podczas wyświetlania ekranu Edytuj. Jeśli chcę to przetestować, chcę mieć różnorodność na naszej liście.
+
+
+
+Najbardziej skomplikowane jest dostarczanie dat. Chciałbym teraz utworzyć dwie właściwości statyczne, jedną dla zeszłego tygodnia i jedną dla zeszłego miesiąca. Mogę użyć metody calendar.current.date, która pozwala mi dodać określony komponent daty, na przykład dzień, o wartość minus siedem do bieżącej daty, która to jest date.now, co da mi zeszły tydzień. Podobnie mogę utworzyć właściwość statyczną dla zeszłego miesiąca, zmieniając ten komponent daty na miesiąc i wartość na minus jeden. 
+
+```swift
+    static let lastWeek = Calendar.current.date(byAdding: .day, value: -7, to: Date.now)!
+    static let lastMonth = Calendar.current.date(byAdding: .month, value: -1, to: Date.now)!
+```
+
+Można tworzyć wiele różnych dat względem bieżącej daty, które można używać w danych próbkowych. Dzięki tym właściwościom statycznym mogę tworzyć różne książki. Na przykład mógłbym mieć książkę, która została dodana w zeszłym miesiącu, rozpoczęta w zeszłym tygodniu i ukończona dzisiaj. Jeśli nie chcesz tworzyć własnych danych, możesz użyć danych, które podałem w tym fragmencie kodu. Możesz po prostu uzyskać wartość surową, jeśli chcesz, i skopiować całą zawartość, a następnie wkleić ją do tablicy twoich próbek książek.
+
+```swift
+import Foundation
+extension Book {
+    static let lastWeek = Calendar.current.date(byAdding: .day, value: -7, to: Date.now)!
+    static let lastMonth = Calendar.current.date(byAdding: .month, value: -1, to: Date.now)!
+
+    static var sampleBooks: [Book] {
+        [
+            Book(title: "QBVII",
+                 author: "Leon Uris"),
+
+            Book(title: "Macbeth",
+                 author: "William Shakespeare",
+                 dateAdded: lastWeek,
+                 dateStarted: Date.now,
+                 status: Status.inProgress),
+
+            Book(title: "Silence of the Grave",
+                 author: "Arnuldur Indrason, Bernard Scudder",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 dateCompleted: Date.now,
+                 summary: "Inheriting Ian Fleming's long-lost account of his spy activities during World War II, young American academic Amy Greenberg finds herself targeted by unknown assailants and must race to finish the manuscript in order to save her life and reveal the actions of a traitor.",
+                 rating: 4,
+                 status: Status.completed),
+
+            Book(title: "Cardinal",
+                 author: "Giles Blunt"),
+
+            Book(title: "Jackdaws",
+                 author: "Ken Follett",
+                 dateAdded: lastWeek,
+                 dateStarted: Date.now,
+                 summary: "In his own bestselling tradition of Eye of the Needle and The Key to Rebecca, Ken Follett delivers a breathtaking novel of suspense set in the most dangerous days of World War II. D-Day is approaching. They don’t know where or when, but the Germans know it’ll be soon, and for Felicity “Flick” Clariet, the stakes have never been higher. A senior agent in the ranks of the Special Operations Executive (SOE) responsible for sabotage, Flick has survived to become one of Britain’s most effective operatives in Northern France. She knows that the Germans’ ability to thwart the Allied attack depends upon their lines of communications, and in the days before the invasion no target is of greater strategic importance than the largest telephone exchange in Europe. But when Flick and her Resistance-leader husband try a direct, head-on assault that goes horribly wrong, her world turns upside down. Her group destroyed, her husband missing, her superiors unsure of her, her own confidence badly shaken, she has one last chance at the target, but the challenge, once daunting, is now near impossible. The new plan requires an all-woman team, none of them professionals, to be assembled and trained within days. Code-named the Jackdaws, they will attempt to infiltrate the exchange under the noses of the Germans—but the Germans are waiting for them now and have plans of their own. There are secrets Flick does not know—secrets within the German ranks, secrets among her hastily recruited team, secrets among those she trusts the most. And as the hours tick down to the point of no return, most daunting of all, there are secrets within herself.",
+                 status: Status.inProgress),
+
+            Book(title: "Blackout",
+                 author: "John Lawton",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 dateCompleted: Date.now,
+                 summary: "In London, during World War II, a dog uncovers a severed arm, which turns out to be that of a rocket scientist--and it was not a bomb that killed him. Sgt. Frederick Troy of Scotland Yard is assigned to the case, which pits him against the U.S. Office of Strategic Services, the wartime spy agency.",
+                 rating: 3,
+                 status: Status.completed),
+
+            Book(title: "The Sandman",
+                 author: "Lars Kepler"),
+
+            Book(title: "The Redbreast",
+                 author: "Jo Nesbo",
+                 dateAdded: lastWeek,
+                 dateStarted: Date.now,
+                 status: Status.inProgress),
+
+            Book(title: "Fatherland",
+                 author: "Robert Harris",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Twenty years after Germany's victory in World War II, while the entire country prepares for the U.S. president's visit, Berlin Detective Xavier March attempts to solve the murder of a high-ranking Nazi commander. Reprint.",
+                 rating: 5,
+                 status: Status.completed),
+            Book(title: "W pustyni i w puszczy",
+                 author: "Henryk Sienkiewicz",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Opowieść o przygodach dwóch polskich dzieci, Staśka i Nel, którzy zostają porwani przez beduinów podczas podróży do Egiptu.",
+                 status: Status.inProgress),
+
+            Book(title: "Quo Vadis",
+                 author: "Henryk Sienkiewicz",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Historia miłości między rzymskim oficerem a chrześcijańską dziewczyną podczas czasów Nerona.",
+                 rating: 5,
+                 status: Status.completed),
+
+            Book(title: "Ferdydurke",
+                 author: "Witold Gombrowicz",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Satyryczna opowieść o młodym mężczyźnie, który zostaje zamieniony w niezdarnego, infantylnego nastolatka.",
+                 rating: 4,
+                 status: Status.completed),
+
+            Book(title: "Pan Tadeusz",
+                 author: "Adam Mickiewicz",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Epicki poemat opowiadający historię dwóch szlacheckich rodzin w czasach napoleońskich.",
+                 status: Status.inProgress),
+
+            Book(title: "Lalka",
+                 author: "Bolesław Prus",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Spojrzenie na życie warszawskiej elity w drugiej połowie XIX wieku, skupione wokół historii miłosnej bohaterki, Izabeli Łęckiej.",
+                 rating: 4,
+                 status: Status.completed),
+
+            Book(title: "Pan Wołodyjowski",
+                 author: "Henryk Sienkiewicz",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Kontynuacja przygód z Trylogii, skupiona na życiu rycerza Jana Wołodyjowskiego podczas wojen z Kozakami i Tatarami.",
+                 rating: 5,
+                 status: Status.completed),
+
+            Book(title: "Solaris",
+                 author: "Stanisław Lem",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Science fiction opowiadające o misji badawczej na tajemniczej planecie pokrytej oceanem, która ożywia ludzkie wspomnienia i pragnienia.",
+                 rating: 5,
+                 status: Status.inProgress),
+
+            Book(title: "Krzyżacy",
+                 author: "Henryk Sienkiewicz",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Historia wojny między Zakonem Krzyżackim a Polską, z elementami miłości i bohaterstwa.",
+                 rating: 5,
+                 status: Status.completed),
+
+            Book(title: "Chłopi",
+                 author: "Władysław Reymont",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Opowieść o życiu chłopów w polskiej wsi, przedstawiająca ich codzienne zmagania, radości i smutki.",
+                 rating: 4,
+                 status: Status.inProgress),
+
+            Book(title: "Balladyna",
+                 author: "Juliusz Słowacki",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Dramat romantyczny opowiadający o dziewczynie, która została wybrana przez los na królową, a jej życie jest płaszczyzną walki między dobrem a złem.",
+                 rating: 4,
+                 status: Status.completed),
+
+            Book(title: "Zbrodnia i kara",
+                 author: "Fiodor Dostojewski",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Historia Rodiona Raskolnikowa, studenta, który popełnia morderstwo, przekonany, że jest ponad prawem.",
+                 rating: 5,
+                 status: Status.completed),
+
+            Book(title: "Na skróty",
+                 author: "Marek Hłasko",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Zbiór opowiadań ukazujących życie zwykłych ludzi w Polsce powojennej.",
+                 rating: 4,
+                 status: Status.inProgress),
+
+            Book(title: "Ferdydurke",
+                 author: "Witold Gombrowicz",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Satyryczna opowieść o młodym mężczyźnie, który zostaje zamieniony w niezdarnego, infantylnego nastolatka.",
+                 rating: 4,
+                 status: Status.completed),
+
+            Book(title: "Sklep zoologiczny",
+                 author: "Kazimierz Orłoś",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Książka opowiadająca o życiu w powojennej Polsce z perspektywy zwierząt w sklepie zoologicznym.",
+                 rating: 3,
+                 status: Status.inProgress),
+
+            Book(title: "Szatan z siódmej klasy",
+                 author: "Kornel Makuszyński",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Przygody chłopca imieniem Pawełek, który podejmuje walkę ze złym szkolnym kolegą.",
+                 rating: 4,
+                 status: Status.completed),
+
+            Book(title: "Ciemności kryją ziemię",
+                 author: "Jerzy Andrzejewski",
+                 dateAdded: lastMonth,
+                 dateStarted: lastWeek,
+                 summary: "Książka przedstawiająca losy ludzi podczas powstania warszawskiego w czasie II wojny światowej.",
+                 rating: 5,
+                 status: Status.completed)
+
+
+
+        ]
+        
+    }
+}
+
+```
+
+ Teraz, gdy mamy pewne dane próbkowe, zobaczmy, jak możemy je użyć. Teraz, gdy mamy dane próbne do podglądów, możemy skonfigurować pamięciowy kontener, który możemy wypełnić tymi danymi i użyć w naszych podglądach. Więc  utworzę nowy plik i nazwę go `PreviewContainer`. Następnie utworzę nową strukturę o nazwie `Preview`. I utworzę pojedynczą właściwość, która będzie kontenerem. I będziemy go tworzyć tak, jak tworzyliśmy nasz trwały kontener. Więc będę potrzebować inicjalizatora.
+
+Więc utworzymy konfigurację modelu o nazwie `config` i ustalimy, że `isStoredInMemoryOnly` ma wartość `true`. Nie ma potrzeby podawania URL, ponieważ dane będą przechowywane w pamięci. W initializerze możemy utworzyć ten kontener w bloku do-catch, pamiętając, że metoda może rzucać wyjątkiem. Spróbujemy utworzyć kontener modelu dla `book.self` z tą konkretą konfiguracją, tak jak robiliśmy wcześniej.
+
+```swift
+import Foundation
+import SwiftData
+
+struct Preview {
+    let container: ModelContainer
+    init() {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        do {
+            container = try ModelContainer(for: Book.self, configurations: config )
+
+        } catch {
+            fatalError("Cos sie zjebsuło")
+        }
+    }
+}
+```
+
+Następnie utworzymy funkcję, która pozwoli nam dodać przykłady z tablicy tych książek. Mamy tę tablicę przykładów. Wewnątrz tej funkcji możemy przejść przez tę tablicę przykładów za pomocą pętli `for each`, a następnie użyć głównego kontekstu kontenera, aby wstawić ten przykład w iteracji. Pamiętaj, że znaleźliśmy, że kontener ma kontekst, a to jest jego główny kontekst. Tutaj widzimy ostrzeżenie, że główny kontekst jest używany w kontekście, który nie obsługuje równoległości. Następne ostrzeżenie mówi nam, że to musi być wykonane na głównym wątku. Więc tworzymy zadanie `Task` dla asynchronicznej operacji, a następnie używamy `@MainActor`, aby wykonać to na głównym wątku.
+
+```swift
+    func addExamples(_ examples: [Book]) {
+        Task { @MainActor in
+            examples.forEach { example in
+                container.mainContext.insert(example)
+            }
+        }
+    }
+```
+
+Jak możemy to wykorzystać? Wróćmy do naszego widoku listy książek, gdzie używamy kontenera modelu dla `book.self` w pamięci, ustawiając wartość `true`. Ale zastąpimy to naszym nowym kontenerem i przykładami. Więc najpierw utworzymy nową instancję naszej struktury `preview`, po prostu nazwijmy ją `preview`. Następnie wywołamy funkcję `addExamples`, aby przekazać tablicę `sampleBooks` jako argument.
+
+
+
+Tak więc nasz kontener podglądu będzie teraz zawierał wszystkie te przykłady. Ale teraz będziemy musieli zmienić kontekst modelu z użycia `for` na po prostu użycie właściwości `preview.container`, tak jak robiliśmy to w przypadku naszego kontenera trwałego. Ponieważ nie mamy już tutaj jednej linii zwracającej wynik, będziemy musieli określić `return` w widoku listy książek. I to wszystko. 
+
+```swift
+#Preview {
+    let preview = Preview()
+    preview.addExamples(Book.sampleBooks)
+    return BookListView()
+        .modelContainer(preview.container)
+}
+```
+
+Nasze przykładowe książki są w pamięci i są wyświetlane w naszym podglądzie. 
+
+![image-20231013214129962](image-20231013214129962.png)
+
+Pamiętajmy, że w widoku edycji książki zakomentowaliśmy fragment dotyczący podglądu. Teraz odkomentujemy go i stworzymy własny kontener podglądu, a następnie dodamy do niego nasze książki tak, jak robiliśmy to wcześniej, ale nie musimy dodawać tablicy. Wystarczy utworzyć nowy obiekt podglądu, który ma ten kontener, a następnie, tak jak wcześniej, użyć metody `modelContainer` dla tego kontenera podglądu. Teraz będziemy musieli dodać `return` dla całego stosu nawigacyjnego. Ale widok edycji książki wymaga obiektu książki, więc możemy przekazać dowolną z naszych książek z tablicy przykładowych książek. Na przykład, element 18. 
+
+```swift
+#Preview {
+    let preview = Preview(Book.self)
+   return NavigationStack {
+       EditBookView(book: Book.sampleBooks[18])
+           .modelContainer(preview.container)
+    }
+}
+```
+
+Widzimy teraz, że jest on wyświetlany w naszym podglądzie. Posiadając tablicę przykładowych książek, możemy zmienić ten indeks, aby wyświetlić inną książkę. Cóż, wyświetla się nasza książka, ale nie moglibyśmy wprowadzać żadnych zmian w podglądzie tutaj, chyba że określimy tę metodę `modelContainer`, przekazując nasz kontener podglądu. Ale to jeszcze nie wszystko, możemy to zrobić lepiej, ponieważ w końcu możemy dodawać więcej modeli, i nie chcę tworzyć oddzielnych struktur kontenera podglądu dla każdego z nich.
+
+![image-20231013214052735](image-20231013214052735.png)
+
+Chciałbym nawet móc ponownie używać tego kontenera podglądu dla różnych projektów. Obecnie przeglądamy tylko ten model książki. Jeśli wrócimy do struktury podglądu (preview struct), wszędzie, gdzie widzę słowo 'book', chcę to zastąpić czymś, co wstrzyknę podczas inicjalizacji tego podglądu. Musi to się wydarzyć w inicjalizatorze. Zamiast tylko wstrzykiwać 'book', zamierzam wstrzykiwać 'models', które będą zmienną tablicą typów 'persistent model.type'. Dzięki temu mogę przekazać nie tylko 'book', ale również każdy inny model, który chcę. Teraz pojawia się problem, ponieważ mój konstruktor dla modelu kontenera nie może przekazać typu 'persistent model.type' jako argumentów zmiennych. Na szczęście jednak nasz kontener ma inny konstruktor, jak się nauczyliśmy, który pozwala nam dodać schemat. Schemat może przyjąć zmienną ilość modeli. Mogę ustawić schemat jako 'schema equal schema models'. Następnie możemy zmienić nasz kontener modelu tak, aby używał tego schematu. Wreszcie, tam gdzie mamy funkcję dodającą nasze przykłady, nie musi to być tablica książek. Może to być tablica dowolnego modelu. 
+
+```swift
+struct Preview {
+    let container: ModelContainer
+    init(_ models: any PersistentModel.Type...) {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let schema = Schema(models)
+        do {
+            container = try ModelContainer(for: schema, configurations: config )
+
+        } catch {
+            fatalError("Cos sie zjebsuło")
+        }
+    }
+
+    func addExamples(_ examples: [any PersistentModel]) {
+        Task { @MainActor in
+            examples.forEach { example in
+                container.mainContext.insert(example)
+            }
+        }
+    }
+}
+```
+
+Mogę wywołać tę funkcję dla każdego modelu, który przekazuję, wraz z ich tablicą przykładów. Gdziekolwiek byśmy nie konstruowali naszego podglądu z naszego podglądu w pamięci, będziemy musieli przekazać pewną zmienną ilość modeli. Ale mamy tylko jeden, więc pozwolimy podglądowi być podglądem typu 'book.self' i zrobimy to w obu naszych widokach.
+
+W BookListView
+
+```swift
+#Preview {
+    let preview = Preview(Book.self)
+    preview.addExamples(Book.sampleBooks)
+    return BookListView()
+        .modelContainer(preview.container)
+} 
+```
+
+
+
+W EditBookView
+
+```swift
+#Preview {
+    let preview = Preview(Book.self)
+   return NavigationStack {
+       EditBookView(book: Book.sampleBooks[18])
+           .modelContainer(preview.container)
+    }
+}
+```
+
+Najpierw w widoku listy książek przekazujemy nasz model, którym jest 'book.self', a podobnie w widoku edycji książki. Upewniamy się, że stosujemy funkcję 'modelContainer' dla tego podglądu. Teraz nasze podglądy są wczytywane do pamięci i mogę wykonywać wszystkie te same czynności, które wykonuję, gdy uruchamiam aplikację na symulatorze. Jeśli jesteś zainteresowany/zainteresowana dowiedzeniem się więcej na temat tych podglądów, sugeruję obejrzenie filmu stworzonego przez TunesDev na temat pracy z podglądami w Swift Data. To bardzo dobre rozwiązanie, które jeszcze bardziej usprawnia pracę z podglądami, ale ja zostawię to tak, jak jest, ponieważ myślę, że pomoże Ci lepiej zrozumieć kontenery, konteksty, konfiguracje i schematy, gdy uczysz się, ale zdecydowanie warto obejrzeć ten film.
+
+https://www.youtube.com/watch?v=jCC3yuc5MUI

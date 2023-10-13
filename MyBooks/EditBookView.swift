@@ -134,8 +134,10 @@ var changed: Bool {
 
 }
 
-//#Preview {
-//    NavigationStack {
-//        EditBookView()
-//    }
-//}
+#Preview {
+    let preview = Preview(Book.self)
+   return NavigationStack {
+       EditBookView(book: Book.sampleBooks[18])
+           .modelContainer(preview.container)
+    }
+}

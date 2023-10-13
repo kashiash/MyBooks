@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		761F19162AD95BCE003E9725 /* BookSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761F19152AD95BCE003E9725 /* BookSamples.swift */; };
+		761F19182AD9C3C2003E9725 /* PreviewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761F19172AD9C3C2003E9725 /* PreviewContainer.swift */; };
 		763FC7CB2AD693D00008E040 /* MyBooksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763FC7CA2AD693D00008E040 /* MyBooksApp.swift */; };
 		763FC7CD2AD693D00008E040 /* BookListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763FC7CC2AD693D00008E040 /* BookListView.swift */; };
 		763FC7CF2AD693D20008E040 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 763FC7CE2AD693D20008E040 /* Assets.xcassets */; };
@@ -19,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		761F19152AD95BCE003E9725 /* BookSamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSamples.swift; sourceTree = "<group>"; };
+		761F19172AD9C3C2003E9725 /* PreviewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContainer.swift; sourceTree = "<group>"; };
 		763FC7C72AD693D00008E040 /* MyBooks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyBooks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		763FC7CA2AD693D00008E040 /* MyBooksApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBooksApp.swift; sourceTree = "<group>"; };
 		763FC7CC2AD693D00008E040 /* BookListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookListView.swift; sourceTree = "<group>"; };
@@ -43,9 +47,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		761F19142AD95BB8003E9725 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				761F19152AD95BCE003E9725 /* BookSamples.swift */,
+				761F19172AD9C3C2003E9725 /* PreviewContainer.swift */,
+			);
+			path = Preview;
+			sourceTree = "<group>";
+		};
 		763FC7BE2AD693D00008E040 = {
 			isa = PBXGroup;
 			children = (
+				761F19142AD95BB8003E9725 /* Preview */,
 				763FC7DB2AD695300008E040 /* Book.swift */,
 				763FC7D92AD694430008E040 /* Readme.md */,
 				763FC7C92AD693D00008E040 /* MyBooks */,
@@ -155,11 +169,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				761F19162AD95BCE003E9725 /* BookSamples.swift in Sources */,
 				763FC7DE2AD6FE8D0008E040 /* NewBookView.swift in Sources */,
 				76FC4C532AD847130088895E /* RatingsView.swift in Sources */,
 				76FC4C512AD832560088895E /* EditBookView.swift in Sources */,
 				763FC7CD2AD693D00008E040 /* BookListView.swift in Sources */,
 				763FC7CB2AD693D00008E040 /* MyBooksApp.swift in Sources */,
+				761F19182AD9C3C2003E9725 /* PreviewContainer.swift in Sources */,
 				763FC7DC2AD695300008E040 /* Book.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

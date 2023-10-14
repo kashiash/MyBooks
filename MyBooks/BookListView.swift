@@ -19,6 +19,8 @@ struct BookListView: View {
 
     @State  private var createNewBook = false
     @State private var sortOrder = SortOrder.status
+    @State private var filter = ""
+
     var body: some View {
         NavigationStack {
             Picker("", selection: $sortOrder) {
@@ -27,7 +29,8 @@ struct BookListView: View {
                 }
             }
             .buttonStyle(.bordered)
-            BookList(sortOrder: sortOrder)
+            BookList(sortOrder: sortOrder, filterString: filter)
+                .searchable(text: $filter, prompt: "Filtruj po tytule lub autorze")
             .navigationTitle("Moje książki")
             .toolbar{
                 Button {

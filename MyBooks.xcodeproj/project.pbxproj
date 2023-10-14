@@ -16,6 +16,7 @@
 		763FC7DA2AD694430008E040 /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 763FC7D92AD694430008E040 /* Readme.md */; };
 		763FC7DC2AD695300008E040 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763FC7DB2AD695300008E040 /* Book.swift */; };
 		763FC7DE2AD6FE8D0008E040 /* NewBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763FC7DD2AD6FE8D0008E040 /* NewBookView.swift */; };
+		76B319812ADAE15600AF1E86 /* BookList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76B319802ADAE15600AF1E86 /* BookList.swift */; };
 		76FC4C512AD832560088895E /* EditBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FC4C502AD832560088895E /* EditBookView.swift */; };
 		76FC4C532AD847130088895E /* RatingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FC4C522AD847130088895E /* RatingsView.swift */; };
 /* End PBXBuildFile section */
@@ -32,6 +33,7 @@
 		763FC7D92AD694430008E040 /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		763FC7DB2AD695300008E040 /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		763FC7DD2AD6FE8D0008E040 /* NewBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewBookView.swift; sourceTree = "<group>"; };
+		76B319802ADAE15600AF1E86 /* BookList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookList.swift; sourceTree = "<group>"; };
 		76FC4C502AD832560088895E /* EditBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBookView.swift; sourceTree = "<group>"; };
 		76FC4C522AD847130088895E /* RatingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -80,12 +82,13 @@
 			children = (
 				763FC7CA2AD693D00008E040 /* MyBooksApp.swift */,
 				763FC7CC2AD693D00008E040 /* BookListView.swift */,
+				76B319802ADAE15600AF1E86 /* BookList.swift */,
 				763FC7DD2AD6FE8D0008E040 /* NewBookView.swift */,
+				76FC4C502AD832560088895E /* EditBookView.swift */,
+				76FC4C522AD847130088895E /* RatingsView.swift */,
 				763FC7CE2AD693D20008E040 /* Assets.xcassets */,
 				763FC7D02AD693D20008E040 /* MyBooks.entitlements */,
 				763FC7D12AD693D20008E040 /* Preview Content */,
-				76FC4C502AD832560088895E /* EditBookView.swift */,
-				76FC4C522AD847130088895E /* RatingsView.swift */,
 			);
 			path = MyBooks;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 				761F19162AD95BCE003E9725 /* BookSamples.swift in Sources */,
 				763FC7DE2AD6FE8D0008E040 /* NewBookView.swift in Sources */,
 				76FC4C532AD847130088895E /* RatingsView.swift in Sources */,
+				76B319812ADAE15600AF1E86 /* BookList.swift in Sources */,
 				76FC4C512AD832560088895E /* EditBookView.swift in Sources */,
 				763FC7CD2AD693D00008E040 /* BookListView.swift in Sources */,
 				763FC7CB2AD693D00008E040 /* MyBooksApp.swift in Sources */,

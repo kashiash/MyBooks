@@ -14,10 +14,11 @@ struct EditBookView: View {
     @State private var rating: Int?
     @State private var title = ""
     @State private var author = ""
-    @State private var summary = ""
+    @State private var synopsis = ""
     @State private var dateAdded = Date.distantPast
     @State private var dateStarted = Date.distantPast
     @State private var dateCompleted = Date.distantPast
+    @State private var recomendedBy = ""
 
     @State private var firstView = true;
 
@@ -37,58 +38,73 @@ struct EditBookView: View {
                 LabeledContent {
                     DatePicker("",selection: $dateAdded, displayedComponents: .date)
                 } label: {
-                    Text("Data dodania")
+                    Text("Date Added")
                 }
 
                 if status == .inProgress || status == .completed {
-                    DatePicker("Data rozpoczęcia",selection: $dateStarted,in: dateAdded..., displayedComponents: .date)
+                    DatePicker("Date Started",selection: $dateStarted,in: dateAdded..., displayedComponents: .date)
                 }
                 if status == .completed {
-                    DatePicker("Data przeczytania",selection: $dateCompleted,in: dateStarted..., displayedComponents: .date)
+                    DatePicker("Date Completed",selection: $dateCompleted,in: dateStarted..., displayedComponents: .date)
                 }
             }
             .foregroundStyle(.secondary)
             .onChange(of: status) { oldValue, newValue in
                 if firstView {
 
-                 if newValue == .onShelf {
-                    dateStarted = Date.distantPast
-                    dateCompleted = Date.distantPast
-                } else if newValue == .inProgress && oldValue  == .completed {
-                    dateCompleted = Date.distantPast
-                } else if newValue == .inProgress && oldValue  == .onShelf {
-                    dateStarted = Date.now
-                } else if newValue == .completed  && oldValue  == .onShelf {
-                    dateCompleted = Date.now
-                    dateStarted = dateAdded
-                } else  {
-                    dateCompleted = Date.now
-                }
+                    if newValue == .onShelf {
+                        dateStarted = Date.distantPast
+                        dateCompleted = Date.distantPast
+                    } else if newValue == .inProgress && oldValue  == .completed {
+                        dateCompleted = Date.distantPast
+                    } else if newValue == .inProgress && oldValue  == .onShelf {
+                        dateStarted = Date.now
+                    } else if newValue == .completed  && oldValue  == .onShelf {
+                        dateCompleted = Date.now
+                        dateStarted = dateAdded
+                    } else  {
+                        dateCompleted = Date.now
+                    }
                     firstView = false
+                }
             }
+            Divider()
+            LabeledContent{
+                RatingsView(maxRating: 5, currentRating: $rating, width: 30)
+            }label: {
+                Text("Rating")
+            }
+            LabeledContent {
+                TextField("", text:$title)
+            } label: {
+                Text("Title")
+            }
+            LabeledContent {
+                TextField("", text: $author)
+            } label: {
+                Text("Author")
+            }
+
+            LabeledContent {
+                TextField("", text: $recomendedBy)
+            } label: {
+                Text("Recomended by")
+            }
+            Divider()
+            Text("Synopsis").foregroundStyle(.secondary)
+            TextEditor(text: $synopsis)
+                .padding(5)
+                .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color(uiColor: .tertiarySystemFill), lineWidth: 2))
+            NavigationLink {
+                QuotesListView( book: book)
+            } label : {
+                let count = book.quotes?.count ?? 0
+                Label("^[\(count) Quotes](inflect: true)",systemImage:"quote.opening")
+            }
+            .buttonStyle(.bordered)
+            .frame(maxWidth: .infinity, alignment:.trailing)
+            .padding(.horizontal)
         }
-        Divider()
-        LabeledContent{
-            RatingsView(maxRating: 5, currentRating: $rating, width: 30)
-        }label: {
-            Text("Ocena")
-        }
-        LabeledContent {
-            TextField("", text:$title)
-        } label: {
-            Text("Tytuł")
-        }
-        LabeledContent {
-            TextField("", text: $author)
-        } label: {
-            Text("Autor")
-        }
-        Divider()
-        Text("Opis").foregroundStyle(.secondary)
-        TextEditor(text: $summary)
-            .padding(5)
-            .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color(uiColor: .tertiarySystemFill), lineWidth: 2))
-    }
         .padding()
         .textFieldStyle(.roundedBorder)
         .navigationTitle(title)
@@ -100,11 +116,12 @@ struct EditBookView: View {
                     book.rating     = rating
                     book.title      = title
                     book.author     = author
-                    book.summary    = summary
+                    book.synopsis    = synopsis
                     book.dateAdded  = dateAdded
                     book.dateCompleted = dateCompleted
                     book.dateStarted = dateStarted
-
+                    book.dateStarted = dateStarted
+                    book.recomendedBy = recomendedBy
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)
@@ -115,29 +132,31 @@ struct EditBookView: View {
             rating  =   book.rating
             title   =   book.title
             author  =   book.author
-            summary =   book.summary
+            synopsis =   book.synopsis
             dateAdded       = book.dateAdded
             dateCompleted   = book.dateCompleted
             dateStarted     = book.dateStarted
+            recomendedBy = book.recomendedBy
         }
-}
-var changed: Bool {
-    status != Status(rawValue: book.status)!
-    || rating != book.rating
-    || title != book.title
-    || author != book.author
-    || summary != book.summary
-    || dateAdded != book.dateAdded
-    || dateCompleted != book.dateCompleted
-    || dateStarted != book.dateStarted
-}
+    }
+    var changed: Bool {
+        status != Status(rawValue: book.status)!
+        || rating != book.rating
+        || title != book.title
+        || author != book.author
+        || synopsis != book.synopsis
+        || dateAdded != book.dateAdded
+        || dateCompleted != book.dateCompleted
+        || dateStarted != book.dateStarted
+        || recomendedBy != book.recomendedBy
+    }
 
 }
 
 #Preview {
     let preview = Preview(Book.self)
-   return NavigationStack {
-       EditBookView(book: Book.sampleBooks[18])
-           .modelContainer(preview.container)
+    return NavigationStack {
+        EditBookView(book: Book.sampleBooks[16])
+            .modelContainer(preview.container)
     }
 }

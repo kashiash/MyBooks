@@ -1,0 +1,84 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "%lld Quotes" : {
+
+    },
+    "Add first book" : {
+
+    },
+    "Author" : {
+
+    },
+    "Autor" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Create" : {
+
+    },
+    "Date Added" : {
+
+    },
+    "Date Completed" : {
+
+    },
+    "Date Started" : {
+
+    },
+    "Filter by title or author" : {
+
+    },
+    "My books" : {
+
+    },
+    "New book" : {
+
+    },
+    "Page" : {
+
+    },
+    "page #" : {
+
+    },
+    "Page: %@" : {
+
+    },
+    "Quotes" : {
+
+    },
+    "Rating" : {
+
+    },
+    "Recomended by" : {
+
+    },
+    "Save" : {
+
+    },
+    "Sort by %@" : {
+
+    },
+    "Status" : {
+
+    },
+    "Synopsis" : {
+
+    },
+    "Title" : {
+
+    },
+    "Tytuł ksiązki" : {
+
+    },
+    "Update" : {
+
+    }
+  },
+  "version" : "1.0"
+}

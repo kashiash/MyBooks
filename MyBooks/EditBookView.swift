@@ -99,7 +99,7 @@ struct EditBookView: View {
                 QuotesListView( book: book)
             } label : {
                 let count = book.quotes?.count ?? 0
-                Label("^[\(count) Quotes](inflect: true)",systemImage:"quote.opening")
+                Label("\(count) Quotes",systemImage:"quote.opening")
             }
             .buttonStyle(.bordered)
             .frame(maxWidth: .infinity, alignment:.trailing)
@@ -111,7 +111,7 @@ struct EditBookView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if changed {
-                Button("Zapisz") {
+                Button("Save") {
                     book.status     = status.rawValue
                     book.rating     = rating
                     book.title      = title

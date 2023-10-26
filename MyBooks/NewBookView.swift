@@ -18,14 +18,14 @@ struct NewBookView: View {
                 TextField("Tytuł ksiązki",text: $title)
                 TextField("Autor",text: $author)
                 HStack {
-                    Button("Anuluj") {
+                    Button("Cancel") {
 
                         dismiss()
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .buttonStyle(.bordered)
 
-                    Button("Zapisz") {
+                    Button("Save") {
                         let newBook = Book(title: title, author: author)
                         context.insert(newBook)
                         dismiss()
@@ -36,11 +36,11 @@ struct NewBookView: View {
                     .disabled(title.isEmpty || author.isEmpty)
                 }
 
-                .navigationTitle("Nowa książka")
+                .navigationTitle("New book")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar{
                     ToolbarItem(placement: .topBarLeading) {
-                        Button("Anuluj") {
+                        Button("Cancel") {
                             dismiss()
                         }
                     }

@@ -30,8 +30,8 @@ struct BookListView: View {
             }
             .buttonStyle(.bordered)
             BookList(sortOrder: sortOrder, filterString: filter)
-                .searchable(text: $filter, prompt: "Filtruj po tytule lub autorze")
-            .navigationTitle("Moje książki")
+                .searchable(text: $filter, prompt: "Filter by title or author")
+            .navigationTitle("My books")
             .toolbar{
                 Button {
                     createNewBook = true

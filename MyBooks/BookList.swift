@@ -32,7 +32,7 @@ struct BookList: View {
     var body: some View {
         Group {
             if books.isEmpty {
-                ContentUnavailableView("Wprowadź pierwszą książkę", systemImage: "book.fill")
+                ContentUnavailableView("Add first book", systemImage: "book.fill")
             } else {
                 List {
                     ForEach(books) { book in

@@ -231,6 +231,9 @@
         }
       }
     },
+    "Hello, World!" : {
+
+    },
     "My books" : {
       "localizations" : {
         "de" : {

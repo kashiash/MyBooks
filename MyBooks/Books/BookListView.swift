@@ -50,7 +50,7 @@ struct BookListView: View {
 
 #Preview("English") {
     let preview = Preview(Book.self)
-    
+
     let books = Book.sampleBooks
     let genres = Genre.sampleGenres
 

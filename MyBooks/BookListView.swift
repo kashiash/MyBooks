@@ -48,9 +48,24 @@ struct BookListView: View {
     }
 }
 
-#Preview {
+#Preview("English") {
     let preview = Preview(Book.self)
     preview.addExamples(Book.sampleBooks)
     return BookListView()
         .modelContainer(preview.container)
+        .environment(\.locale, Locale(identifier: "GB"))
+}
+#Preview("Polish") {
+    let preview = Preview(Book.self)
+    preview.addExamples(Book.sampleBooks)
+    return BookListView()
+        .modelContainer(preview.container)
+        .environment(\.locale, Locale(identifier: "PL"))
+}
+#Preview("German") {
+    let preview = Preview(Book.self)
+    preview.addExamples(Book.sampleBooks)
+    return BookListView()
+        .modelContainer(preview.container)
+        .environment(\.locale, Locale(identifier: "DE"))
 }

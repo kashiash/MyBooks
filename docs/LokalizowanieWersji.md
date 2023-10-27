@@ -28,7 +28,482 @@ zamieniamy na
 Label("\(count) Quotes",systemImage:"quote.opening")
 ```
 
-Pozwól mi zbudować jeszcze raz, a kiedy wrócę do mojego katalogu ciągów znaków, zostanie zaktualizowany. Widzę teraz, że ten ciąg to teraz %lld cytowań, gdzie %lld będzie wartością count, a następnie znakiem cudzysłowu. Ale chcę, żeby ten ciąg był po prostu pojedynczym cytatem, gdy jest tylko jeden cytat. Cóż, możesz kliknąć prawym przyciskiem myszy i wybrać opcję vary by plural (zmień w zależności od liczby mnogiej). To generuje te dwie linie. A jeśli jest tylko jeden, chcę, żeby słowo było po prostu "quote". Dla pozostałych, które obejmują zero i każdą większą niż jedna liczbę, "quotes" są odpowiednie. Tak więc możemy to zostawić. Upewnijmy się tylko, że to działa. Mogę otworzyć widok Listy Książek, aby zobaczyć podgląd. Niech wybiorę jedną z moich książek i widzę, że ma zero cytowań używając liczby mnogiej. Jeśli kliknę przycisk, aby dodać cytat, mogę to zrobić tutaj. Następnie wróćmy do widoku Listy i widzę, że teraz pokazuje tylko jeden cytat, używając pojedynczego cytatu. Wróćmy znów do widoku Cytatów i dodajmy kolejny. Kiedy wrócę do widoku Listy, jest znowu liczba mnoga. Tak więc, jeśli nic innego, lokalizacja jest świetnym sposobem na radzenie sobie z liczbami mnogimi w Twojej aplikacji. Teraz przyszedł czas, aby dodać nowy język. Wybierz swój katalog ciągów znaków, a na dole możesz kliknąć przycisk plus i wybrać inny język. Wybieram niemiecki. Teraz, jeśli przejdę do pliku niemieckiego, widzę, że mamy klucz, a potem domyślną lokalizację, która jest angielska, a następnie kolumnę do wprowadzenia tłumaczenia na niemiecki.
+Pozwól mi zbudować jeszcze raz, a kiedy wrócę do mojego katalogu ciągów znaków, zostanie zaktualizowany. Widzę teraz, że ten ciąg to teraz %lld cytowań, gdzie %lld będzie wartością count, a następnie znakiem cudzysłowu. 
+
+![image-20231026142822464](image-20231026142822464.png)
+
+Ale chcę, żeby ten ciąg był po prostu pojedynczym cytatem, gdy jest tylko jeden cytat. Cóż, możesz kliknąć prawym przyciskiem myszy i wybrać opcję vary by plural (zmień w zależności od liczby mnogiej). To generuje te dwie linie. A jeśli jest tylko jeden, chcę, żeby słowo było po prostu "quote". Dla pozostałych, które obejmują zero i każdą większą niż jedna liczbę, "quotes" są odpowiednie. Tak więc możemy to zostawić. 
+
+![image-20231026143153493](image-20231026143153493.png)
+
+Upewnijmy się tylko, że to działa. Mogę otworzyć widok Listy Książek, aby zobaczyć podgląd. Niech wybiorę jedną z moich książek i widzę, że ma zero cytowań używając liczby mnogiej. Jeśli kliknę przycisk, aby dodać cytat, mogę to zrobić tutaj. Następnie wróćmy do widoku Listy i widzę, że teraz pokazuje tylko jeden cytat, używając pojedynczego cytatu. Wróćmy znów do widoku Cytatów i dodajmy kolejny. Kiedy wrócę do widoku Listy, jest znowu liczba mnoga. Tak więc, jeśli nic innego, lokalizacja jest świetnym sposobem na radzenie sobie z liczbami mnogimi w Twojej aplikacji. Teraz przyszedł czas, aby dodać nowy język. Wybierz swój katalog ciągów znaków, a na dole możesz kliknąć przycisk plus i wybrać inny język. Wybieram niemiecki. Teraz, jeśli przejdę do pliku niemieckiego, widzę, że mamy klucz, a potem domyślną lokalizację, która jest angielska, a następnie kolumnę do wprowadzenia tłumaczenia na 
+
+~~~swift
+Certainly! Here are the missing German translations filled in the provided JSON file:
+
+```json
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ""
+          }
+        }
+      }
+    },
+    "%lld Quotes": {
+      "localizations": {
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Zitat"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Zitate"
+                }
+              }
+            }
+          }
+        }
+      },
+      "en": {
+        "variations": {
+          "plural": {
+            "one": {
+              "stringUnit": {
+                "state": "translated",
+                "value": "%lld Quote"
+              }
+            },
+            "other": {
+              "stringUnit": {
+                "state": "new",
+                "value": "%lld Quotes"
+              }
+            }
+          }
+        }
+      },
+      "pl": {
+        "variations": {
+          "plural": {
+            "few": {
+              "stringUnit": {
+                "state": "translated",
+                "value": "%lld Cytaty"
+              }
+            },
+            "many": {
+              "stringUnit": {
+                "state": "translated",
+                "value": "%lld Cytatów"
+              }
+            },
+            "one": {
+              "stringUnit": {
+                "state": "translated",
+                "value": "%lld Cytat"
+              }
+            },
+            "other": {
+              "stringUnit": {
+                "state": "translated",
+                "value": "%lld Cytatów"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Add first book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Füge erstes Buch hinzu"
+          }
+        }
+      },
+      "pl": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Dodaj pierwszą książkę"
+        }
+      }
+    },
+    "Author": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autor"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autor"
+          }
+        }
+      }
+    },
+    "Book title": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buchtitel"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tytuł książki"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbrechen"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anuluj"
+          }
+        }
+      }
+    },
+    "Create": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erstellen"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utwórz"
+          }
+        }
+      }
+    },
+    "Date Added": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinzugefügt am"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data dodania"
+          }
+        }
+      }
+    },
+    "Date Completed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abgeschlossen am"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data ukończenia"
+          }
+        }
+      }
+    },
+    "Date Started": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestartet am"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data rozpoczęcia"
+          }
+        }
+      }
+    },
+    "Filter by title or author": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtern nach Titel oder Autor"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtruj wg autora i tytułu"
+          }
+        }
+      }
+    },
+    "My books": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meine Bücher"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moje książki"
+          }
+        }
+      }
+    },
+    "New book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neues Buch"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nowa książka"
+          }
+        }
+      }
+    },
+    "Page": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seite"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strona"
+          }
+        }
+      }
+    },
+    "page #": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seite %d"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "strona nr"
+          }
+        }
+      }
+    },
+    "Page: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seite: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strona: %@"
+          }
+        }
+     
+
+ }
+    },
+    "Quotes": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zitate"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cytaty"
+          }
+        }
+      }
+    },
+    "Rating": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bewertung"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ocena"
+          }
+        }
+      }
+    },
+    "Recomended by": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empfohlen von"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polecił"
+          }
+        }
+      }
+    },
+    "Save": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichern"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapisz"
+          }
+        }
+      }
+    },
+    "Sort by %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sortieren nach %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sortuj wg"
+          }
+        }
+      }
+    },
+    "Status": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Status"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Status"
+          }
+        }
+      }
+    },
+    "Synopsis": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zusammenfassung"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Streszczenie"
+          }
+        }
+      }
+    },
+    "Title": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tytuł"
+          }
+        }
+      }
+    },
+    "Update": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualisieren"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualizuj"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
+```
+
+This JSON includes the missing German translations for the given English keys.
+~~~
+
+.
 
 > 
 
@@ -36,7 +511,7 @@ Zauważ, że niemiecki jest obecnie oznaczony jako 0% ukończony. Znajdźmy tera
 
 > 
 
-Tak więc mogę użyć tych tłumaczeń, aby uzupełnić niemiecki w moim katalogu ciągów znaków. Pozwól mi wrócić do widoku według katalogu ciągów znaków zamiast tego JSON źródłowego. Mogę posortować, klikając w nagłówek kolumny. Puste ciągi znaków są takie same w każdym języku, więc mogę je oznaczyć jako zrecenzowane, co zmienia je na znaczek zatwierdzenia. Zauważ znaczek zatwierdzenia pokazany dla naszych cytatów. Został ukończony i zatwierdzony. Zaczynajmy więc wprowadzać nasze inne tłumaczenia. Więc dla "Author", czyli "AUTOR" w języku angielskim, ChatGPT mówi mi, że w niemieckim to po prostu "AUTOR". Teraz nie będę Cię nudził wprowadzaniem reszty tych tłumaczeń, więc pozwól mi przejść od razu na koniec. Wróćmy więc do widoku Listy Książek i dodajmy drugi podgląd dla niemieckiego. Najpierw dodajmy tytuł dla tego podglądu jako "English", aby pojawił się w naszym podglądzie. Teraz mogę skopiować cały ten podgląd i wkleić go, nadając tytuł "German". Cóż, teraz nadal są po angielsku. Co mogę zrobić, to dodać metodę środowiskową do naszego widoku, która używa ścieżki klucza, która to jest lokalizacja, ale wymaga wartości, a jest nią instancja lokalizacji z identyfikatorem dla niemieckiego, który to jest DE. Teraz, jeśli przejdę do tego podglądu, zobaczysz, że mój tytuł i pola wyszukiwania zostały zmodyfikowane. Ale jeśli przyjrzysz się uważnie temu pickerowi, te małe litery "status", "title" i "author" nie zostały przetłumaczone. Teraz, jeśli przejdę do widoku szczegółów, większość ciągów znaków została przetłumaczona, za wyjątkiem tych, które wprowadziłem, oczywiście, ponieważ moje wpisy do książek utworzyłem po angielsku. Ale picker również nie został przetłumaczony, a jest to coś, co jest w kodzie. Problem polega na tym, że używaliśmy enumów, enumów case iterable i korzystaliśmy zarówno ze string raw value, jak w przypadku sort order, jak i z właściwości obliczeniowej dla opisu ciągu znaków w naszym enumie statusu. To jest naprawdę łatwe do naprawienia. Możesz znaleźć sort order w widoku listy książek.
+Tak więc mogę użyć tych tłumaczeń, aby uzupełnić niemiecki w moim katalogu ciągów znaków. Pozwól mi wrócić do widoku według katalogu ciągów znaków zamiast tego JSON źródłowego. Mogę posortować, klikając w nagłówek kolumny. Puste ciągi znaków są takie same w każdym języku, więc mogę je oznaczyć jako zrecenzowane, co zmienia je na znaczek zatwierdzenia. Zauważ znaczek zatwierdzenia pokazany dla naszych cytatów. Został ukończony i zatwierdzony. Zaczynajmy więc wprowadzać nasze inne tłumaczenia. Więc dla "Author", czyli "AUTOR" w języku angielskim, ChatGPT mówi mi, że w niemieckim to po prostu "AUTOR". Teraz nie będę Cię nudził wprowadzaniem reszty tych tłumaczeń, więc pozwól mi przejść od razu na koniec. Wróćmy więc do widoku Listy Książek i dodajmy drugi podgląd dla niemieckiego. Najpierw dodajmy tytuł dla tego podglądu jako "English", aby pojawił się w naszym podglądzie. Teraz mogę skopiować cały ten podgląd i wkleić go, nadając tytuł "German". Cóż, teraz nadal są po angielsku. Co mogę zrobić, to dodać metodę środowiskową do naszego widoku, która używa ścieżki klucza, która to jest lokalizacja, ale wymaga wartości, a jest nią instancja lokalizacji z identyfikatorem dla niemieckiego, który to jest DE. Teraz, jeśli przejdę do tego podglądu, zobaczysz, że mój tytuł i pola wyszukiwania zostały zmodyfikowane. Ale jeśli przyjrzysz się uważnie temu pickerowi, te małe litery "status", "title" i "author" nie zostały przetłumaczone. Teraz, jeśli przejdę do widoku szczegółów, większość ciągów znaków została przetłumaczona, za wyjątkiem tych, które wprowadziłem, oczywiście, ponieważ moje wpisy do książek utworzyłem po angielsku. Ale picker również nie został przetłumaczony, a jest to coś, co jest w kodzie. Problem polega na tym, że używaliśmy enumów i korzystaliśmy zarówno ze string raw value, jak w przypadku sort order, jak i z właściwości obliczeniowej dla opisu ciągu znaków w naszym enumie statusu. To jest naprawdę łatwe do naprawienia. Możesz znaleźć sort order w widoku listy książek.
 
 > 
 

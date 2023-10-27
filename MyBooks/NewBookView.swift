@@ -15,8 +15,8 @@ struct NewBookView: View {
     var body: some View {
         NavigationStack{
             Form{
-                TextField("Tytuł ksiązki",text: $title)
-                TextField("Autor",text: $author)
+                TextField("Book title",text: $title)
+                TextField("Author",text: $author)
                 HStack {
                     Button("Cancel") {
 

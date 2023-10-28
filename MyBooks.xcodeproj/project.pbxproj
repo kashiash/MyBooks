@@ -22,6 +22,7 @@
 		766D02A12AEBFD85000CE954 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766D02A02AEBFD85000CE954 /* UIColor+Extension.swift */; };
 		766D02A32AEC023B000CE954 /* GenreSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766D02A22AEC023B000CE954 /* GenreSamples.swift */; };
 		766D02AA2AEC286E000CE954 /* GenresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766D02A92AEC286E000CE954 /* GenresView.swift */; };
+		766D02AC2AED0548000CE954 /* NewGenreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766D02AB2AED0548000CE954 /* NewGenreView.swift */; };
 		76B319812ADAE15600AF1E86 /* BookList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76B319802ADAE15600AF1E86 /* BookList.swift */; };
 		76B319832ADBC62800AF1E86 /* migrations.md in Resources */ = {isa = PBXBuildFile; fileRef = 76B319822ADBC62700AF1E86 /* migrations.md */; };
 		76B3198E2ADBC64A00AF1E86 /* image-20231011212137465.png in Resources */ = {isa = PBXBuildFile; fileRef = 76B319842ADBC64A00AF1E86 /* image-20231011212137465.png */; };
@@ -58,6 +59,7 @@
 		766D02A02AEBFD85000CE954 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		766D02A22AEC023B000CE954 /* GenreSamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreSamples.swift; sourceTree = "<group>"; };
 		766D02A92AEC286E000CE954 /* GenresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresView.swift; sourceTree = "<group>"; };
+		766D02AB2AED0548000CE954 /* NewGenreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGenreView.swift; sourceTree = "<group>"; };
 		76B319802ADAE15600AF1E86 /* BookList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookList.swift; sourceTree = "<group>"; };
 		76B319822ADBC62700AF1E86 /* migrations.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = migrations.md; sourceTree = "<group>"; };
 		76B319842ADBC64A00AF1E86 /* image-20231011212137465.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image-20231011212137465.png"; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				766D02A92AEC286E000CE954 /* GenresView.swift */,
+				766D02AB2AED0548000CE954 /* NewGenreView.swift */,
 			);
 			path = Genres;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 				766D029F2AEBFC02000CE954 /* Color+Hex.swift in Sources */,
 				761F19162AD95BCE003E9725 /* BookSamples.swift in Sources */,
 				763FC7DE2AD6FE8D0008E040 /* NewBookView.swift in Sources */,
+				766D02AC2AED0548000CE954 /* NewGenreView.swift in Sources */,
 				76FC4C532AD847130088895E /* RatingsView.swift in Sources */,
 				766D029C2AEAAB19000CE954 /* Genre.swift in Sources */,
 				766D02A12AEBFD85000CE954 /* UIColor+Extension.swift in Sources */,

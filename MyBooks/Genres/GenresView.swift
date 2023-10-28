@@ -82,7 +82,9 @@ struct GenresView: View {
 
     preview.addExamples(genres)
     preview.addExamples(books)
-    books[1].genres?.append(genres[1])
-    return GenresView(book: books[1])
-        .modelContainer(preview.container)
+    books[2].genres?.append(genres[1])
+    return    NavigationStack {
+        GenresView(book: books[2])
+            .modelContainer(preview.container)
+    }
 }

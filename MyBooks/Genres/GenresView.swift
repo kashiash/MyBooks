@@ -13,7 +13,7 @@ struct GenresView: View {
     @Environment(\.modelContext) private var context
     @Bindable var book: Book
     @Query(sort:\Genre.name) var genres: [Genre]
-
+   @State private var newGenre = false
     var body: some View {
         NavigationStack {
             if genres.isEmpty {
@@ -24,7 +24,7 @@ struct GenresView: View {
                     Text("You need to create some genres first.")
                 } actions: {
                     Button("Create Genre") {
-
+                        newGenre = true
                     }
                     .buttonStyle(.borderedProminent)
                 }
@@ -51,11 +51,34 @@ struct GenresView: View {
                             Text(genre.name)
                         }
                     }
+                    LabeledContent {
+                        Button {
+                            newGenre = true
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .imageScale(.large)
+                        }
+                        .buttonStyle(.borderedProminent)
+                    } label: {
+                        Text("Create new Genre")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
                 }
+                .listStyle(.plain)
             }
 
         }
         .navigationTitle(book.title)
+        .sheet(isPresented: $newGenre) {
+            NewGenreView()
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Back") {
+                    dismiss()
+                }
+            }
+        }
 
     }
 

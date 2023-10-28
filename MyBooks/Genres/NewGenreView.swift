@@ -19,7 +19,18 @@ struct NewGenreView: View {
             Form {
                 TextField("name", text: $name)
                 ColorPicker("Set the genre color", selection: $color, supportsOpacity: false)
+                Button("Create") {
+                    let newGenre = Genre(name: name, color: color.toHexString()!)
+                    context.insert(newGenre)
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(maxWidth: .infinity,alignment: .trailing)
+                .disabled(name.isEmpty)
             }
+            .padding()
+            .navigationTitle("New Genre")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

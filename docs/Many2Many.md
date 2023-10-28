@@ -189,7 +189,7 @@ Pierwszy gatunek nazwę "Literatura piękna" i ustawię kolor na zielony, czyli 
 
  Mamy teraz wiele plików w naszym nawigatorze, więc chciałbym je zorganizować, zanim pójdę dalej. Zatem pierwszą rzeczą, jaką zrobię, to wybiorę widok listy książek, listę książek, widok nowej książki i widok edycji książki, zaznaczę je wszystkie i utworzę nową grupę z tego zaznaczenia, nazwiję ją po prostu "Books". Możesz organizować pliki według własnego uznania, to tylko sposób, w jaki ja to robię. Następnie wybiorę moje trzy modele, książkę, cytat i gatunek, i utworzę z nich nową grupę, nazywając ją "Models". Mam dwie rozszerzenia, więc je zaznaczę i utworzę grupę nazwaną "Extensions". Mam tylko jeden widok cytatu, ale może lepiej będzie zaznaczyć go i utworzyć osobną grupę, którą nazwę "Quotes". Przenieśmy go powyżej "Books".Następnie wybiorę widok ocen i utworzę z niego nową grupę, którą nazwę "Accessory View". Teraz w nawigatorze możesz wybrać dowolny folder lub przejść na najwyższy poziom w dowolnym momencie i użyć klawisza opcji oraz strzałek w lewo lub w prawo, aby zwijać lub rozwijać wszystkie grupy folderów. 
 
-
+## GenresView
 
 Stwórzmy teraz widok, który pozwoli nam zobaczyć wszystkie dostępne gatunki w liście, jednocześnie umożliwiając wybór tych, które mogą być związane z wybraną książką. Zacznijmy od utworzenia grupy, którą nazwę "Gatunek", która będzie zawierała wszystkie pliki związane z tym zagadnieniem. Wewnątrz niej utworzymy nowy plik SwiftUI, który nazwę "GenresView", i zaimportujemy SwiftData. Ten widok będzie prezentowany jako modalny arkusz, więc będziemy musieli uzyskać dostęp do kluczowego środowiska "dismiss" i utworzyć zmienną dla tego celu. Będę również potrzebował dostępu do kontekstu, ponieważ będę prezentować listę z przesunięciem palca. Zdefiniujmy więc kolejną zmienną środowiskową dla klucza "modelContext", którą przypiszę do zmiennej o nazwie "context". Zapytanie będzie otrzymywane z obiektu książki z widoku edycji książki, gdzie będę miał przycisk do wyświetlenia arkusza. Tym razem jednak chcę otrzymać książkę jako obiekt typu "BindableObject". Oznacza to, że będziemy mogli dokonywać zmian bezpośrednio w dowolnej właściwości książki, a zostaną one zaktualizowane i zapisane przez SwiftData. Aby wyświetlić listę wszystkich gatunków przechowywanych w naszej tabeli gatunków, mogę użyć makra "query" i podać kolejność sortowania według ścieżki klucza "name". To da nam tablicę gatunków.
 
@@ -331,15 +331,108 @@ if let bookGenres = book.genres {
 
 Teraz możemy dotknąć gatunku, aby dodać go do listy lub usunąć z tablicy gatunków książki. Kontener podglądu aktualizuje naszą książkę w pamięci. 
 
+## NewGenreView
 
+Teraz, gdy możemy prezentować gatunki, będziemy musieli mieć możliwość tworzenia nowych. Zacznijmy od utworzenia nowego widoku SwiftUI wewnątrz grupy "Gatunek" i nazwijmy go "NewGenreView". Zaimportujmy SwiftData. Będę potrzebować dwóch właściwości stanu, których możemy użyć do utworzenia naszego nowego gatunku. Jeden dla nazwy i jeden dla koloru. Nazwa będzie ciągiem znaków, który możemy zainicjalizować jako pusty ciąg. Ale kolor będzie widokiem koloru, który możemy użyć w selektorze kolorów do zmiany, więc ustaw domyślnie na czerwony. Będziemy tworzyć nowy obiekt gatunku, więc będziemy potrzebować dostępu do kontekstu z otoczenia. Dostaniemy się do tego kontekstu modelu i nazwiemy go "context". Widok ten będzie prezentowany jako modalny arkusz, więc znowu umożliwmy jego zamknięcie, korzystając z klucza środowiska "dismiss" w celu utworzenia właściwości "dismiss".
 
-Teraz, gdy możemy prezentować gatunki, będziemy musieli mieć możliwość tworzenia nowych. Zacznijmy od utworzenia nowego widoku SwiftUI wewnątrz grupy "Gatunek" i nazwijmy go "NewGenreView". Zaimportujmy SwiftData. Będę potrzebować dwóch właściwości stanu, których możemy użyć do utworzenia naszego nowego gatunku. Jeden dla nazwy i jeden dla koloru. Nazwa będzie ciągiem znaków, który możemy zainicjalizować jako pusty ciąg. Ale kolor będzie widokiem koloru, który możemy użyć w selektorze kolorów do zmiany, więc ustaw domyślnie na czerwony. Będziemy tworzyć nowy obiekt gatunku, więc będziemy potrzebować dostępu do kontekstu z otoczenia.
+```swift
+struct NewGenreView: View {
+    @State private var name = ""
+    @State private var color = Color.red
+    @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
 
+    var body: some View {...}
+}
+```
 
+ Zamienię ciało widoku na nawigacyjny stos zawierający formularz. Jako pierwszy element formularza utworzę widok tekstowy z kluczem tytułowym "name" i zbindowaną właściwością stanu "name". Następnie dodam do tego selektor kolorów, gdzie klucz tytułowy będzie ustawiony na "genreColor", a wybór będzie zbindowany z właściwością stanu "color". Ignoruję także opcję przezroczystości, więc argument "supportsOpacity" będzie ustawiony na "false". 
 
-Dostaniemy się do tego kontekstu modelu i nazwiemy go "context". Widok ten będzie prezentowany jako modalny arkusz, więc znowu umożliwmy jego zamknięcie, korzystając z klucza środowiska "dismiss" w celu utworzenia właściwości "dismiss". Zamienię ciało widoku na nawigacyjny stos zawierający formularz. Jako pierwszy element formularza utworzę widok tekstowy z kluczem tytułowym "name" i zbindowaną właściwością stanu "name". Następnie dodam do tego selektor kolorów, gdzie klucz tytułowy będzie ustawiony na "genreColor", a wybór będzie zbindowany z właściwością stanu "color". Ignoruję także opcję przezroczystości, więc argument "supportsOpacity" będzie ustawiony na "false". Następnie utworzę przycisk z etykietą "Utwórz". Dla akcji utworzymy nowy gatunek, gdzie nazwa będzie równa naszej nazwie. Dla koloru będziemy musieli przekształcić kolor na ciąg szesnastkowy za pomocą naszego rozszerzenia. Musi to być "force unwrap", ponieważ jest to opcjonalne, ale ponieważ będzie pochodzić bezpośrednio z selektora kolorów, jest bezpieczne do "force unwrap" w tym miejscu. Teraz, gdy obie wartości są ciągami, możemy użyć kontekstu do wstawienia modelu. Następnie zamkniemy ten widok. Ustawmy też styl przycisku na "borderedProminent". Zastosujmy ramkę, ustawiając maksymalną szerokość na "infinity" z wyjustowaniem do prawej strony, co przesunie go na prawą stronę naszego formularza. Aby upewnić się, że nie uzyskamy pustych kolorów, zdezaktywujemy przycisk, jeśli nazwa jest pusta. Do formularza dodam też odrobinę marginesu. Utworzymy nawigacyjny tytuł, używając ciągu "New Genre", ale ustawmy tryb wyświetlania tytułu paska nawigacyjnego na "inline". Teraz, jeśli spróbujesz utworzyć jeden tutaj, aplikacja by się zawiesiła, ponieważ nie skonfigurowaliśmy jeszcze naszego kontenera podglądu. Niemniej jednak nie ma sensu tego robić tutaj. Wróćmy do naszego widoku gatunków i dodajmy przycisk, który ten widok będzie prezentować. Tak więc, jako ostatni wiersz w liście po pętli "for each", utwórzmy widok z etykietą, używając zawartości i etykiety. Dla zawartości utworzymy przycisk, ale na razie pozostawmy akcję pustą. Dla etykiety przycisku utworzymy obrazek, używając nazwy systemowej "plus.circle.fill". Ustawimy skalę obrazka na "large". Zastosujemy również styl przycisku na "borderedProminent".
+```swift
+    var body: some View {
+        NavigationStack {
+            Form {
+                TextField("name", text: $name)
+                ColorPicker("Set the genre color", selection: $color, supportsOpacity: false)
+            }
+        }
+    }
+```
 
+Następnie utworzę przycisk z etykietą "Utwórz". Dla akcji utworzymy nowy gatunek, gdzie nazwa będzie równa naszej nazwie. Dla koloru będziemy musieli przekształcić kolor na ciąg szesnastkowy za pomocą naszego rozszerzenia. Musi to być "force unwrap", ponieważ jest to opcjonalne, ale ponieważ będzie pochodzić bezpośrednio z selektora kolorów, jest bezpieczne do "force unwrap" w tym miejscu. Teraz, gdy obie wartości są ciągami, możemy użyć kontekstu do wstawienia modelu. Następnie zamkniemy ten widok. 
 
+```swift
+                Button("Create") {
+                    let newGenre = Genre(name: name, color: color.toHexString()!)
+                    context.insert(newGenre)
+                    dismiss()
+                }
+```
+
+Ustawmy też styl przycisku na "borderedProminent". Zastosujmy ramkę, ustawiając maksymalną szerokość na "infinity" z wyjustowaniem do prawej strony, co przesunie go na prawą stronę naszego formularza. Aby upewnić się, że nie uzyskamy pustych kolorów, zdezaktywujemy przycisk, jeśli nazwa jest pusta. Do formularza dodam też odrobinę marginesu. Utworzymy nawigacyjny tytuł, używając ciągu "New Genre", ale ustawmy tryb wyświetlania tytułu paska nawigacyjnego na "inline". 
+
+```swift
+import SwiftUI
+import SwiftData
+
+struct NewGenreView: View {
+    @State private var name = ""
+    @State private var color = Color.red
+    @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                TextField("name", text: $name)
+                ColorPicker("Set the genre color", selection: $color, supportsOpacity: false)
+                Button("Create") {
+                    let newGenre = Genre(name: name, color: color.toHexString()!)
+                    context.insert(newGenre)
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(maxWidth: .infinity,alignment: .trailing)
+                .disabled(name.isEmpty)
+            }
+            .padding()
+            .navigationTitle("New Genre")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+}
+```
+
+Teraz, jeśli spróbujesz utworzyć jakiś gatunek na podglądzie, aplikacja by się zawiesiła, ponieważ nie skonfigurowaliśmy jeszcze naszego kontenera podglądu. Niemniej jednak nie ma sensu tego robić tutaj. Wróćmy do naszego widoku gatunków i dodajmy przycisk, który ten widok będzie prezentować. Tak więc, jako ostatni wiersz w liście po pętli "for each", utwórzmy widok z etykietą, używając zawartości i etykiety. Dla zawartości utworzymy przycisk, ale na razie pozostawmy akcję pustą. Dla etykiety przycisku utworzymy obrazek, używając nazwy systemowej "plus.circle.fill". Ustawimy skalę obrazka na "large". Zastosujemy również styl przycisku na "borderedProminent".
+
+```swift
+    var body: some View {
+        NavigationStack {
+            if genres.isEmpty {...
+            } else {
+                List {
+                    ForEach(genres) { ...
+                   }
+                    LabeledContent {
+                        Button {
+
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .imageScale(.large)
+                        }
+                        .buttonStyle(.borderedProminent)
+                    } label: {
+                        Text("Create new Genre")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+            }
+
+        }
+        .navigationTitle(book.title)
+
+    }
+```
 
 Dla etykiety samego widoku "labeled content" utworzę nowy widok tekstowy, używając napisu "Create New Genre". Zastosuję czcionkę podpisu (captioned font) i ustawię styl wypełnienia (foreground style) na "secondary". Ustawmy również styl listy na "plain". Przycisk, który utworzyliśmy, będzie używany do prezentowania arkusza modalnego, więc utworzę nową właściwość stanu o nazwie "newGenre" i zainicjalizuję ją jako "false". Następnie dla akcji tego przycisku po prostu przełączymy tę właściwość stanu. Czasami zauważam, że zakomentowanie i odkomentowanie linii kodu naprawia te fałszywe błędy podglądu. Teraz ważne jest, aby wrócić do widoku z informacją o niedostępnej zawartości, gdzie mieliśmy ten przycisk akcji. Możemy również użyć tego samego przełączania "newGenre" tutaj. Po przełączeniu go będziemy musieli wyświetlić arkusz, więc utworzymy modyfikator "sheet", gdzie "isPresented" będzie zbindowane z tym przełącznikiem i użyjemy go do prezentowania widoku "NewGenreView". Utworzę również pasek narzędzi, aby dostać przycisk, który pozwoli mi zamknąć ekran. Następnie wewnątrz tego paska narzędzi utworzę element paska narzędzi, gdzie położenie (placement) będzie ustawione na "top bar leading", aby umieścić go na krawędzi wiodącej, i utworzę przycisk, który nazwę "Back" i po prostu wywoła funkcję "dismiss". Teraz ten widok sam w sobie musi być prezentowany z widoku edycji książki, dokładnie tak samo, jak utworzyliśmy przycisk do prezentacji widoku "QuotesView". Więc wrócę do widoku edycji książki i utworzę właściwość stanu dla "showGenres" i ustawię ją na "false". Gdzie mamy ten link nawigacyjny do prezentacji naszych cytatów, zagnieżdżę go w hstack, aby pokazać oba te przyciski obok siebie, a jako pierwszy element w hstack utworzę przycisk, gdzie klucz tytułowy to "Genres", ale teraz w Xcode 15 możemy również dodać obraz systemowy do etykiety naszego przycisku. Więc podam "bookmark.fill". A dla akcji po prostu przełączę "showGenres".
 

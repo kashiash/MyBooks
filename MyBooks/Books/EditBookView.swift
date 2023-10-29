@@ -21,6 +21,7 @@ struct EditBookView: View {
     @State private var recomendedBy = ""
 
     @State private var firstView = true;
+    @State private var showGenres = false;
 
     var body: some View {
         HStack{
@@ -95,15 +96,24 @@ struct EditBookView: View {
             TextEditor(text: $synopsis)
                 .padding(5)
                 .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color(uiColor: .tertiarySystemFill), lineWidth: 2))
-            NavigationLink {
-                QuotesListView( book: book)
-            } label : {
-                let count = book.quotes?.count ?? 0
-                Label("\(count) Quotes",systemImage:"quote.opening")
-            }
-            .buttonStyle(.bordered)
-            .frame(maxWidth: .infinity, alignment:.trailing)
+            HStack {
+                Button("Genres",systemImage: "bookmark.fill") {
+                    showGenres.toggle()
+                }
+                .sheet(isPresented: $showGenres) {
+                    GenresView(book: book)
+                }
+
+                NavigationLink {
+                    QuotesListView( book: book)
+                } label : {
+                    let count = book.quotes?.count ?? 0
+                    Label("\(count) Quotes",systemImage:"quote.opening")
+                }
+                .buttonStyle(.bordered)
+                .frame(maxWidth: .infinity, alignment:.trailing)
             .padding(.horizontal)
+            }
         }
         .padding()
         .textFieldStyle(.roundedBorder)

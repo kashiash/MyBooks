@@ -325,6 +325,7 @@ if let bookGenres = book.genres {
     } label: {
       Image(systemName: bookGenres.contains(genre) ? "circle.fill" : "circle")
     }
+    .foregroundStyle(genre.hexColor)
   }
 }
 ```
@@ -434,9 +435,97 @@ Teraz, jeśli spróbujesz utworzyć jakiś gatunek na podglądzie, aplikacja by 
     }
 ```
 
-Dla etykiety samego widoku "labeled content" utworzę nowy widok tekstowy, używając napisu "Create New Genre". Zastosuję czcionkę podpisu (captioned font) i ustawię styl wypełnienia (foreground style) na "secondary". Ustawmy również styl listy na "plain". Przycisk, który utworzyliśmy, będzie używany do prezentowania arkusza modalnego, więc utworzę nową właściwość stanu o nazwie "newGenre" i zainicjalizuję ją jako "false". Następnie dla akcji tego przycisku po prostu przełączymy tę właściwość stanu. Czasami zauważam, że zakomentowanie i odkomentowanie linii kodu naprawia te fałszywe błędy podglądu. Teraz ważne jest, aby wrócić do widoku z informacją o niedostępnej zawartości, gdzie mieliśmy ten przycisk akcji. Możemy również użyć tego samego przełączania "newGenre" tutaj. Po przełączeniu go będziemy musieli wyświetlić arkusz, więc utworzymy modyfikator "sheet", gdzie "isPresented" będzie zbindowane z tym przełącznikiem i użyjemy go do prezentowania widoku "NewGenreView". Utworzę również pasek narzędzi, aby dostać przycisk, który pozwoli mi zamknąć ekran. Następnie wewnątrz tego paska narzędzi utworzę element paska narzędzi, gdzie położenie (placement) będzie ustawione na "top bar leading", aby umieścić go na krawędzi wiodącej, i utworzę przycisk, który nazwę "Back" i po prostu wywoła funkcję "dismiss". Teraz ten widok sam w sobie musi być prezentowany z widoku edycji książki, dokładnie tak samo, jak utworzyliśmy przycisk do prezentacji widoku "QuotesView". Więc wrócę do widoku edycji książki i utworzę właściwość stanu dla "showGenres" i ustawię ją na "false". Gdzie mamy ten link nawigacyjny do prezentacji naszych cytatów, zagnieżdżę go w hstack, aby pokazać oba te przyciski obok siebie, a jako pierwszy element w hstack utworzę przycisk, gdzie klucz tytułowy to "Genres", ale teraz w Xcode 15 możemy również dodać obraz systemowy do etykiety naszego przycisku. Więc podam "bookmark.fill". A dla akcji po prostu przełączę "showGenres".
+Dla etykiety samego widoku "labeled content" utworzę nowy widok tekstowy, używając napisu "Create New Genre". Zastosuję czcionkę podpisu (captioned font) i ustawię styl wypełnienia (foreground style) na "secondary". Ustawmy również styl listy na "plain". Przycisk, który utworzyliśmy, będzie używany do prezentowania arkusza modalnego, więc utworzę nową właściwość stanu o nazwie "newGenre" i zainicjalizuję ją jako "false". Następnie dla akcji tego przycisku po prostu przełączymy tę właściwość stanu. 
+
+```swift
+struct GenresView: View {
+    ...
+   @State private var newGenre = false
+```
+
+Czasami zauważam, że zakomentowanie i odkomentowanie linii kodu naprawia te fałszywe błędy podglądu. Teraz ważne jest, aby wrócić do widoku z informacją o niedostępnej zawartości, gdzie mieliśmy ten przycisk akcji. Możemy również użyć tego samego przełączania "newGenre". Po przełączeniu go będziemy musieli wyświetlić arkusz, więc utworzymy modyfikator "sheet", gdzie "isPresented" będzie zbindowane z tym przełącznikiem i użyjemy go do prezentowania widoku "NewGenreView". 
+
+```swift
+        .sheet(isPresented: $newGenre) {
+            NewGenreView()
+        }
+```
+
+Utworzę również pasek narzędzi, aby dostać przycisk, który pozwoli mi zamknąć ekran. Następnie wewnątrz tego paska narzędzi utworzę element paska narzędzi, gdzie położenie (placement) będzie ustawione na "top bar leading", aby umieścić go na krawędzi wiodącej, i utworzę przycisk, który nazwę "Back" i po prostu wywoła funkcję "dismiss".
+
+```swift
+struct GenresView: View {
+  ...
+  var body: some View {
+        NavigationStack {...}
+        .navigationTitle(book.title)
+        .sheet(isPresented: $newGenre) {
+            NewGenreView()
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Back") {
+                    dismiss()
+                }
+            }
+        }
+```
+
+ Teraz ten widok sam w sobie musi być prezentowany z widoku edycji książki, dokładnie tak samo, jak utworzyliśmy przycisk do prezentacji widoku "QuotesView". Więc wrócę do widoku edycji książki i utworzę właściwość stanu dla "showGenres" i ustawię ją na "false". 
+
+```swift
+struct EditBookView: View {
+    ...
+    @State private var showGenres = false;
+```
+
+Szukamy fragmentu gdzie mamy ten link nawigacyjny do prezentacji naszych cytatów, 
 
 
+
+```swift
+struct EditBookView: View {
+  var body: some View {
+    ...
+    NavigationLink {
+      QuotesListView( book: book)
+    } label : {
+      let count = book.quotes?.count ?? 0
+      Label("\(count) Quotes",systemImage:"quote.opening")
+    }
+    .buttonStyle(.bordered)
+    .frame(maxWidth: .infinity, alignment:.trailing)
+    .padding(.horizontal)
+```
+
+zagnieżdżę go w HStack, aby pokazać oba te przyciski obok siebie, a jako pierwszy element w hstack utworzę przycisk, gdzie klucz tytułowy to "Genres", ale teraz w Xcode 15 możemy również dodać obraz systemowy do etykiety naszego przycisku. Więc podam "bookmark.fill". A dla akcji po prostu przełączę "showGenres".
+
+```swift
+var body: some View {
+  ...
+  HStack {
+    Button("Genres",systemImage: "bookmark.fill") {
+      showGenres.toggle()
+    }
+    .sheet(isPresented: $showGenres) {
+      GenresView(book: book)
+    }
+
+    NavigationLink {
+      QuotesListView( book: book)
+    } label : {
+      let count = book.quotes?.count ?? 0
+      Label("\(count) Quotes",systemImage:"quote.opening")
+    }
+    .buttonStyle(.bordered)
+    .frame(maxWidth: .infinity, alignment:.trailing)
+    .padding(.horizontal)
+  }
+}
+...
+}
+}
+```
 
 Teraz, gdy mamy przełącznik akcji "showGenres", mogę utworzyć arkusz, który będzie prezentować nasz widok gatunków. Ten arkusz będzie zbindowany z "isPresented" do właściwości "showGenres", a następnie mogę utworzyć widok "GenresView", przekazując do niego tę książkę. Teraz, jeśli wrócimy teraz do widoku listy książek, możemy to przetestować w podglądzie. Dotknij dowolnego wiersza, a dostaniesz widok szczegółowy. A stąd możemy nacisnąć przycisk gatunków. I mogę wybrać jeden lub dwa gatunki dla mojej książki. Jeśli naciśnę przycisk "Wstecz", nie zobaczę jeszcze dodanych gatunków, ponieważ jeszcze tego nie obsłużyliśmy. To jest następne. Ale jeśli wrócę do widoku gatunków, zobaczę, że musiały zostać one dodane, ponieważ są wciąż zaznaczone. Pozwól mi teraz spróbować dodać nowy gatunek. Nazwę go "akcja". I wybiorę kolor. I dodam go. I widzimy, że został on dodany alfabetycznie do listy. Jeśli go wybiorę i wrócę, zostanie wstawiony. Jeśli wrócę, zobaczę, że nowy gatunek pozostał i został zaznaczony. Mamy jeszcze dwie rzeczy do zrobienia. Chcę stworzyć ładny sposób na wyświetlanie wybranych gatunków na tym widoku szczegółów, jak również na widoku listy. I nadal będziemy musieli być w stanie usunąć gatunek, którego już nie chcemy, oraz upewnić się, że zostanie on również usunięty z każdej z książek. Ponieważ chcę, aby wygląd był taki sam zarówno na widoku listy, jak i na szczegółowym, stworzę widok SwiftUI do prezentacji naszego stosu gatunków. Więc utworzę nowy plik SwiftUI, który nazwę "GenreStackView". Teraz ten widok otrzyma tablicę gatunków podczas prezentacji. Nazwiemy ją "genres". Następnie zastąpię ciało widoku hstackiem. I użyjemy pętli forEach na naszej tablicy gatunków. To da nam gatunek. Posortuję również tablicę, używając porównywacza klucza ścieżki, którym będzie nazwa naszego gatunku. Wówczas po prostu utworzymy widok tekstowy, używając tej nazwy gatunku. Ustawię czcionkę na podpis (caption). Styl wypełnienia na biały. Dodam trochę marginesu 5. A następnie ustawiam tło na zaokrąglony prostokąt o promieniu rogu 5 i wypełnieniu, które używa koloru szesnastkowego tego gatunku. Teraz nie będę używać podglądu tutaj, ponieważ to dość prosty widok. Więc możemy dodać to do naszych dwóch widoków. Więc w widoku listy książek, gdzie wykonujemy nasze zapytanie w etykiecie nawigacyjnego linku oraz w vStack po polu "reading", użyję iflet, aby sprawdzić, czy mamy tablicę gatunków. I po prostu wyświetlę ten widok "GenreStackView", przekazując tę tablicę.
 

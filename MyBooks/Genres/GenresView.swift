@@ -24,7 +24,7 @@ struct GenresView: View {
                     Text("You need to create some genres first.")
                 } actions: {
                     Button("Create Genre") {
-                        newGenre = true
+                        newGenre.toggle()
                     }
                     .buttonStyle(.borderedProminent)
                 }
@@ -46,6 +46,7 @@ struct GenresView: View {
                                     } label: {
                                         Image(systemName: bookGenres.contains(genre) ? "circle.fill" : "circle")
                                     }
+                                    .foregroundStyle(genre.hexColor)
                                 }
                             }
                             Text(genre.name)
@@ -53,7 +54,7 @@ struct GenresView: View {
                     }
                     LabeledContent {
                         Button {
-                            newGenre = true
+                            newGenre.toggle()
                         } label: {
                             Image(systemName: "plus.circle.fill")
                                 .imageScale(.large)

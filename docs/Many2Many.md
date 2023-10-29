@@ -332,6 +332,8 @@ if let bookGenres = book.genres {
 
 Teraz możemy dotknąć gatunku, aby dodać go do listy lub usunąć z tablicy gatunków książki. Kontener podglądu aktualizuje naszą książkę w pamięci. 
 
+![2023-10-29_11-07-10 (1)](2023-10-29_11-07-10%20(1).gif)
+
 ## NewGenreView
 
 Teraz, gdy możemy prezentować gatunki, będziemy musieli mieć możliwość tworzenia nowych. Zacznijmy od utworzenia nowego widoku SwiftUI wewnątrz grupy "Gatunek" i nazwijmy go "NewGenreView". Zaimportujmy SwiftData. Będę potrzebować dwóch właściwości stanu, których możemy użyć do utworzenia naszego nowego gatunku. Jeden dla nazwy i jeden dla koloru. Nazwa będzie ciągiem znaków, który możemy zainicjalizować jako pusty ciąg. Ale kolor będzie widokiem koloru, który możemy użyć w selektorze kolorów do zmiany, więc ustaw domyślnie na czerwony. Będziemy tworzyć nowy obiekt gatunku, więc będziemy potrzebować dostępu do kontekstu z otoczenia. Dostaniemy się do tego kontekstu modelu i nazwiemy go "context". Widok ten będzie prezentowany jako modalny arkusz, więc znowu umożliwmy jego zamknięcie, korzystając z klucza środowiska "dismiss" w celu utworzenia właściwości "dismiss".
@@ -407,32 +409,32 @@ struct NewGenreView: View {
 Teraz, jeśli spróbujesz utworzyć jakiś gatunek na podglądzie, aplikacja by się zawiesiła, ponieważ nie skonfigurowaliśmy jeszcze naszego kontenera podglądu. Niemniej jednak nie ma sensu tego robić tutaj. Wróćmy do naszego widoku gatunków i dodajmy przycisk, który ten widok będzie prezentować. Tak więc, jako ostatni wiersz w liście po pętli "for each", utwórzmy widok z etykietą, używając zawartości i etykiety. Dla zawartości utworzymy przycisk, ale na razie pozostawmy akcję pustą. Dla etykiety przycisku utworzymy obrazek, używając nazwy systemowej "plus.circle.fill". Ustawimy skalę obrazka na "large". Zastosujemy również styl przycisku na "borderedProminent".
 
 ```swift
-    var body: some View {
-        NavigationStack {
-            if genres.isEmpty {...
-            } else {
-                List {
-                    ForEach(genres) { ...
-                   }
-                    LabeledContent {
-                        Button {
+var body: some View {
+  NavigationStack {
+    Group{
+      if genres.isEmpty {...
+                        } else {
+        List {
+          ForEach(genres) { ...
+                          }
+          LabeledContent {
+            Button {
 
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .imageScale(.large)
-                        }
-                        .buttonStyle(.borderedProminent)
-                    } label: {
-                        Text("Create new Genre")
-                            .font(.caption).foregroundStyle(.secondary)
-                    }
-                }
+            } label: {
+              Image(systemName: "plus.circle.fill")
+              .imageScale(.large)
             }
-
+            .buttonStyle(.borderedProminent)
+          } label: {
+            Text("Create new Genre")
+            .font(.caption).foregroundStyle(.secondary)
+          }
         }
-        .navigationTitle(book.title)
-
+      }
     }
+  }
+  .navigationTitle(book.title)
+}
 ```
 
 Dla etykiety samego widoku "labeled content" utworzę nowy widok tekstowy, używając napisu "Create New Genre". Zastosuję czcionkę podpisu (captioned font) i ustawię styl wypełnienia (foreground style) na "secondary". Ustawmy również styl listy na "plain". Przycisk, który utworzyliśmy, będzie używany do prezentowania arkusza modalnego, więc utworzę nową właściwość stanu o nazwie "newGenre" i zainicjalizuję ją jako "false". Następnie dla akcji tego przycisku po prostu przełączymy tę właściwość stanu. 
@@ -527,7 +529,15 @@ var body: some View {
 }
 ```
 
-Teraz, gdy mamy przełącznik akcji "showGenres", mogę utworzyć arkusz, który będzie prezentować nasz widok gatunków. Ten arkusz będzie zbindowany z "isPresented" do właściwości "showGenres", a następnie mogę utworzyć widok "GenresView", przekazując do niego tę książkę. Teraz, jeśli wrócimy teraz do widoku listy książek, możemy to przetestować w podglądzie. Dotknij dowolnego wiersza, a dostaniesz widok szczegółowy. A stąd możemy nacisnąć przycisk gatunków. I mogę wybrać jeden lub dwa gatunki dla mojej książki. Jeśli naciśnę przycisk "Wstecz", nie zobaczę jeszcze dodanych gatunków, ponieważ jeszcze tego nie obsłużyliśmy. To jest następne. Ale jeśli wrócę do widoku gatunków, zobaczę, że musiały zostać one dodane, ponieważ są wciąż zaznaczone. Pozwól mi teraz spróbować dodać nowy gatunek. Nazwę go "akcja". I wybiorę kolor. I dodam go. I widzimy, że został on dodany alfabetycznie do listy. Jeśli go wybiorę i wrócę, zostanie wstawiony. Jeśli wrócę, zobaczę, że nowy gatunek pozostał i został zaznaczony. Mamy jeszcze dwie rzeczy do zrobienia. Chcę stworzyć ładny sposób na wyświetlanie wybranych gatunków na tym widoku szczegółów, jak również na widoku listy. I nadal będziemy musieli być w stanie usunąć gatunek, którego już nie chcemy, oraz upewnić się, że zostanie on również usunięty z każdej z książek. Ponieważ chcę, aby wygląd był taki sam zarówno na widoku listy, jak i na szczegółowym, stworzę widok SwiftUI do prezentacji naszego stosu gatunków. Więc utworzę nowy plik SwiftUI, który nazwę "GenreStackView". Teraz ten widok otrzyma tablicę gatunków podczas prezentacji. Nazwiemy ją "genres". Następnie zastąpię ciało widoku hstackiem. I użyjemy pętli forEach na naszej tablicy gatunków. To da nam gatunek. Posortuję również tablicę, używając porównywacza klucza ścieżki, którym będzie nazwa naszego gatunku. Wówczas po prostu utworzymy widok tekstowy, używając tej nazwy gatunku. Ustawię czcionkę na podpis (caption). Styl wypełnienia na biały. Dodam trochę marginesu 5. A następnie ustawiam tło na zaokrąglony prostokąt o promieniu rogu 5 i wypełnieniu, które używa koloru szesnastkowego tego gatunku. Teraz nie będę używać podglądu tutaj, ponieważ to dość prosty widok. Więc możemy dodać to do naszych dwóch widoków. Więc w widoku listy książek, gdzie wykonujemy nasze zapytanie w etykiecie nawigacyjnego linku oraz w vStack po polu "reading", użyję iflet, aby sprawdzić, czy mamy tablicę gatunków. I po prostu wyświetlę ten widok "GenreStackView", przekazując tę tablicę.
+Teraz, gdy mamy przełącznik akcji "showGenres", mogę utworzyć arkusz, który będzie prezentować nasz widok gatunków. Ten arkusz będzie zbindowany z "isPresented" do właściwości "showGenres", a następnie mogę utworzyć widok "GenresView", przekazując do niego tę książkę. Teraz, jeśli wrócimy teraz do widoku listy książek, możemy to przetestować w podglądzie. Dotknij dowolnego wiersza, a dostaniesz widok szczegółowy. A stąd możemy nacisnąć przycisk gatunków. I mogę wybrać jeden lub dwa gatunki dla mojej książki. Jeśli naciśnę przycisk "Wstecz", nie zobaczę jeszcze dodanych gatunków, ponieważ jeszcze tego nie obsłużyliśmy. To jest następne. Ale jeśli wrócę do widoku gatunków, zobaczę, że musiały zostać one dodane, ponieważ są wciąż zaznaczone. Dodajmy teraz nowy gatunek. Nazwę go "akcja". I wybiorę kolor. I dodam go. I widzimy, że został on dodany alfabetycznie do listy. 
+
+![2023-10-29_11-04-23 (1)](2023-10-29_11-04-23%20(1).gif)
+
+Jeśli go wybiorę i wrócę, zostanie wstawiony. Jeśli wrócę, zobaczę, że nowy gatunek pozostał i został zaznaczony. 
+
+## GenreStackView 
+
+​	Mamy jeszcze dwie rzeczy do zrobienia. Chcę stworzyć ładny sposób na wyświetlanie wybranych gatunków na tym widoku szczegółów, jak również na widoku listy. I nadal będziemy musieli być w stanie usunąć gatunek, którego już nie chcemy, oraz upewnić się, że zostanie on również usunięty z każdej z książek. Ponieważ chcę, aby wygląd był taki sam zarówno na widoku listy, jak i na szczegółowym, stworzę widok SwiftUI do prezentacji naszego stosu gatunków. Więc utworzę nowy plik SwiftUI, który nazwę "GenreStackView". Teraz ten widok otrzyma tablicę gatunków podczas prezentacji. Nazwiemy ją "genres". Następnie zastąpię ciało widoku hstackiem. I użyjemy pętli forEach na naszej tablicy gatunków. To da nam gatunek. Posortuję również tablicę, używając porównywacza klucza ścieżki, którym będzie nazwa naszego gatunku. Wówczas po prostu utworzymy widok tekstowy, używając tej nazwy gatunku. Ustawię czcionkę na podpis (caption). Styl wypełnienia na biały. Dodam trochę marginesu 5. A następnie ustawiam tło na zaokrąglony prostokąt o promieniu rogu 5 i wypełnieniu, które używa koloru szesnastkowego tego gatunku. Teraz nie będę używać podglądu tutaj, ponieważ to dość prosty widok. Więc możemy dodać to do naszych dwóch widoków. Więc w widoku listy książek, gdzie wykonujemy nasze zapytanie w etykiecie nawigacyjnego linku oraz w vStack po polu "reading", użyję iflet, aby sprawdzić, czy mamy tablicę gatunków. I po prostu wyświetlę ten widok "GenreStackView", przekazując tę tablicę.
 
 
 

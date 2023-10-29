@@ -119,6 +119,9 @@
         }
       }
     },
+    "Back" : {
+
+    },
     "Book title" : {
       "localizations" : {
         "de" : {
@@ -166,6 +169,12 @@
           }
         }
       }
+    },
+    "Create Genre" : {
+
+    },
+    "Create new Genre" : {
+
     },
     "Date Added" : {
       "localizations" : {
@@ -231,7 +240,7 @@
         }
       }
     },
-    "Hello, World!" : {
+    "Genres" : {
 
     },
     "My books" : {
@@ -250,6 +259,9 @@
         }
       }
     },
+    "name" : {
+
+    },
     "New book" : {
       "localizations" : {
         "de" : {
@@ -265,6 +277,9 @@
           }
         }
       }
+    },
+    "New Genre" : {
+
     },
     "Page" : {
       "localizations" : {
@@ -378,6 +393,9 @@
         }
       }
     },
+    "Set the genre color" : {
+
+    },
     "Sort by %@" : {
       "localizations" : {
         "de" : {
@@ -457,6 +475,9 @@
           }
         }
       }
+    },
+    "You need to create some genres first." : {
+
     }
   },
   "version" : "1.0"

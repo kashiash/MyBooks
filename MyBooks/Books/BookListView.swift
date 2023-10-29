@@ -16,10 +16,13 @@ enum SortOrder: String, Identifiable, CaseIterable {
 }
 
 struct BookListView: View {
-
+    @Environment(\.modelContext) private var context
     @State  private var createNewBook = false
     @State private var sortOrder = SortOrder.status
     @State private var filter = ""
+
+    @Query  var books: [Book]
+    @Query  var genres: [Genre]
 
     var body: some View {
         NavigationStack {
@@ -30,21 +33,44 @@ struct BookListView: View {
             }
             .buttonStyle(.bordered)
             BookList(sortOrder: sortOrder, filterString: filter)
-            .searchable(text: $filter, prompt: "Filter by title or author")
-            .navigationTitle("My books")
-            .toolbar{
-                Button {
-                    createNewBook = true
-                } label : {
-                    Image(systemName: "plus.circle.fill")
-                        .imageScale(.large)
+                .searchable(text: $filter, prompt: "Filter by title or author")
+                .navigationTitle("My books")
+                .toolbar{
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button(role: .destructive) {
+                            addSampleData()
+                        } label : {
+                            Image(systemName: "wand.and.stars")
+                                .imageScale(.large)
+                        }
+                        .foregroundColor(.red)
+
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            createNewBook = true
+                        } label : {
+                            Image(systemName: "plus.circle.fill")
+                                .imageScale(.large)
+                        }
+                    }
                 }
-            }
-            .sheet(isPresented: $createNewBook) {
-                NewBookView()
-                    .presentationDetents([.medium])
-            }
+                .sheet(isPresented: $createNewBook) {
+                    NewBookView()
+                        .presentationDetents([.medium])
+                }
         }
+    }
+    func addSampleData(){
+
+
+        Book.sampleBooks.forEach { book in
+            context.insert(Book(title: book.title, author: book.author,synopsis: book.synopsis))
+        }
+        Genre.sampleGenres.forEach { genre in
+            context.insert(genre)
+        }
+
     }
 }
 

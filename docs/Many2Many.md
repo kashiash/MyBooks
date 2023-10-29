@@ -537,16 +537,123 @@ Jeśli go wybiorę i wrócę, zostanie wstawiony. Jeśli wrócę, zobaczę, że 
 
 ## GenreStackView 
 
-​	Mamy jeszcze dwie rzeczy do zrobienia. Chcę stworzyć ładny sposób na wyświetlanie wybranych gatunków na tym widoku szczegółów, jak również na widoku listy. I nadal będziemy musieli być w stanie usunąć gatunek, którego już nie chcemy, oraz upewnić się, że zostanie on również usunięty z każdej z książek. Ponieważ chcę, aby wygląd był taki sam zarówno na widoku listy, jak i na szczegółowym, stworzę widok SwiftUI do prezentacji naszego stosu gatunków. Więc utworzę nowy plik SwiftUI, który nazwę "GenreStackView". Teraz ten widok otrzyma tablicę gatunków podczas prezentacji. Nazwiemy ją "genres". Następnie zastąpię ciało widoku hstackiem. I użyjemy pętli forEach na naszej tablicy gatunków. To da nam gatunek. Posortuję również tablicę, używając porównywacza klucza ścieżki, którym będzie nazwa naszego gatunku. Wówczas po prostu utworzymy widok tekstowy, używając tej nazwy gatunku. Ustawię czcionkę na podpis (caption). Styl wypełnienia na biały. Dodam trochę marginesu 5. A następnie ustawiam tło na zaokrąglony prostokąt o promieniu rogu 5 i wypełnieniu, które używa koloru szesnastkowego tego gatunku. Teraz nie będę używać podglądu tutaj, ponieważ to dość prosty widok. Więc możemy dodać to do naszych dwóch widoków. Więc w widoku listy książek, gdzie wykonujemy nasze zapytanie w etykiecie nawigacyjnego linku oraz w vStack po polu "reading", użyję iflet, aby sprawdzić, czy mamy tablicę gatunków. I po prostu wyświetlę ten widok "GenreStackView", przekazując tę tablicę.
+​	Mamy jeszcze dwie rzeczy do zrobienia. Chcę stworzyć ładny sposób na wyświetlanie wybranych gatunków na tym widoku szczegółów, jak również na widoku listy. I nadal będziemy musieli być w stanie usunąć gatunek, którego już nie chcemy, oraz upewnić się, że zostanie on również usunięty z każdej z książek. Ponieważ chcę, aby wygląd był taki sam zarówno na widoku listy, jak i na szczegółowym, stworzę widok SwiftUI do prezentacji naszego stosu gatunków. Więc utworzę nowy plik SwiftUI, który nazwę "GenreStackView". Teraz ten widok otrzyma tablicę gatunków podczas prezentacji. Nazwiemy ją "genres". Następnie zastąpię ciało widoku hstackiem. I użyjemy pętli forEach na naszej tablicy gatunków. To da nam gatunek. Posortuję również tablicę, używając porównywacza klucza ścieżki, którym będzie nazwa naszego gatunku. Wówczas po prostu utworzymy widok tekstowy, używając tej nazwy gatunku. Ustawię czcionkę na podpis (caption). Styl wypełnienia na biały. Dodam trochę marginesu 5. A następnie ustawiam tło na zaokrąglony prostokąt o promieniu rogu 5 i wypełnieniu, które używa koloru szesnastkowego tego gatunku. 
+
+```swift
+struct GenresStackView: View {
+    var genres: [Genre]
+    var body: some View {
+        HStack {
+            ForEach(genres.sorted(using: KeyPathComparator(\Genre.name))) {
+                genre in
+                Text(genre.name)
+                    .font(.caption)
+                    .foregroundStyle(.white)
+                    .padding(5)
+                    .background(RoundedRectangle(cornerRadius: 5).fill(genre.hexColor))
+            }
+        }
+    }
+}
+```
+
+Teraz nie będę używać podglądu tutaj, ponieważ to dość prosty widok. Więc możemy dodać to do naszych dwóch widoków. Więc w widoku listy książek `BookListView`, gdzie wykonujemy nasze zapytanie w etykiecie nawigacyjnego linku oraz w vStack po polu "reading", sprawdzę, czy mamy tablicę gatunków. I po prostu wyświetlę ten widok "GenreStackView", przekazując tę tablicę.
+
+```swift
+if let rating = book.rating {
+  ...}
+if let genres = book.genres {
+  GenresStackView(genres: genres)
+}
+...
+```
+
+Więc mogę skopiować to i użyć tego samego kodu w naszym widoku `editBookView` po polu tekstowym dla streszczenia, ale przed dwoma przyciskami. 
+
+```swift
+...            
+Divider()
+Text("Synopsis").foregroundStyle(.secondary)
+TextEditor(text: $synopsis)
+.padding(5)
+.overlay(RoundedRectangle(cornerRadius: 20).stroke(Color(uiColor: .tertiarySystemFill), lineWidth: 2))
+
+if let genres = book.genres {
+  GenresStackView(genres: genres)
+}
+
+
+HStack {
+  Button("Genres",systemImage: "bookmark.fill") {
+    showGenres.toggle()
+  }
+  ....
+```
+
+Więc wróćmy do widoku `bookListView` i przetestujmy to. To jest prawie idealne, ale co jeśli mielibyśmy wiele gatunków? Możemy wyczerpać miejsce w tym poziomym stosie. Aby to udowodnić, pozwól mi uruchomić to w symulatorze. Zobaczysz, że dodałem dość dużo więcej gatunków dla tej grupy książek. A dla jednego z nich przypisałem wiele gatunków. Teraz wygląda to dobrze tutaj, ale pozwól mi dodać jeszcze jeden gatunek do tej książki. Teraz, w widoku `editView`, nie wygląda to tak dobrze, ponieważ próbuje wcisnąć wszystkie te gatunki w ten wiersz. A jeśli wrócę do widoku `listView`, jest jeszcze gorzej. Gdyby to było wewnątrz `scrollView`, nie byłoby problemu. Okazuje się, że jest to dość łatwe do naprawienia. Po prostu możemy użyć `viewThatFits`, aby widok używał `scrollView`, tylko jeśli to konieczne. 
+
+```swift
+ViewThatFits {
+  GenresStackView(genres: genres)
+  ScrollView(.horizontal,showsInicators: false) {
+    GenresStackView(genres: genres)
+  }
+}
+```
+
+. Więc w pliku `books.lists` zamknę `genreStacksView` w `viewThatFits`. Następnie jako drugi widok dodam `scrollView`, który jest poziomy i ustawię `showsIndicators` na `false`, a następnie przekażę ten `genreStackView` przekazując gatunek. Użyję dokładnie tego samego kodu w widoku `editBookView`. Teraz uruchommy to w symulatorze. Widzę, że wygląda idealnie. Nie tylko na liście, ale także w widoku szczegółów. Przewija się tylko w razie potrzeby. 
+
+![image-20231029124417979](image-20231029124417979.png)
 
 
 
-Więc mogę skopiować to i użyć tego samego kodu w naszym widoku `editBookView` po polu tekstowym dla streszczenia, ale przed dwoma przyciskami. Więc wróćmy do widoku `bookListView` i przetestujmy to. To jest prawie idealne, ale co jeśli mielibyśmy wiele gatunków? Możemy wyczerpać miejsce w tym poziomym stosie. Aby to udowodnić, pozwól mi uruchomić to w symulatorze. Zobaczysz, że dodałem dość dużo więcej gatunków dla tej grupy książek. A dla jednego z nich przypisałem wiele gatunków. Teraz wygląda to dobrze tutaj, ale pozwól mi dodać jeszcze jeden gatunek do tej książki. Teraz, w widoku `editView`, nie wygląda to tak dobrze, ponieważ próbuje wcisnąć wszystkie te gatunki w ten wiersz. A jeśli wrócę do widoku `listView`, jest jeszcze gorzej. Gdyby to było wewnątrz `scrollView`, nie byłoby problemu. Okazuje się, że jest to dość łatwe do naprawienia. Po prostu możemy użyć `viewThatFits`, aby widok używał `scrollView`, tylko jeśli to konieczne. Użyłem tego jako przykład w moim filmie o `viewThatFits`. Więc w pliku `books.lists` zamknę `genreStacksView` w `viewThatFits`. Następnie jako drugi widok dodam `scrollView`, który jest poziomy i ustawię `showsIndicators` na `false`, a następnie przekażę ten `genreStackView` przekazując gatunek. Użyję dokładnie tego samego kodu w widoku `editBookView`. Teraz uruchommy to w symulatorze. Widzę, że wygląda idealnie. Nie tylko na liście, ale także w widoku szczegółów. Przewija się tylko w razie potrzeby. Teraz ostatnią rzeczą, którą chcę omówić, jest usuwanie gatunku z tablicy gatunków. Usunięcie gatunku nie spowoduje żadnego usunięcia związanej z nim książki, ponieważ domyślnie zostanie tylko znullowana. Więc to będzie w porządku. Będziemy musieli to zrobić w symulatorze, więc jeśli podążasz za mną, upewnij się, że dodałeś wiele książek, wiele gatunków i masz gatunki powiązane z różnymi książkami. Najpierw chcę jednak otworzyć tę bazę danych SQL, aby zobaczyć, jak aktualnie wygląda struktura. Jeśli przeglądam dane tej książki, nie widzę żadnej reprezentacji tablicy gatunków. Ale zauważ, że ta pierwsza kolumna, oznaczona jako `z_pk`, oznacza klucz główny. Na przykład książka `qb7` ma klucz główny 1. Podobnie, przeglądając dane dla gatunku, nie ma tu wzmianki o książkach, ale jest inna kolumna klucza głównego.
+![image-20231029124652139](image-20231029124652139.png)
 
 
 
-Kiedy tworzymy relację wiele do wielu w SwiftData, za kulisami tworzona jest nowa tabela łącząca. W tym przypadku nosi ona nazwę `z_one_genres`. Jeśli ją otworzę, zobaczę, że ma dwie kolumny, jedną dla książek i jedną dla gatunków, a lista tu to klucze główne każdego rekordu. Można zobaczyć, że książka o kluczu głównym 1, czyli `rqb7`, ma gatunki 1 i 6. A jeśli przejdę do gatunków, zobaczę, że 1 to fikcja, a 6 to historia. Wróćmy do aplikacji raz jeszcze, aby sprawdzić, czy to się zgadza. Teraz chcę przetestować usunięcie całego gatunku, aby zobaczyć, co się stanie. Więc w widoku gatunków utworzyłem listę gatunków przy użyciu pętli `forEach`. Możemy więc tutaj użyć modyfikatora `onDelete` dla akcji przesunięcia w lewo. Powinienem być w stanie przejść przez ten zestaw indeksów, utworzyć indeks, a następnie użyć metody `delete`, aby usunąć z tablicy gatunków pod tym indeksem. Uruchommy to teraz w naszym symulatorze. Widzę, że gatunek "Detektyw" jest powiązany z dwiema książkami. Pozwól mi go usunąć. Wybiorę jedną z książek z gatunkiem "Detektyw", a następnie pojawię się na ekranie z gatunkami, gdzie teraz mam przesunięcie akcji od prawej do lewej, aby go usunąć. Po powrocie do widoku szczegółów książki, nadal jest tam ten gatunek. To jest problem. Jednakże, po powrocie do widoku listy, tego gatunku już tam nie ma. Problem polega na tym, że kiedy prezentujemy widok gatunków i usuwamy gatunek, nie ma powiązania z tą konkretną tablicą dla naszej książki. Rozwiązanie jest jednak dość proste. Musimy po prostu najpierw usunąć książkę z tej tablicy, co zaktualizuje widok, który ją prezentuje, a następnie mogę usunąć gatunek, co automatycznie zaktualizuje widok listy. Więc tutaj możemy odczytać `book.genres`, używając `if let`, jednocześnie sprawdzając, czy `book.genres` zawiera gatunki pod indeksem gatunków. Jeśli tak jest, to możemy ustawić `bookGenresIndex` jako pierwszy indeks, gdzie ID gatunku dla gatunku tej książki jest równe indeksowi całej tablicy. Następnie możemy usunąć ten indeks z `bookGenresIndex`.
+![image-20231029124738518](image-20231029124738518.png)
 
 
 
-Pozwólmy sobie przetestować jeszcze raz. Widzę, że gatunek 'fiction' jest powiązany z wieloma książkami, więc pozwól mi wybrać dowolną książkę z tego gatunku. Widzę ją tutaj w widoku szczegółów, więc przejdźmy do ekranu gatunków i przesuńmy, aby usunąć ten gatunek 'fiction'. Po powrocie do ekranu szczegółów widzę, że już go tu nie ma. A wracając do widoku listy, widzę, że zniknął z każdej książki. Cóż, to praktycznie kompletna podstawa tej aplikacji opartej na SwiftData, ale nadal mam kilka rzeczy, które chciałbym zrobić z tą aplikacją. Cdn 
+
+
+Teraz ostatnią rzeczą, którą chcę omówić, jest usuwanie gatunku z tablicy gatunków. Usunięcie gatunku nie spowoduje żadnego usunięcia związanej z nim książki, ponieważ domyślnie zostanie tylko ustawiona na null. I to będzie w porządku. Będziemy musieli to zrobić w symulatorze, więc jeśli podążasz za mną, upewnij się, że dodałeś wiele książek, wiele gatunków i masz gatunki powiązane z różnymi książkami. Najpierw chcę jednak otworzyć tę bazę danych SQL, aby zobaczyć, jak aktualnie wygląda struktura. 
+
+<video src="../../../../../var/folders/np/_0q7c5vx4rn36kb_hxv49g5h0000gp/T/2023-10-29_12-55-03.mp4"></video>
+
+Jeśli przeglądam dane tej książki, nie widzę żadnej reprezentacji tablicy gatunków. Ale zauważ, że ta pierwsza kolumna, oznaczona jako `z_pk`, oznacza klucz główny. Na przykład książka `qb7` ma klucz główny 1. Podobnie, przeglądając dane dla gatunku, nie ma tu wzmianki o książkach, ale jest inna kolumna klucza głównego.
+
+Kiedy tworzymy relację wiele do wielu w SwiftData, za kulisami tworzona jest nowa tabela łącząca. W tym przypadku nosi ona nazwę `z_1genres`. Jeśli ją otworzę, zobaczę, że ma dwie kolumny, jedną dla książek i jedną dla gatunków, a lista tu to klucze główne każdego rekordu. Można zobaczyć, że książka o kluczu głównym 1, czyli `rqb7`, ma gatunki 1,2,3,4,5,6,7,8 . A jeśli przejdę do gatunków, zobaczę, że 1 to fikcja, a 6 to historia. Wróćmy do aplikacji raz jeszcze, aby sprawdzić, czy to się zgadza. Teraz chcę przetestować usunięcie całego gatunku, aby zobaczyć, co się stanie. Więc w widoku gatunków utworzyłem listę gatunków przy użyciu pętli `forEach`. Możemy więc tutaj użyć modyfikatora `onDelete` dla akcji przesunięcia w lewo. Powinienem być w stanie przejść przez ten zestaw indeksów, utworzyć indeks, a następnie użyć metody `delete`, aby usunąć z tablicy gatunków pod tym indeksem. 
+
+```swift
+struct GenresView: View {
+  ....
+  List {
+    ForEach(genres) { genre in
+                     ...                                         
+                    }
+    .onDelete(perform: { indexSet in
+                        indexSet.forEach { index in
+                                          context.delete(genres[index])
+                                         }
+                       })
+    LabeledContent {
+      ...
+```
+
+Uruchommy to teraz w naszym symulatorze. Widzę, że gatunek "Fiction" jest powiązany z dwiema książkami.Usuńmy go. Wybiorę jedną z książek z gatunkiem "Fiction", a następnie pojawię się na ekranie z gatunkami, gdzie teraz mam przesunięcie akcji od prawej do lewej, aby go usunąć. Po powrocie do widoku szczegółów książki, nadal jest tam ten gatunek. To jest problem. Jednakże, po powrocie do widoku listy, tego gatunku już tam nie ma. Problem polega na tym, że kiedy prezentujemy widok gatunków i usuwamy gatunek, nie ma powiązania z tą konkretną tablicą dla naszej książki. Rozwiązanie jest jednak dość proste. Musimy po prostu najpierw usunąć książkę z tej tablicy, co zaktualizuje widok, który ją prezentuje, a następnie mogę usunąć gatunek, co automatycznie zaktualizuje widok listy. Więc tutaj możemy odczytać `book.genres`, używając `if let`, jednocześnie sprawdzając, czy `book.genres` zawiera gatunki pod indeksem gatunków. Jeśli tak jest, to możemy ustawić `bookGenresIndex` jako pierwszy indeks, gdzie ID gatunku dla gatunku tej książki jest równe indeksowi całej tablicy. Następnie możemy usunąć ten indeks z `bookGenresIndex`.
+
+```swift
+.onDelete(perform: { indexSet in
+                    indexSet.forEach { index in
+                                      if let bookGenres = book.genres, bookGenres.contains(genres[index]),
+                                      let bookGenreIndex = bookGenres.firstIndex(where: { $0.id == genres[index].id})
+                                      {
+                                        book.genres?.remove(at: bookGenreIndex)
+                                      }
+                                      context.delete(genres[index])
+                                     }
+                   })
+```
+
+Przetestujmy to ponownie. Widzę, że gatunek 'fiction' jest powiązany z wieloma książkami, więc pozwól mi wybrać dowolną książkę z tego gatunku. Widzę ją tutaj w widoku szczegółów, więc przejdźmy do ekranu gatunków i przesuńmy, aby usunąć ten gatunek 'fiction'. Po powrocie do ekranu szczegółów widzę, że już go tu nie ma. A wracając do widoku listy, widzę, że zniknął z każdej książki. Cóż, to praktycznie kompletna podstawa tej aplikacji opartej na SwiftData, ale nadal mam kilka rzeczy, które chciałbym zrobić z tą aplikacją. Cdn 

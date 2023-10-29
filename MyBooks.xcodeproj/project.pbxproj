@@ -49,6 +49,11 @@
 		76CB69472AEE66E000D75294 /* 2023-10-29_11-07-10 (1).gif in Resources */ = {isa = PBXBuildFile; fileRef = 76CB69442AEE66E000D75294 /* 2023-10-29_11-07-10 (1).gif */; };
 		76CB69482AEE66E000D75294 /* 2023-10-29_11-02-35 (1).gif in Resources */ = {isa = PBXBuildFile; fileRef = 76CB69452AEE66E000D75294 /* 2023-10-29_11-02-35 (1).gif */; };
 		76CB69492AEE66E000D75294 /* 2023-10-29_11-04-23 (1).gif in Resources */ = {isa = PBXBuildFile; fileRef = 76CB69462AEE66E000D75294 /* 2023-10-29_11-04-23 (1).gif */; };
+		76CB694B2AEE6BB100D75294 /* GenresStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CB694A2AEE6BB100D75294 /* GenresStackView.swift */; };
+		76CB69502AEE849400D75294 /* image-20231029124652139.png in Resources */ = {isa = PBXBuildFile; fileRef = 76CB694C2AEE849400D75294 /* image-20231029124652139.png */; };
+		76CB69512AEE849400D75294 /* 2023-10-29_12-55-03.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 76CB694D2AEE849400D75294 /* 2023-10-29_12-55-03.mp4 */; };
+		76CB69522AEE849400D75294 /* image-20231029124738518.png in Resources */ = {isa = PBXBuildFile; fileRef = 76CB694E2AEE849400D75294 /* image-20231029124738518.png */; };
+		76CB69532AEE849400D75294 /* image-20231029124417979.png in Resources */ = {isa = PBXBuildFile; fileRef = 76CB694F2AEE849400D75294 /* image-20231029124417979.png */; };
 		76FC4C512AD832560088895E /* EditBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FC4C502AD832560088895E /* EditBookView.swift */; };
 		76FC4C532AD847130088895E /* RatingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FC4C522AD847130088895E /* RatingsView.swift */; };
 /* End PBXBuildFile section */
@@ -98,6 +103,11 @@
 		76CB69442AEE66E000D75294 /* 2023-10-29_11-07-10 (1).gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "2023-10-29_11-07-10 (1).gif"; sourceTree = "<group>"; };
 		76CB69452AEE66E000D75294 /* 2023-10-29_11-02-35 (1).gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "2023-10-29_11-02-35 (1).gif"; sourceTree = "<group>"; };
 		76CB69462AEE66E000D75294 /* 2023-10-29_11-04-23 (1).gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "2023-10-29_11-04-23 (1).gif"; sourceTree = "<group>"; };
+		76CB694A2AEE6BB100D75294 /* GenresStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresStackView.swift; sourceTree = "<group>"; };
+		76CB694C2AEE849400D75294 /* image-20231029124652139.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image-20231029124652139.png"; sourceTree = "<group>"; };
+		76CB694D2AEE849400D75294 /* 2023-10-29_12-55-03.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "2023-10-29_12-55-03.mp4"; sourceTree = "<group>"; };
+		76CB694E2AEE849400D75294 /* image-20231029124738518.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image-20231029124738518.png"; sourceTree = "<group>"; };
+		76CB694F2AEE849400D75294 /* image-20231029124417979.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image-20231029124417979.png"; sourceTree = "<group>"; };
 		76FC4C502AD832560088895E /* EditBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBookView.swift; sourceTree = "<group>"; };
 		76FC4C522AD847130088895E /* RatingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -219,6 +229,7 @@
 			children = (
 				766D02A92AEC286E000CE954 /* GenresView.swift */,
 				766D02AB2AED0548000CE954 /* NewGenreView.swift */,
+				76CB694A2AEE6BB100D75294 /* GenresStackView.swift */,
 			);
 			path = Genres;
 			sourceTree = "<group>";
@@ -226,6 +237,10 @@
 		76B319982ADBC65000AF1E86 /* docs */ = {
 			isa = PBXGroup;
 			children = (
+				76CB694D2AEE849400D75294 /* 2023-10-29_12-55-03.mp4 */,
+				76CB694F2AEE849400D75294 /* image-20231029124417979.png */,
+				76CB694C2AEE849400D75294 /* image-20231029124652139.png */,
+				76CB694E2AEE849400D75294 /* image-20231029124738518.png */,
 				76CB69452AEE66E000D75294 /* 2023-10-29_11-02-35 (1).gif */,
 				76CB69462AEE66E000D75294 /* 2023-10-29_11-04-23 (1).gif */,
 				76CB69442AEE66E000D75294 /* 2023-10-29_11-07-10 (1).gif */,
@@ -313,8 +328,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76CB69522AEE849400D75294 /* image-20231029124738518.png in Resources */,
 				76B3198F2ADBC64A00AF1E86 /* Sortowanie i Filtrowanie danych.md in Resources */,
 				76B319912ADBC64A00AF1E86 /* image-20231011145312090.png in Resources */,
+				76CB69502AEE849400D75294 /* image-20231029124652139.png in Resources */,
 				76B3198E2ADBC64A00AF1E86 /* image-20231011212137465.png in Resources */,
 				763FC7DA2AD694430008E040 /* Readme.md in Resources */,
 				763FC7D32AD693D20008E040 /* Preview Assets.xcassets in Resources */,
@@ -334,9 +351,11 @@
 				76CB69492AEE66E000D75294 /* 2023-10-29_11-04-23 (1).gif in Resources */,
 				766D029A2AEA857D000CE954 /* Localizable.xcstrings in Resources */,
 				76CB69432AED5BEE00D75294 /* LokalizowanieWersji.md in Resources */,
+				76CB69512AEE849400D75294 /* 2023-10-29_12-55-03.mp4 in Resources */,
 				76B319902ADBC64A00AF1E86 /* image-20231011184751985.png in Resources */,
 				76B319942ADBC64A00AF1E86 /* image-20231013214052735.png in Resources */,
 				76B319922ADBC64A00AF1E86 /* image-20231011185449831.png in Resources */,
+				76CB69532AEE849400D75294 /* image-20231029124417979.png in Resources */,
 				76B319972ADBC64A00AF1E86 /* 2023-10-12_15-26-37 (1).gif in Resources */,
 				76B3199E2ADC4E7400AF1E86 /* One2Many.md in Resources */,
 				76CB69482AEE66E000D75294 /* 2023-10-29_11-02-35 (1).gif in Resources */,
@@ -357,6 +376,7 @@
 				76FC4C532AD847130088895E /* RatingsView.swift in Sources */,
 				766D029C2AEAAB19000CE954 /* Genre.swift in Sources */,
 				766D02A12AEBFD85000CE954 /* UIColor+Extension.swift in Sources */,
+				76CB694B2AEE6BB100D75294 /* GenresStackView.swift in Sources */,
 				76B319812ADAE15600AF1E86 /* BookList.swift in Sources */,
 				76FC4C512AD832560088895E /* EditBookView.swift in Sources */,
 				763FC7CD2AD693D00008E040 /* BookListView.swift in Sources */,
